@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "185580144968",
+    "project_id": "acolher-consultas",
+    "storage_bucket": "acolher-consultas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185580144968:android:fab553d0884ffbbb290b7d",
+        "android_client_info": {
+          "package_name": "br.com.acolherconsultas.acolherconsultas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn6GzRokJeuUzl3klSHroZUocHJpEy85g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
