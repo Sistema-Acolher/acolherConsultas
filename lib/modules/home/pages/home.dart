@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,8 +17,20 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Text('Home Page Teste'),
+      body: Center(
+        child: TextButton(
+          onPressed: () {
+            final FirebaseFirestore firestore = FirebaseFirestore.instance;
+            firestore.collection("consultas").add({
+              "data": DateTime.now(),
+              "paciente": "João da Silva",
+              "medico": "Dr. José",
+              "especialidade": "Cardiologia",
+              "status": "Agendada"
+            });
+          },
+          child: Text("Teste - Adicionar Consulta")
+        ),
       ),
     );
   }
