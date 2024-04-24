@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
+import 'package:acolherconsultas/modules/pacientes/pages/pacientesCadastradosScreen.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CadastroPacienteScreen(title: "Cadastro de Pacientes"))),
               child: const Text("Cadastro de Pacientes")
+            ),
+            TextButton(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PacientesCadastradosScreen())),
+              child: const Text("Lista de Pacientes Cadastrados")
             ),
           ],
         ),
