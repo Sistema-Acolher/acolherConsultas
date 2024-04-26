@@ -8,14 +8,19 @@ import 'package:flutter/services.dart';
 import 'package:mask/mask.dart';
 import 'package:provider/provider.dart';
 
+// A classe CadastroPacienteScreen é a tela de cadastro de pacientes.
+
 class CadastroPacienteScreen extends StatefulWidget {
   const CadastroPacienteScreen({super.key, required this.title});
 
+  // Atributo que define o título da tela.
   final String title;
 
   @override
   State<CadastroPacienteScreen> createState() => _CadastroPacienteScreenState();
 }
+
+// A classe _CadastroPacienteScreenState é a classe que representa o estado da tela de cadastro de pacientes.
 
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _controllerCadastroPaciente = ControllerCadastroPaciente();
@@ -25,7 +30,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // go back button
+        // Botão de voltar, na barra superior.
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -34,11 +39,16 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
       ),
       body: Center(
         child: Container(
+          // Define o espaçamento em volta da decoração e do widget filho do Container.
           margin: const EdgeInsets.all(20),
+          // Form é um widget que implementa um formulário.
           child: Form(
+            // Atribui uma chave única ao formulário para validação.
             key: _formKey,
+            // ListView é um widget que implementa uma lista de widgets filhos, onde os itens são organizados em uma lista vertical e com scroll.
             child: ListView(
               children: [
+                // Cada um dos campos de entrada para o cadastro de pacientes, utilizando os componentes criados.
                 InputTextCadastroPaciente(
                   label: "Nome", 
                   controller: _controllerCadastroPaciente.nome,
@@ -113,6 +123,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                   child: ElevatedButton(
                     onPressed: () {
+                      // Se o formulário for válido, exibe um diálogo de confirmação.
                       if (_formKey.currentState!.validate()) {
                         showDialog(
                           context: context,
@@ -151,6 +162,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                                               ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(content: Text('Cadastrando paciente...'), duration: Duration())
                                               );
+                                              // Chama o método de cadastro de paciente do Provider, através 
                                               context.read<PacientesCadastradosProvider>().cadastrarPaciente(_controllerCadastroPaciente.cadastro())
                                               .then((value) {
                                                 Navigator.pop(context);

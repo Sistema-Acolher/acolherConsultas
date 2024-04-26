@@ -3,41 +3,53 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/databases/repositories/pacientesCadastradosRepository.dart';
 import 'package:flutter/foundation.dart';
 
+// A classe PacientesCadastradosProvider é a classe que controla os pacientes cadastrados.
 class PacientesCadastradosProvider extends ChangeNotifier {
+  // Repositório de pacientes cadastrados, com métodos de CRUD.
   final _repository = PacientesCadastradosRepository();
 
+  // Lista de pacientes cadastrados.
   final List<CadastroPaciente> _pacientes = [];
   List<CadastroPaciente> get pacientes => _pacientes;
 
+  // Último paciente cadastrado.
   CadastroPaciente? _pacienteCadastrado;
   CadastroPaciente? get pacienteCadastrado => _pacienteCadastrado;
 
+  // Método que busca a lista de pacientes cadastrados e notifica os 'ouvintes'.
   Future<void> getPacientes() async {
+    // Limpa a lista de pacientes.
     _pacientes.clear();
 
+    // Busca a lista de pacientes cadastrados no repositório de pacientes e adiciona na lista de pacientes do provedor.
     for(var paciente in await _repository.selecionarTodos()){
       CadastroPaciente p = CadastroPaciente.fromMap(paciente);
       p.id = paciente["id"];
       _pacientes.add(p);
     }
+
     notifyListeners();
   }
 
+  // Método que verifica se o CPF já está cadastrado.
   Future<bool> cpfCadastrado(String cpf) async {
     return await _repository.selecionarCpf(cpf) != null;
   }
 
+  // Método que verifica se o RG já está cadastrado.
   Future<bool> rgCadastrado(String rg) async {
     return await _repository.selecionarRg(rg) != null;
   }
 
+  // Método que verifica se o número do cartão do SUS já está cadastrado.
   Future<bool> numeroCartaoSusCadastrado(String numeroCartaoSus) async {
     return await _repository.selecionarNumeroCartaoSus(numeroCartaoSus) != null;
   }
 
-  Future<String> cadastrarPaciente(CadastroPaciente pacienteCadastro) async {
+  // Método que cadastra um paciente, atualiza a lista de pacientes e notifica os 'ouvintes'.
+  Future<String> cadastrarPaciente(CadastroPaciente cadastroPaciente) async {
     try {
-      Paciente paciente = pacienteCadastro.paciente;
+      Paciente paciente = cadastroPaciente.paciente;
 
       if(await cpfCadastrado(paciente.cpf)){
         return "Erro ao cadastrar: CPF já cadastrado";
@@ -46,11 +58,13 @@ class PacientesCadastradosProvider extends ChangeNotifier {
       } else if(await numeroCartaoSusCadastrado(paciente.numeroCartaoSus)){
         return "Erro ao cadastrar: Número do cartão do SUS já cadastrado";
       } else  {
-        String id = await _repository.criar(pacienteCadastro);
-        pacienteCadastro.id = id;
+        // Caso o paciente não esteja cadastrado, o cadastro é requisitado para o repositório de pacientes.
+        // No caso, cadastra diretamente para o Firebase.
+        String id = await _repository.criar(cadastroPaciente);
+        cadastroPaciente.id = id;
 
-        _pacientes.add(pacienteCadastro);
-        _pacienteCadastrado = pacienteCadastro;
+        _pacientes.add(cadastroPaciente);
+        _pacienteCadastrado = cadastroPaciente;
         notifyListeners();
 
         return "Paciente cadastrado com sucesso";

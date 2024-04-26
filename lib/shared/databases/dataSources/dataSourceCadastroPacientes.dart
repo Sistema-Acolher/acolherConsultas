@@ -1,3 +1,5 @@
+// Classe abstrata que define os métodos necessários para a comunicação com os banco de dados da "tabela" de pacientes (CRUD completo).
+
 abstract class DataSourcePacientes{
   Future<String> criar(Map<String, dynamic> paciente);
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// Widget de input de texto para o cadastro de pacientes.
+
 class InputTextCadastroPaciente extends StatefulWidget {
   const InputTextCadastroPaciente({
     super.key, 
@@ -12,6 +14,7 @@ class InputTextCadastroPaciente extends StatefulWidget {
     required this.keyboardType
   });
 
+  // Atributos do componente.
   final String label;
   final TextEditingController controller;
   final bool? obscureText;
@@ -41,6 +44,7 @@ class _InputTextCadastroPacienteState extends State<InputTextCadastroPaciente> {
         ),
         controller: widget.controller,
         obscureText: widget.obscureText ?? false,
+        // Função de validação do campo de texto.
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Informe o ${widget.label} do paciente";
@@ -50,7 +54,9 @@ class _InputTextCadastroPacienteState extends State<InputTextCadastroPaciente> {
           }
           return null;
         },
+        // Propiedade de formatação (máscara e formato) do campo de texto.
         inputFormatters: widget.inputFormatter,
+        // Tipo de teclado que será exibido ao tocar no campo de texto.
         keyboardType: widget.keyboardType ?? TextInputType.text,
       ),
     );

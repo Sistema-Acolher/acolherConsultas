@@ -1,7 +1,10 @@
 import 'package:acolherconsultas/shared/databases/dataSources/dataSourceCadastroPacientes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Class que implementa a classe abstrata DataSourcePacientes, e é responsável por realizar a comunicação com o banco de dados Firebase.
+
 class DataSourceFirebasePacientes extends DataSourcePacientes {
+  // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -20,6 +23,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
   Future<void> remover(Map<String, dynamic> paciente) async {
   }
 
+  // Quatro métodos que realizam uma query no banco de dados do Firebase Firestore para encontrar um paciente em específico, utilizando diferentes parâmetros.
   @override
   Future<Map<String, dynamic>?> selecionar(String cpf, String rg, String numeroCartaoSus) async {
     QuerySnapshot querySnapshot = await firestore.collection("pacientes")
@@ -75,7 +79,9 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
     List<Map<String, dynamic>> pacientes = [];
 
     for (var element in querySnapshot.docs) {
-      pacientes.add(element.data() as Map<String, dynamic>);
+      var paciente = element.data() as Map<String, dynamic>;
+      paciente["id"] = element.id;
+      pacientes.add(paciente);
     }
 
     return pacientes;

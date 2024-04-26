@@ -2,9 +2,15 @@ import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart'
 import 'package:acolherconsultas/shared/databases/dataSources/dataSourceCadastroPacientes.dart';
 import 'package:acolherconsultas/shared/databases/firebase/listaPacientesCadastrados/dataSourceFirebaseCadastroPacientes.dart';
 
+// Repositório de pacientes cadastrados, com métodos de CRUD e controle de qual fonte de dados será utilizada.
+
 class PacientesCadastradosRepository{
 
+  // Instância da classe DataSourcePacientes que será utilizada, inicializada com a classe DataSourceFirebasePacientes.
   final DataSourcePacientes _dbFirebase = DataSourceFirebasePacientes();
+  // Posteriormente será adicionada uma variável de um banco de dados local.
+  
+  // CRUD de pacientes cadastrados, no caso, está sendo utilizado apenas o firebase.
 
   Future<String> criar(CadastroPaciente pacienteCadastrado) async {
     return _dbFirebase.criar(pacienteCadastrado.toMap());

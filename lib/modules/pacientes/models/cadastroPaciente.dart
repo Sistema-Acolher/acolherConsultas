@@ -4,6 +4,11 @@ import 'dart:convert';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// A classe CadastroPaciente é a classe que representa o cadastro de um paciente.
+// Ela contém um objeto Paciente, um id, a data de cadastro e a data de atualização.
+// Gerada automaticamente pela extensão "Dart Data Class Generator".
+// Possui métodos para converter um objeto CadastroPaciente em um Map e vice-versa, além de converter um objeto CadastroPaciente em JSON e vice-versa.
+// Além disso, possui um método copyWith para copiar um objeto CadastroPaciente e alterar seus atributos, e o métodos toString, alteração da função == e definição do hashCode.
 class CadastroPaciente {
   Paciente paciente;
   String? id;

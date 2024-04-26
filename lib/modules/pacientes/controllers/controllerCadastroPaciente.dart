@@ -1,11 +1,11 @@
-import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
 import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// A classe ControllerCadastroPaciente é a classe que controla os campos do cadastro de pacientes.
 class ControllerCadastroPaciente extends ChangeNotifier {
+  // Campos do cadastro de pacientes.
   final nome = TextEditingController();
   final genero = TextEditingController();
   final rg = TextEditingController();
@@ -16,6 +16,7 @@ class ControllerCadastroPaciente extends ChangeNotifier {
   final dataNascimento = TextEditingController();
   final idade = TextEditingController();
 
+  // Método que retorna um objeto CadastroPaciente com os dados preenchidos nos campos e com as datas de cadastro e atualização.
   CadastroPaciente cadastro() {
     Paciente paciente = Paciente(
       nome: nome.text.trim(),

@@ -3,6 +3,11 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// A classe Paciente é a classe que representa um paciente.
+// Ela contém os atributos nome, gênero, número do cartão do SUS, RG, CPF, observações, encaminhamentos, motivo do acolhimento, acolhimento anterior e data de nascimento.
+// Gerada automaticamente pela extensão "Dart Data Class Generator".
+// Possui métodos para converter um objeto Paciente em um Map e vice-versa, além de converter um objeto Paciente em JSON e vice-versa.
+// Além disso, possui um método copyWith para copiar um objeto Paciente e alterar seus atributos, e o método toString, alteração da função == e definição do hashCode.
 class Paciente {
   String nome;
   String genero;
@@ -28,6 +33,7 @@ class Paciente {
     required this.acolhimentoAnterior,
   });
 
+  // Método que calcula a idade do paciente a partir da data de nascimento e retorna uma string com a idade formatada.
   static String calcularIdade(DateTime dataNascimento) {
     final DateTime agora = DateTime.now();
     final int idade = agora.year - dataNascimento.year;
@@ -80,7 +86,6 @@ class Paciente {
   }
 
   // Este método foi substituído pelo método acima pois é menos preciso 
-
   // static String calcularIdade(DateTime dataNascimento){
   //   final DateTime agora = DateTime.now();
   //   int dias = agora.difference(dataNascimento).inDays;
