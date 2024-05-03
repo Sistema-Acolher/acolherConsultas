@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/home/pages/home.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         // O theme é uma propriedade que define o tema do aplicativo.
         theme: ThemeData(
           // O colorScheme é uma propriedade que define o esquema de cores do aplicativo.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: amarelo),
           // O useMaterial3 é uma propriedade que define se o aplicativo usa o Material Design 3.
           useMaterial3: true,
         ),
