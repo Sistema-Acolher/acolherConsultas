@@ -1,10 +1,12 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/controllerCadastroPaciente.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
+import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputDateCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsCadastroPaciente.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputTextCadastroPaciente.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mask/mask.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +29,27 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    _controllerCadastroPaciente.dataNascimento.addListener(() {
+      atualizaControllerIdade();
+    });
+  }
+
+  void atualizaControllerIdade() {
+    if(_controllerCadastroPaciente.dataNascimento.text.length == 10){
+      DateTime data = DateFormat('dd/MM/yyyy').parse(_controllerCadastroPaciente.dataNascimento.text);
+      String dataString =  Paciente.calcularIdade(data);
+      _controllerCadastroPaciente.idade.text = dataString;
+    } else {
+      _controllerCadastroPaciente.idade.text = "";
+    }
+}
+
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         // Botão de voltar, na barra superior.
@@ -49,7 +71,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
             child: ListView(
               children: [
                 // Cada um dos campos de entrada para o cadastro de pacientes, utilizando os componentes criados.
-                InputTextCadastroPaciente(
+                InputTextoAcolher(
                   label: "Nome", 
                   controller: _controllerCadastroPaciente.nome,
                   keyboardType: TextInputType.name,
@@ -68,7 +90,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   label: "Gênero",
                   controller: _controllerCadastroPaciente.genero
                 ),
-                InputTextCadastroPaciente(
+                InputTextoAcolher(
                   label: "RG (Apenas Números)", 
                   controller: _controllerCadastroPaciente.rg,
                   keyboardType: TextInputType.number,
@@ -82,7 +104,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     LengthLimitingTextInputFormatter(11),
                   ],
                 ),
-                InputTextCadastroPaciente(
+                InputTextoAcolher(
                   label: "Número do Cartão do SUS", 
                   controller: _controllerCadastroPaciente.numeroCartaoSus, 
                   validation: (value) => Mask.validations.generic(
@@ -97,27 +119,63 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   ],
                   keyboardType: TextInputType.number,
                 ),
-                InputTextCadastroPaciente(
+                InputTextoAcolher(
                   label: "CPF", 
                   controller: _controllerCadastroPaciente.cpf,
                   validation: (value) => Mask.validations.cpf(value),
                   inputFormatter: [Mask.cpf()],
                   keyboardType: TextInputType.number,
                 ),
-                InputTextCadastroPaciente(
+                InputTextoAcolher(
                   label: "Motivo do Acolhimento", 
                   controller: _controllerCadastroPaciente.motivoAcolhimento,
-                  keyboardType: TextInputType.text,
                 ),
                 InputRadioButtonsCadastroPaciente(
                   options: const ["Sim", "Não"], 
                   label: "Já teve Acolhimento Anterior",
                   controller: _controllerCadastroPaciente.acolhimentoAnterior
                 ),
-                InputDateCadastroPaciente(
-                  label: "Data de Nascimento", 
-                  controllerDataNascimento: _controllerCadastroPaciente.dataNascimento,
-                  controllerIdade: _controllerCadastroPaciente.idade
+                Container(
+                  width: size.width,
+                  constraints: BoxConstraints(maxWidth: size.width),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: InputTextoAcolher(
+                          label: "Data de Nascimento", 
+                          hintText: "    /    /",
+                          controller: _controllerCadastroPaciente.dataNascimento,
+                          keyboardType: TextInputType.datetime,
+                          icone: Icons.date_range_outlined,
+                          validation: (value) => Mask.validations.date(value),
+                          inputFormatter: [Mask.date()],
+                          readOnly: true,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 1,
+                        child: InputTextoAcolher(
+                          label: "Idade", 
+                          hintText: "..a ..m ..d",
+                          controller: _controllerCadastroPaciente.idade,
+                          readOnly: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                InputTextoAcolher(
+                  label: "Senha", 
+                  controller: _controllerCadastroPaciente.nome, 
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
+                ),
+                InputTextoAcolher(
+                  label: "Editar", 
+                  controller: _controllerCadastroPaciente.nome,
+                  icone: Icons.edit,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),

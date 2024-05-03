@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: amarelo),
           // O useMaterial3 é uma propriedade que define se o aplicativo usa o Material Design 3.
           useMaterial3: true,
+          fontFamily: "Montserrat",
         ),
         // O home é uma propriedade que define a página inicial do aplicativo.
         home: const HomePage(title: 'Sistema Acolher Consultas v1.0'),
