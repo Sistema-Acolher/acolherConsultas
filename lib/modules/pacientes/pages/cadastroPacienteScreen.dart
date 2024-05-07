@@ -1,8 +1,8 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/controllerCadastroPaciente.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
-
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputDateCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ class CadastroPacienteScreen extends StatefulWidget {
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _controllerCadastroPaciente = ControllerCadastroPaciente();
   final _formKey = GlobalKey<FormState>();
+  bool isChecked = false;
 
   @override
   void initState() {
@@ -84,19 +85,11 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                       LengthLimitingTextInputFormatter(50),
                     ],
                   ),
-                  /*InputRadioButtonsCadastroPaciente(
-                  options: const ["Masculino", "Feminino"], 
-                  label: "Gênero",
-                  controller: _controllerCadastroPaciente.genero
-                ),*/
-                  const Padding( //dorpdown padrão, passe a lista e label
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                    child: InputDropdown(list: [
-                      'Masculino',
-                      'Feminino',
-                      'Prefiro não responder'
-                    ], label: 'Gênero'),
-                  ),
+                  // InputRadioButtonsCadastroPaciente(
+                  //   options: const ["Masculino", "Feminino"],
+                  //   label: "Gênero",
+                  //   controller: _controllerCadastroPaciente.genero
+                  // ),
                   InputTextoAcolher(
                     label: "RG (Apenas Números)",
                     controller: _controllerCadastroPaciente.rg,
@@ -127,15 +120,18 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     inputFormatter: [Mask.cpf()],
                     keyboardType: TextInputType.number,
                   ),
-                  InputTextoAcolher(
+                  InputCaixaDeTextoAcolhimento(
                     label: "Motivo do Acolhimento",
                     controller: _controllerCadastroPaciente.motivoAcolhimento,
                   ),
                   InputRadioButtonsCadastroPaciente(
-                      options: const ["Sim", "Não"],
-                      label: "Já teve Acolhimento Anterior",
-                      controller:
-                          _controllerCadastroPaciente.acolhimentoAnterior),
+                    options: const ["Sim", "Não"],
+                    label: "Acolhimento anterior",
+                    controller: TextEditingController(),
+                    optionalController:
+                        _controllerCadastroPaciente.acolhimentoAnterior,
+                    isChecked: isChecked,
+                  ),
                   Container(
                     width: size.width,
                     constraints: BoxConstraints(maxWidth: size.width),
