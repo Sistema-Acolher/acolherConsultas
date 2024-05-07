@@ -1,6 +1,7 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/controllerCadastroPaciente.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputDateCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
@@ -27,6 +28,8 @@ class CadastroPacienteScreen extends StatefulWidget {
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _controllerCadastroPaciente = ControllerCadastroPaciente();
   final _formKey = GlobalKey<FormState>();
+  bool isChecked = false;
+
 
   @override
   void initState() {
@@ -85,11 +88,11 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     LengthLimitingTextInputFormatter(50),
                   ],
                 ),
-                InputRadioButtonsCadastroPaciente(
-                  options: const ["Masculino", "Feminino"], 
-                  label: "Gênero",
-                  controller: _controllerCadastroPaciente.genero
-                ),
+                // InputRadioButtonsCadastroPaciente(
+                //   options: const ["Masculino", "Feminino"], 
+                //   label: "Gênero",
+                //   controller: _controllerCadastroPaciente.genero
+                // ),
                 InputTextoAcolher(
                   label: "RG (Apenas Números)", 
                   controller: _controllerCadastroPaciente.rg,
@@ -126,14 +129,16 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   inputFormatter: [Mask.cpf()],
                   keyboardType: TextInputType.number,
                 ),
-                InputTextoAcolher(
+                InputCaixaDeTextoAcolhimento(
                   label: "Motivo do Acolhimento", 
                   controller: _controllerCadastroPaciente.motivoAcolhimento,
                 ),
                 InputRadioButtonsCadastroPaciente(
                   options: const ["Sim", "Não"], 
                   label: "Acolhimento anterior",
-                  controller: _controllerCadastroPaciente.acolhimentoAnterior
+                  controller: TextEditingController(),
+                  optionalController: _controllerCadastroPaciente.acolhimentoAnterior,
+                  isChecked: isChecked,
                 ),
                 Container(
                   width: size.width,
