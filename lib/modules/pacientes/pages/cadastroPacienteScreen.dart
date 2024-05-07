@@ -1,8 +1,9 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/controllerCadastroPaciente.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
+
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputDateCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsCadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,15 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   //   label: "Gênero",
                   //   controller: _controllerCadastroPaciente.genero
                   // ),
+                  const Padding(
+                    //dorpdown padrão, passe a lista e label
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    child: InputDropdown(list: [
+                      'Masculino',
+                      'Feminino',
+                      'Prefiro não responder'
+                    ], label: 'Gênero'),
+                  ),
                   InputTextoAcolher(
                     label: "RG (Apenas Números)",
                     controller: _controllerCadastroPaciente.rg,
