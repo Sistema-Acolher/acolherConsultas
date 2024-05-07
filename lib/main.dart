@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 // A função main é a função principal do aplicativo, onde são inicializados o aplicativo e o Firebase (até então).
-void main() async{
+void main() async {
   // O método ensureInitialized é responsável por garantir que o Flutter esteja inicializado.
   WidgetsFlutterBinding.ensureInitialized();
 
