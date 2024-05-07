@@ -132,7 +132,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                 ),
                 InputRadioButtonsCadastroPaciente(
                   options: const ["Sim", "Não"], 
-                  label: "Já teve Acolhimento Anterior",
+                  label: "Acolhimento anterior",
                   controller: _controllerCadastroPaciente.acolhimentoAnterior
                 ),
                 Container(
