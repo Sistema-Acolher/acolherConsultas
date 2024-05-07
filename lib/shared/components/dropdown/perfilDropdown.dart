@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
 
 class UserDropdown extends StatefulWidget {
   final String userName;
@@ -62,10 +63,12 @@ class _UserDropdownState extends State<UserDropdown> {
         ),
         onChanged: (value) {
           if (value == 'Sair') {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SairScreen()),
-            );*/
+            /*setState(() {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SairScreen()),
+              );
+            });*/
           }
         },
       ),
