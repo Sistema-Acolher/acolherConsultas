@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class InputRadioButtonsCadastroPaciente extends StatefulWidget {
@@ -25,27 +26,26 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
         Row(
           children: [
             Expanded(
-              flex: 3,
-              child: Text(
-                "${widget.label}:",
-                style: const TextStyle(
-                  fontSize: 10.2,
-                  fontWeight: FontWeight.bold
-                )
+              child: FittedBox(
+                child: Text(
+                  "${widget.label}:",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold
+                  )
+                ),
               ),
             ),
             ...List.generate(
               widget.options.length, 
               (index) => Expanded(
-                flex: 3,
                 child: Opacity(
                   opacity: widget.controller.text == widget.options[index] ? 1.0 : 0.5,
                   child: RadioListTile(
-                    title: Text(
-                      widget.options[index],
-                      style: const TextStyle(
-                        fontSize: 12
-                      )
+                    title: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Text(
+                        widget.options[index],
+                      ),
                     ),
                     value: widget.options[index],
                     groupValue: widget.controller.text,
@@ -67,9 +67,10 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
             ),
           ],
         ),
-        // Aqui a caixa de texto está abaixo do Row, mas ainda dentro da mesma coluna
         if (showTextBox)
-          InputCaixaDeTextoAcolhimento(controller: widget.optionalController!)
+          InputCaixaDeTextoAcolhimento(
+            controller: widget.optionalController!,            
+          )
       ],
     );
   }

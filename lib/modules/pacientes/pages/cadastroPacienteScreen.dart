@@ -138,8 +138,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
                     controller: TextEditingController(),
-                    optionalController:
-                        _controllerCadastroPaciente.acolhimentoAnterior,
+                    optionalController:_controllerCadastroPaciente.acolhimentoAnterior,
                     isChecked: isChecked,
                   ),
                   Container(
