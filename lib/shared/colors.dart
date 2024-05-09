@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const vermelhoEscuro = Color(0xFFFF3131);
+const vermelhoEscuro = Color.fromARGB(255, 136, 22, 22);
 const vermelho = Color(0xFFE53935);
 const verdeEscuro = Color(0xFF24964F);
 const verde = Color(0xFF7ED957);

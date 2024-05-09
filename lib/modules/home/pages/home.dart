@@ -1,9 +1,8 @@
+import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
-import 'package:acolherconsultas/modules/pacientes/pages/pacientesCadastradosScreen.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
-import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 // A classe HomePage é a classe que representa a página inicial do aplicativo.
 class HomePage extends StatefulWidget {
@@ -37,51 +36,63 @@ class _HomePageState extends State<HomePage> {
       ),
       // O body é um widget que implementa o corpo do aplicativo, onde são exibidos os conteúdos da página, abaixo do Appbar.
       // O Center é um widget que centraliza o conteúdo do widget filho.
-      body: Center(
-        // O Column é um widget que organiza os widgets filhos em uma coluna vertical e sem scroll.
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: UserDropdown(
-                  userName: "Nome usuário",
+      body: PersistentTabView(
+        tabs: [
+          PersistentTabConfig(
+            screen: const ConsultasScreen(),
+            item: ItemConfig(
+                icon: const Icon(Icons.medical_information, color: verde),
+                title: "Consultas",
+                textStyle: const TextStyle(color: verde),
+                inactiveForegroundColor: verde,
+                activeForegroundColor: verdeEscuro),
+          ),
+          PersistentTabConfig(
+            screen: _buildPage('Agenda'),
+            item: ItemConfig(
+                icon: const Icon(Icons.date_range, color: vermelho),
+                title: "Agenda",
+                textStyle: const TextStyle(color: vermelho),
+                inactiveForegroundColor: vermelho,
+                activeForegroundColor: vermelhoEscuro),
+          ),
+          PersistentTabConfig(
+            screen:
+                const CadastroPacienteScreen(title: "Cadastro de Pacientes"),
+            item: ItemConfig(
+                icon: const Icon(Icons.menu_book, color: azul),
+                title: "Cadastro",
+                textStyle: const TextStyle(color: azul),
+                inactiveForegroundColor: azul,
+                activeForegroundColor: azulEscuro),
+          ),
+          PersistentTabConfig(
+            screen: _buildPage('Relatório'),
+            item: ItemConfig(
+                icon: const Icon(
+                  Icons.description,
+                  color: cinzaClaro,
                 ),
-              ),
-            ),
-            const CasasDropdown(),
-            TextButton(
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CadastroPacienteScreen(
-                          title: "Cadastro de Pacientes"))),
-              child: const Text(
-                "Cadastro de Pacientes",
-                style: TextStyle(
-                  fontFamily: "BobbyJonesCondensed",
-                  color: vermelhoEscuro,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const PacientesCadastradosScreen())),
-              child: const Text(
-                "Lista de Pacientes Cadastrados",
-                style: TextStyle(
-                  fontFamily: "BobbyJonesSoft",
-                  color: verdeEscuro,
-                ),
-              ),
-            ),
-          ],
+                title: "Relatório",
+                textStyle: const TextStyle(color: cinzaClaro),
+                inactiveForegroundColor: cinzaClaro,
+                activeForegroundColor: cinza),
+          ),
+        ],
+        navBarBuilder: (navBarConfig) => Style1BottomNavBar(
+          navBarDecoration: const NavBarDecoration(color: amarelo),
+          navBarConfig: navBarConfig,
         ),
       ),
     );
   }
+}
+
+Widget _buildPage(String title) {
+  return Center(
+    child: Text(
+      title,
+      style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    ),
+  );
 }

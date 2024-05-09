@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
 
 class UserDropdown extends StatefulWidget {
   final String userName;

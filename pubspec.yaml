@@ -34,6 +34,7 @@ dependencies:
     sdk: flutter
   dropdown_button2: ^2.3.8
   flutter_svg: ^0.22.0
+  persistent_bottom_nav_bar_v2: ^5.2.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
