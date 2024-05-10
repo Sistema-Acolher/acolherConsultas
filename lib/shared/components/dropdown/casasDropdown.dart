@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -16,16 +17,8 @@ class _CasasDropdownState extends State<CasasDropdown> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: amareloNavbar,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
@@ -53,10 +46,13 @@ class _CasasDropdownState extends State<CasasDropdown> {
             ),
           ],
           buttonStyleData: const ButtonStyleData(
-              height: 50, width: 155, padding: EdgeInsets.all(5)),
+            height: 35,
+            width: 180,
+            padding: EdgeInsets.all(5),
+          ),
           dropdownStyleData: DropdownStyleData(
             maxHeight: 200,
-            width: 155,
+            width: 190,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           ),
         ),
@@ -69,15 +65,15 @@ class _CasasDropdownState extends State<CasasDropdown> {
       children: [
         SvgPicture.asset(
           iconPath,
-          width: 24,
-          height: 24,
+          width: 30,
+          height: 30,
         ),
         const SizedBox(width: 8),
         Text(
           text,
           style: const TextStyle(
             fontFamily: "BobbyJonesSoft",
-            fontSize: 16,
+            fontSize: 20,
           ),
         ),
       ],

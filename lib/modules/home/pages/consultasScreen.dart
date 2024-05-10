@@ -1,7 +1,5 @@
 import 'package:acolherconsultas/modules/pacientes/pages/pacientesCadastradosScreen.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
-import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
 import 'package:flutter/material.dart';
 
 class ConsultasScreen extends StatefulWidget {
@@ -18,16 +16,6 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
       // O Column é um widget que organiza os widgets filhos em uma coluna vertical e sem scroll.
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: UserDropdown(
-                userName: "Nome usuário",
-              ),
-            ),
-          ),
-          const CasasDropdown(),
           /*TextButton(
             onPressed: () => Navigator.push(
                 context,

@@ -1,7 +1,8 @@
 import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/navbars/principalNavbar.dart';
+import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
+import 'package:acolherconsultas/shared/components/bars/principalNavbar.dart';
 import 'package:flutter/material.dart';
 
 // A classe HomePage é a classe que representa a página inicial do aplicativo.
@@ -21,15 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: const TextStyle(
-              fontFamily: "Montserrat",
-              fontWeight: FontWeight.bold,
-              color: amareloEscuro),
-        ),
-      ),
+      appBar: const HomeAppbar(),
       //Navbar
       body: CustomNavbar(icons: const [
         Icons.medical_information,
