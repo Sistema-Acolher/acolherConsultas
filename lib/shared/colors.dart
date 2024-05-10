@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
-const vermelhoEscuro = Color.fromARGB(255, 136, 22, 22);
+const vermelhoEscuro = Color.fromARGB(255, 202, 8, 8);
 const vermelho = Color(0xFFE53935);
-const verdeEscuro = Color(0xFF24964F);
+const vermelhoIcon = Color.fromARGB(255, 251, 94, 91);
+const verdeEscuro = Color.fromARGB(255, 24, 117, 60);
 const verde = Color(0xFF7ED957);
+const verdeIcon = Color.fromARGB(255, 114, 187, 82);
 const azulEscuro = Color(0xFF004AAD);
 const azul = Color(0xFF2277AE);
+const azulIcon = Color.fromARGB(255, 66, 129, 171);
 const amareloEscuro = Color(0xFFF5CB05);
 const amarelo = Color(0xFFFFDE59);
+const amareloNavbar = Color.fromARGB(255, 255, 208, 0);
 const preto = Color(0xFF121415);
 const branco = Color(0xFFFCFCFB);
-const cinza = Color(0xFF545454);
+const cinza = Color.fromARGB(255, 89, 87, 87);
 const cinzaClaro = Color(0xFF757575);
+const cinzaIcon = Color.fromARGB(255, 171, 170, 170);
