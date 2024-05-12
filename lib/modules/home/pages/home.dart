@@ -4,6 +4,7 @@ import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/principalNavbar.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // A classe HomePage é a classe que representa a página inicial do aplicativo.
 class HomePage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       appBar: const HomeAppbar(),
       //Navbar
       body: CustomNavbar(icons: const [
-        Icons.medical_information,
+        Symbols.stethoscope,
         Icons.date_range,
         Icons.menu_book,
         Icons.description,

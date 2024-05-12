@@ -1,6 +1,8 @@
 import 'package:acolherconsultas/modules/pacientes/pages/pacientesCadastradosScreen.dart';
 import 'package:acolherconsultas/shared/colors.dart';
+import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class ConsultasScreen extends StatefulWidget {
   const ConsultasScreen({super.key});
@@ -13,23 +15,15 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      // O Column é um widget que organiza os widgets filhos em uma coluna vertical e sem scroll.
       child: Column(
         children: [
-          /*TextButton(
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CadastroPacienteScreen(
-                        title: "Cadastro de Pacientes"))),
-            child: const Text(
-              "Cadastro de Pacientes",
-              style: TextStyle(
-                fontFamily: "BobbyJonesCondensed",
-                color: vermelhoEscuro,
-              ),
-            ),
-          ),*/
+          CircleButton(
+            title: 'Genograma',
+            icon: Symbols.family_history,
+            onPressed: () {
+              // FUnção que o botão executa
+            },
+          ),
           TextButton(
             onPressed: () => Navigator.push(
                 context,
