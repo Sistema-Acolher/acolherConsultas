@@ -1,6 +1,7 @@
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
 import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
+import 'package:acolherconsultas/shared/components/text/textoColorido.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -19,6 +20,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         titlePadding: EdgeInsets.only(left: 16, bottom: 8),
         centerTitle: false,
       ),
+      centerTitle: true,
+      title: TextoColorido(palavra: "titulo"),
       actions: const [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),

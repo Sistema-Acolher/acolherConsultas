@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/core/app.dart';
+import 'package:acolherconsultas/core/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -15,5 +16,5 @@ void main() async {
   );
 
   // O método runApp é responsável por executar o aplicativo.
-  runApp(const MyApp());
+  runApp(MaterialApp(home: SplashScreen()));
 }
