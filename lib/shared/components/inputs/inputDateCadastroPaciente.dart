@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 // O InputDateCadastroPaciente é um componente que representa um campo de data de nascimento e idade de um paciente.
 
 class InputDateCadastroPaciente extends StatefulWidget {
-  const InputDateCadastroPaciente({super.key, required this.label, required this.controllerDataNascimento, required this.controllerIdade});
+  const InputDateCadastroPaciente({super.key, required this.label, required this.controllerDataNascimento, this.controllerIdade});
 
   // Atributos do componente.
   final String label;
   final TextEditingController controllerDataNascimento;
-  final TextEditingController controllerIdade;
+  final TextEditingController? controllerIdade;
 
   @override
   State<InputDateCadastroPaciente> createState() => _InputDateCadastroPacienteState();
@@ -65,7 +65,7 @@ class _InputDateCadastroPacienteState extends State<InputDateCadastroPaciente> {
                 setState(() {
                   // Atribuição da data de nascimento e idade do paciente aos respectivos campos.
                   widget.controllerDataNascimento.text = DateFormat('dd/MM/yyyy').format(data);
-                  widget.controllerIdade.text = Paciente.calcularIdade(data);
+                  widget.controllerIdade!.text = Paciente.calcularIdade(data);
                 });
               }
             }
@@ -76,7 +76,7 @@ class _InputDateCadastroPacienteState extends State<InputDateCadastroPaciente> {
           child: widget.controllerDataNascimento.text != "" ?
           // Campo de idade do paciente. 
           TextFormField(
-            autovalidateMode: widget.controllerIdade.text.isNotEmpty ? AutovalidateMode.always : AutovalidateMode.disabled,
+            autovalidateMode: widget.controllerIdade!.text.isNotEmpty ? AutovalidateMode.always : AutovalidateMode.disabled,
             readOnly: true,
             decoration: const InputDecoration(
               labelText: "Idade",

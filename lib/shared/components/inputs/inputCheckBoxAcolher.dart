@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // Classe que cria um campo de entrada de texto com checkboxes.
-
 class InputCheckBoxAcolher extends StatefulWidget {
-  const InputCheckBoxAcolher({Key? key, required this.options, required this.label, required this.controller});
+  const InputCheckBoxAcolher({
+    super.key,
+    required this.options,
+    required this.label,
+    required this.controller,
+    this.icones
+  });
 
   // Atributos do componente.
   final List<String> options;
   final String label;
   final TextEditingController controller;
+  final List<String>? icones;
 
   @override
   State<InputCheckBoxAcolher> createState() => _InputCheckBoxAcolherState();
@@ -18,44 +25,54 @@ class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
   @override
   Widget build(BuildContext context) {
     // Column é um widget que organiza os widgets filhos em uma coluna vertical.
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            "${widget.label}:",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold
-            )
-          )
+        Text(
+          "${widget.label}:",
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         // List.generate é uma função que gera uma lista de widgets a partir de uma lista de dados.
         ...List.generate(
           // Definição do tamanho da lista de widgets.
-          widget.options.length, 
-          (index) => Expanded(
-            flex: 3,
-            child: CheckboxListTile(
-              title: Text(
-                widget.options[index],
-                style: const TextStyle(
-                  fontSize: 12
-                )
+          widget.options.length,
+          (index) => Row(
+            children: [
+              Checkbox(
+                value: widget.controller.text.contains(widget.options[index]),
+                onChanged: (value) {
+                  setState(() {
+                    // Adiciona ou remove o valor selecionado ao controller de texto.
+                    if (value == true) {
+                      widget.controller.text += "${widget.options[index]},";
+                    } else {
+                      widget.controller.text = widget.controller.text.replaceAll("${widget.options[index]},", "");
+                    }
+                  });
+                },
+              ),             
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.options[index],
+                    style: const TextStyle(
+                      fontFamily: 'BobbyJonesSoft',
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 4.0),
+                  SvgPicture.asset(
+                    widget.icones![index], // Usando o caminho do ícone da lista de caminhos
+                    width: 24.0,
+                    height: 24.0,
+                  ),
+                ],
               ),
-              value: widget.controller.text.contains(widget.options[index]),
-              onChanged: (value) {
-                setState(() {
-                  // Adiciona ou remove o valor selecionado ao controller de texto.
-                  if (value == true) {
-                    widget.controller.text += "${widget.options[index]},";
-                  } else {
-                    widget.controller.text = widget.controller.text.replaceAll("${widget.options[index]},", "");
-                  }
-                });
-              },
-            ),
+            ],
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
+import 'package:acolherconsultas/modules/relatorioCasas/pages/relatorioCasasScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         const ConsultasScreen(),
         _buildPage('Agenda'),
         const CadastroPacienteScreen(title: "Cadastro de Pacientes"),
-        _buildPage('Relatório'),
+        const RelatorioCasasScreen()
       ], activeIconColors: const [
         verdeEscuro,
         vermelhoEscuro,
