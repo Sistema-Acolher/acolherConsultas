@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/list/Consulta.dart';
 import 'package:acolherconsultas/shared/components/list/listaComIconeAcolher.dart';

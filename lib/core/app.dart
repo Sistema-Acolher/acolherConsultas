@@ -1,5 +1,5 @@
 import 'package:acolherconsultas/modules/home/pages/home.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

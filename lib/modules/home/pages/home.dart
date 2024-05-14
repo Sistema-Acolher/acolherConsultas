@@ -1,6 +1,6 @@
 import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
 import 'package:acolherconsultas/modules/relatorioCasas/pages/relatorioCasasScreen.dart';
-import 'package:acolherconsultas/modules/pacientes/pages/cadastroPacienteScreen.dart';
+import 'package:acolherconsultas/modules/pacientes/pages/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/principalNavbar.dart';

@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/pages/pacientesCadastradosScreen.dart';
+import 'package:acolherconsultas/modules/pacientes/pages/pacienteLista.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
 import 'package:flutter/material.dart';

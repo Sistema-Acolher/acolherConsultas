@@ -1,5 +1,5 @@
-import 'package:acolherconsultas/modules/pacientes/controllers/controllerCadastroPaciente.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacientesCadastradosProvider.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastroController.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
