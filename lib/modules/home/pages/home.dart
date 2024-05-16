@@ -1,8 +1,8 @@
 import 'package:acolherconsultas/modules/home/pages/agenda.dart';
 import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
 import 'package:acolherconsultas/modules/home/pages/sumario.dart';
+import 'package:acolherconsultas/modules/pacientes/pages/pacienteLista.dart';
 import 'package:acolherconsultas/modules/relatorioCasas/pages/relatorioCasasScreen.dart';
-import 'package:acolherconsultas/modules/pacientes/pages/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/principalNavbar.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
     return const CustomNavbar(
         icons:              [ Symbols.stethoscope,  Icons.date_range, Icons.home,         Icons.menu_book,          Icons.description], 
         titles:             [ "Consultas",          "Agenda",         " ",                "Cadastro",               "Relatório"], 
-        screens:            [ ConsultasScreen(),    Agenda(),         Sumario(),          CadastroPacienteScreen(), RelatorioCasasScreen()], 
+        screens:            [ ConsultasScreen(),    Agenda(),         Sumario(),          PacientesCadastradosScreen(), RelatorioCasasScreen()], 
         activeIconColors:   [ verdeEscuro,          vermelhoEscuro,   amarelo,            azulEscuro,               cinza], 
         inactiveIconColors: [ verdeIcon,            vermelhoIcon,     amareloEscuro,      azulIcon,                 cinzaIcon]
       );

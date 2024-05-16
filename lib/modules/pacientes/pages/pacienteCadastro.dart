@@ -1,7 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastroController.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
@@ -53,7 +52,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: const PageAppBar(titulo: "Cadastros",),
         body: Center(
           child: Container(
             // Define o espaçamento em volta da decoração e do widget filho do Container.

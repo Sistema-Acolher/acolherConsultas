@@ -1,5 +1,8 @@
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
+import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
+import 'package:acolherconsultas/shared/components/buttons/bigRoundButton.dart';
+import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/list/Consulta.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
@@ -97,9 +100,7 @@ class _PacientesCadastradosScreenState extends State<PacientesCadastradosScreen>
     ),
   ];
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Lista de Pacientes Cadastrados"),
-      ),
+      appBar: const PageAppBar(titulo: "Cadastros",),
       // O RefreshIndicator é um widget que implementa um indicador de atualização. 
       // Ao se fazer o gesto de 'puxar para baixo', a função onRefresh é chamada e a lista é atualizada.
       body: RefreshIndicator(
@@ -107,6 +108,8 @@ class _PacientesCadastradosScreenState extends State<PacientesCadastradosScreen>
         // O ListView.builder é um widget que implementa uma lista de widgets filhos, onde os itens são construídos a partir de uma lista de dados.
         child: ListaSemIconeAcolher(listaObjeto: pacientes)
       ),
+      floatingActionButton: StandartRoundButton(icon: Icons.add_box_outlined, text: "Novo cadastro"),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
