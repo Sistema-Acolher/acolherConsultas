@@ -17,7 +17,13 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 50,
       leading: const Padding(
         padding: EdgeInsets.only(left: 20),
-        child: CasasDropdown(),
+        child: CasasDropdown(
+          casas: [
+            {'name': 'Servos', 'color': Color(0xFF2277AE)},
+            {'name': 'Maria Paola', 'color': Color(0xFFFF0000)},
+            {'name': 'Santa Isabel', 'color': Color(0xFF78B158)},
+          ],
+        ),
       ),
       leadingWidth: 220,
       centerTitle: true,

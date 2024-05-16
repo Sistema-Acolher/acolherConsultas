@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class CasasDropdown extends StatefulWidget {
-  const CasasDropdown({Key? key}) : super(key: key);
+  final List<Map<String, dynamic>> casas;
+
+  const CasasDropdown({Key? key, required this.casas}) : super(key: key);
 
   @override
   _CasasDropdownState createState() => _CasasDropdownState();
@@ -26,43 +28,40 @@ class _CasasDropdownState extends State<CasasDropdown> {
           onChanged: (String? newValue) {
             setState(() {
               _selectedItem = newValue!;
-              _handleSelectedItem(context, newValue);
+              //  _handleSelectedItem(context, newValue);
             });
           },
-          items: [
-            DropdownMenuItem<String>(
-              value: 'Servos',
-              child: _buildMenuItem('Servos',0xFF2277AE),
-            ),
-            DropdownMenuItem<String>(
-              value: 'Maria Paola',
-              child: _buildMenuItem('Maria Paola',0xFFFF0000),
-            ),
-            DropdownMenuItem<String>(
-              value: 'Santa Isabel',
-              child: _buildMenuItem('Santa Isabel',0xFF78B158),
-            ),
-          ],
+          items: widget.casas.map((casa) {
+            return DropdownMenuItem<String>(
+              value: casa['name'],
+              child: _buildMenuItem(casa['name'], casa['color']),
+            );
+          }).toList(),
           buttonStyleData: const ButtonStyleData(
             height: 20,
             width: 180,
           ),
           dropdownStyleData: DropdownStyleData(
-            maxHeight: 200,
+            maxHeight: 200, // se precisar mudar o tamanho do scroll
             width: 220,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            scrollbarTheme: ScrollbarThemeData(
+              thumbVisibility: MaterialStateProperty.all(true),
+              thickness: MaterialStateProperty.all(5),
+              radius: const Radius.circular(8),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildMenuItem(String text,int colorHex) {
+  Widget _buildMenuItem(String text, Color color) {
     return Row(
       children: [
         Icon(
-          Icons.cottage_outlined, 
-          color: Color(colorHex),
+          Icons.cottage_outlined,
+          color: color,
           size: 40,
         ),
         Padding(
@@ -80,31 +79,25 @@ class _CasasDropdownState extends State<CasasDropdown> {
   }
 }
 
-void _handleSelectedItem(BuildContext context, String value) {
+/*void _handleSelectedItem(BuildContext context, String value) {
   switch (value) {
     case 'Servos':
-      /*Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ServosScreen()),
-      );*/
-
-      //print('Você selecionou Servos');
+      );
       break;
     case 'Maria Paola':
-      /*Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MariaPaolaScreen()),
-      );*/
-      //print('Você selecionou Maria Paola');
+      );
       break;
     case 'Santa Isabel':
-      /*Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SantaIsabelScreen()),
-      );*/
-      //print('Você selecionou Santa Isabel');
+      );
       break;
-    default:
-    //print('Erro ao encontrar casa!');
   }
-}
+}*/
