@@ -4,7 +4,7 @@ import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart'
 import 'package:flutter/material.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppbar({Key? key}) : super(key: key);
+  const HomeAppbar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

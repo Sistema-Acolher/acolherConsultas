@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
@@ -45,9 +46,10 @@ class CustomNavbar extends StatelessWidget {
     }
 
     return PersistentTabView(
+      controller: PersistentTabController(initialIndex: 2),
       tabs: tabs,
       navBarBuilder: (navBarConfig) => Style13BottomNavBar(
-        navBarDecoration: const NavBarDecoration(color: Colors.yellow),
+        navBarDecoration: const NavBarDecoration(color: amareloNavbar),
         navBarConfig: navBarConfig,
       ),
     );

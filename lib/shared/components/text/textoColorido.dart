@@ -39,7 +39,10 @@ class _TextoColoridoState extends State<TextoColorido> {
 
     return Text.rich(
       TextSpan(children: char),
-      style: TextStyle(fontFamily: "BobbyJonesSoft"),
+      style: const TextStyle(
+        fontSize: 30,
+        fontFamily: "BobbyJonesSoft"
+      ),
       
     );
   }
