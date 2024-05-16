@@ -46,7 +46,7 @@ class CustomNavbar extends StatelessWidget {
 
     return PersistentTabView(
       tabs: tabs,
-      navBarBuilder: (navBarConfig) => Style1BottomNavBar(
+      navBarBuilder: (navBarConfig) => Style13BottomNavBar(
         navBarDecoration: const NavBarDecoration(color: Colors.yellow),
         navBarConfig: navBarConfig,
       ),

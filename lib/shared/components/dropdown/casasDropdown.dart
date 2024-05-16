@@ -1,6 +1,5 @@
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class CasasDropdown extends StatefulWidget {
@@ -33,26 +32,24 @@ class _CasasDropdownState extends State<CasasDropdown> {
           items: [
             DropdownMenuItem<String>(
               value: 'Servos',
-              child: _buildMenuItem('Servos', 'src/icons/servos.svg'),
+              child: _buildMenuItem('Servos',0xFF2277AE),
             ),
             DropdownMenuItem<String>(
               value: 'Maria Paola',
-              child: _buildMenuItem('Maria Paola', 'src/icons/mariaPaola.svg'),
+              child: _buildMenuItem('Maria Paola',0xFFFF0000),
             ),
             DropdownMenuItem<String>(
               value: 'Santa Isabel',
-              child:
-                  _buildMenuItem('Santa Isabel', 'src/icons/santaIsabel.svg'),
+              child: _buildMenuItem('Santa Isabel',0xFF78B158),
             ),
           ],
           buttonStyleData: const ButtonStyleData(
-            height: 35,
+            height: 20,
             width: 180,
-            padding: EdgeInsets.all(5),
           ),
           dropdownStyleData: DropdownStyleData(
             maxHeight: 200,
-            width: 190,
+            width: 220,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
           ),
         ),
@@ -60,20 +57,22 @@ class _CasasDropdownState extends State<CasasDropdown> {
     );
   }
 
-  Widget _buildMenuItem(String text, String iconPath) {
+  Widget _buildMenuItem(String text,int colorHex) {
     return Row(
       children: [
-        SvgPicture.asset(
-          iconPath,
-          width: 30,
-          height: 30,
+        Icon(
+          Icons.cottage_outlined, 
+          color: Color(colorHex),
+          size: 40,
         ),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: const TextStyle(
-            fontFamily: "BobbyJonesSoft",
-            fontSize: 20,
+        Padding(
+          padding: const EdgeInsets.only(top: 5, left: 5),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontFamily: "BobbyJonesSoft",
+              fontSize: 25,
+            ),
           ),
         ),
       ],

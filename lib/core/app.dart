@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/home/pages/home.dart';
+import 'package:acolherconsultas/core/splashScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "Montserrat",
         ),
         // O home é uma propriedade que define a página inicial do aplicativo.
-        home: const HomePage(title: 'Sistema Acolher Consultas v1.0'),
+        home: SplashScreen(),
       ),
     );
   }

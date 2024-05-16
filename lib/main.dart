@@ -16,5 +16,5 @@ void main() async {
   );
 
   // O método runApp é responsável por executar o aplicativo.
-  runApp(MaterialApp(home: SplashScreen()));
+  runApp(const MyApp());
 }

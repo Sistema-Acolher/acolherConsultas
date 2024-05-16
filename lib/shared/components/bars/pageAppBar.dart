@@ -1,10 +1,9 @@
-import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
 import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
+import 'package:acolherconsultas/shared/components/text/textoColorido.dart';
 import 'package:flutter/material.dart';
 
-class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppbar({Key? key}) : super(key: key);
+class PageAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const PageAppBar({Key? key}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -12,15 +11,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: amareloNavbar,
-      toolbarHeight: 50,
-      leading: const Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: CasasDropdown(),
-      ),
-      leadingWidth: 220,
       centerTitle: true,
+      title: const TextoColorido(palavra: "titulo"),
       actions: const [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),

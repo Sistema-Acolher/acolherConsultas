@@ -17,7 +17,7 @@ class _UserDropdownState extends State<UserDropdown> {
       child: DropdownButton2<String>(
         customButton: const Icon(
           Icons.account_circle,
-          size: 30,
+          size: 40,
           color: Colors.black,
         ),
         items: [
