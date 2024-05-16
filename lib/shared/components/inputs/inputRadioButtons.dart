@@ -1,5 +1,4 @@
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class InputRadioButtonsCadastroPaciente extends StatefulWidget {

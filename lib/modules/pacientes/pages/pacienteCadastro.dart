@@ -4,8 +4,8 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsCadastroPaciente.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';

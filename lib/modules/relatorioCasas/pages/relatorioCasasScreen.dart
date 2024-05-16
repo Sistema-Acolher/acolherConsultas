@@ -1,10 +1,7 @@
 import 'package:acolherconsultas/modules/relatorioCasas/controllers/controllerRelatorioCasas.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputCheckBoxAcolher.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputDateCadastroPaciente.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputTextoAcolher.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCheckBox.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mask/mask/mask.dart';
 
 class RelatorioCasasScreen extends StatefulWidget {

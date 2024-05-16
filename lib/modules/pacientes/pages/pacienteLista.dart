@@ -1,8 +1,7 @@
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
 import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
 import 'package:acolherconsultas/shared/components/list/Consulta.dart';
-import 'package:acolherconsultas/shared/components/list/listaComIconeAcolher.dart';
-import 'package:acolherconsultas/shared/components/list/listaSemIconeAcolher.dart';
+import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

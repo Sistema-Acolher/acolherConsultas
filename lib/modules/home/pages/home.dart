@@ -2,7 +2,7 @@ import 'package:acolherconsultas/modules/home/pages/consultasScreen.dart';
 import 'package:acolherconsultas/modules/relatorioCasas/pages/relatorioCasasScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/pages/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
+import 'package:acolherconsultas/shared/components/bars/homeAppBar.dart';
 import 'package:acolherconsultas/shared/components/bars/principalNavbar.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -21,8 +21,6 @@ class HomePage extends StatefulWidget {
 
 // A classe _HomePageState é a classe que representa o estado da página inicial do aplicativo.
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
