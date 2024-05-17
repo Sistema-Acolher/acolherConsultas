@@ -1,22 +1,18 @@
-import 'package:acolherconsultas/modules/pacientes/pages/pacienteLista.dart';
+import 'package:acolherconsultas/modules/pacientes/views/pacienteLista.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
+import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
+import 'package:acolherconsultas/shared/components/buttons/loginButton.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-class ConsultasScreen extends StatefulWidget {
-  const ConsultasScreen({super.key});
+class Sumario extends StatelessWidget {
+  const Sumario({super.key});
 
-  @override
-  State<ConsultasScreen> createState() => _ConsultasScreenState();
-}
-
-class _ConsultasScreenState extends State<ConsultasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PageAppBar(titulo: "Consultar"),
+      appBar: const HomeAppbar(),
       body: Center(
         child: Column(
           children: [
@@ -31,7 +27,7 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const PacientesCadastradosScreen())),
+                      builder: (context) => const PacienteListaScreen())),
               child: const Text(
                 "Lista de Pacientes Cadastrados",
                 style: TextStyle(
@@ -40,6 +36,7 @@ class _ConsultasScreenState extends State<ConsultasScreen> {
                 ),
               ),
             ),
+            const LoginButton(text: "ENTRAR")
           ],
         ),
       ),

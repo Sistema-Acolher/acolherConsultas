@@ -1,5 +1,5 @@
 
-import 'package:acolherconsultas/modules/home/pages/home.dart';
+import 'package:acolherconsultas/modules/sistema/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 

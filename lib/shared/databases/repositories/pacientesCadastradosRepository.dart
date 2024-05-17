@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
+import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/databases/dataSources/dataSourceCadastroPacientes.dart';
 import 'package:acolherconsultas/shared/databases/firebase/listaPacientesCadastrados/dataSourceFirebaseCadastroPacientes.dart';
 

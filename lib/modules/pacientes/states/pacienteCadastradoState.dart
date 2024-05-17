@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
+import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/databases/repositories/pacientesCadastradosRepository.dart';
 import 'package:flutter/foundation.dart';

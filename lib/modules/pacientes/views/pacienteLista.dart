@@ -1,23 +1,22 @@
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
-import 'package:acolherconsultas/modules/pacientes/models/cadastroPaciente.dart';
+import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
-import 'package:acolherconsultas/shared/components/buttons/bigRoundButton.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/list/Consulta.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// A classe PacientesCadastradosScreen é a tela que exibe a lista de pacientes cadastrados.
-class PacientesCadastradosScreen extends StatefulWidget {
-  const PacientesCadastradosScreen({super.key});
+// A classe PacienteListaScreen é a tela que exibe a lista de pacientes cadastrados.
+class PacienteListaScreen extends StatefulWidget {
+  const PacienteListaScreen({super.key});
 
   @override
-  State<PacientesCadastradosScreen> createState() => _PacientesCadastradosScreenState();
+  State<PacienteListaScreen> createState() => _PacienteListaScreenState();
 }
 
-// A classe _PacientesCadastradosScreenState é a classe que representa o estado da tela de lista de pacientes cadastrados.
-class _PacientesCadastradosScreenState extends State<PacientesCadastradosScreen> {
+// A classe _PacienteListaScreenState é a classe que representa o estado da tela de lista de pacientes cadastrados.
+class _PacienteListaScreenState extends State<PacienteListaScreen> {
 
   // O método initState é chamado quando o estado do widget é inserido na árvore de widgets.
   // Isto é, assim que a tela é construída/chamada.

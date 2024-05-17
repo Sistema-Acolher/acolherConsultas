@@ -24,7 +24,7 @@ class CadastroPacienteScreen extends StatefulWidget {
 // A classe _CadastroPacienteScreenState é a classe que representa o estado da tela de cadastro de pacientes.
 
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
-  final _controllerCadastroPaciente = ControllerCadastroPaciente();
+  final _controllerCadastroPaciente = CadastroPacienteController();
   final _formKey = GlobalKey<FormState>();
   bool isChecked = false;
 

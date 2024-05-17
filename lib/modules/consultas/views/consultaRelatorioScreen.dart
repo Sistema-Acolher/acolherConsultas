@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/relatorioCasas/controllers/controllerRelatorioCasas.dart';
+import 'package:acolherconsultas/modules/consultas/controllers/consultaRelatorioController.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCheckBox.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
@@ -13,7 +13,7 @@ class RelatorioCasasScreen extends StatefulWidget {
 }
 
 class _RelatorioCasasScreenState extends State<RelatorioCasasScreen> {
-  final _controllerRelatorioCasas = ControllerRelatorioCasas();
+  final _controllerRelatorioCasas = ConsultaRelatorioController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
