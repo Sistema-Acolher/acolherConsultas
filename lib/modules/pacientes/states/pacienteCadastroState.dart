@@ -1,10 +1,11 @@
+import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// A classe CadastroPacienteController é a classe que controla os campos do cadastro de pacientes.
-class CadastroPacienteController extends ChangeNotifier {
+// A classe CadastroPacienteState é a classe que controla os campos do cadastro de pacientes.
+class CadastroPacienteState extends ChangeNotifier {
   // Campos do cadastro de pacientes.
   final nome = TextEditingController();
   final genero = TextEditingController();
@@ -25,8 +26,12 @@ class CadastroPacienteController extends ChangeNotifier {
       numeroCartaoSus: numeroCartaoSus.text.trim(),
       cpf: cpf.text.trim(),
       motivoAcolhimento: motivoAcolhimento.text.trim(),
-      acolhimentoAnterior: acolhimentoAnterior.text.trim() == "Sim" ? true : false,
-      dataNascimento: DateFormat('dd/MM/yyyy').parse(dataNascimento.text),
+      acolhimentoAnterior: acolhimentoAnterior.text.trim(),
+      dataNasc: DateFormat('dd/MM/yyyy').parse(dataNascimento.text), 
+      ativo: true, 
+      orientacoes: '', 
+      encaminhamentos: '', 
+      casaDeApoioId: '',
     );
 
     CadastroPaciente cadastroPaciente = CadastroPaciente(

@@ -15,7 +15,7 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
       appBar: PageAppBar(titulo: "Consultar"),
       body: Center(
         child: Text(
-          "Sumario",
+          "Consultar",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       )

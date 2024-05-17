@@ -3,8 +3,8 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/databases/repositories/pacientesCadastradosRepository.dart';
 import 'package:flutter/foundation.dart';
 
-// A classe PacientesCadastradosProvider é a classe que controla os pacientes cadastrados.
-class PacientesCadastradosProvider extends ChangeNotifier {
+// A classe PacientesCadastradosController é a classe que controla os pacientes cadastrados.
+class PacientesCadastradosController extends ChangeNotifier {
   // Repositório de pacientes cadastrados, com métodos de CRUD.
   final _repository = PacientesCadastradosRepository();
 

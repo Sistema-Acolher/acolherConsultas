@@ -1,8 +1,7 @@
-import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
-import 'package:acolherconsultas/shared/components/list/Consulta.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,81 +22,18 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<PacientesCadastradosProvider>().getPacientes();
+    context.read<PacientesCadastradosController>().getPacientes();
   }
 
   // O método _refreshPacientes é responsável por atualizar a lista de pacientes cadastrados.
   Future<void> _refreshPacientes() async {
-    await context.read<PacientesCadastradosProvider>().getPacientes();
+    await context.read<PacientesCadastradosController>().getPacientes();
   }
 
   // O método build é responsável por construir a interface da tela de lista de pacientes cadastrados.
   @override
   Widget build(BuildContext context) {
-    List<CadastroPaciente> pacientes = Provider.of<PacientesCadastradosProvider>(context).pacientes;
-    // Criando uma lista de consultas para teste
-    List<Consulta> consultas = [
-    Consulta(
-      responsavelId: '1',
-      pacienteId: '1',
-      dataHorario: DateTime.now(),
-      estado: 'Agendada',
-    ),
-    Consulta(
-      responsavelId: '2',
-      pacienteId: '2',
-      dataHorario: DateTime.now().add(Duration(days: 1)),
-      estado: 'Confirmada',
-    ),
-    Consulta(
-      responsavelId: '3',
-      pacienteId: '3',
-      dataHorario: DateTime.now().add(Duration(days: 2)),
-      estado: 'Realizada',
-    ),
-    Consulta(
-      responsavelId: '4',
-      pacienteId: '4',
-      dataHorario: DateTime.now().add(Duration(days: 3)),
-      estado: 'Cancelada',
-    ),
-    Consulta(
-      responsavelId: '5',
-      pacienteId: '5',
-      dataHorario: DateTime.now().add(Duration(days: 4)),
-      estado: 'Agendada',
-    ),
-    Consulta(
-      responsavelId: '6',
-      pacienteId: '6',
-      dataHorario: DateTime.now().add(Duration(days: 5)),
-      estado: 'Confirmada',
-    ),
-    Consulta(
-      responsavelId: '',
-      pacienteId: '',
-      dataHorario: DateTime(9999),
-      estado: '',
-    ),
-    Consulta(
-      responsavelId: '8',
-      pacienteId: '8',
-      dataHorario: DateTime.now().add(Duration(days: 7)),
-      estado: 'Cancelada',
-    ),
-    Consulta(
-      responsavelId: '9',
-      pacienteId: '9',
-      dataHorario: DateTime.now().add(Duration(days: 8)),
-      estado: 'Agendada',
-    ),
-    Consulta(
-      responsavelId: '10',
-      pacienteId: '10',
-      dataHorario: DateTime.now().add(Duration(days: 9)),
-      estado: 'Confirmada',
-    ),
-  ];
+    List<CadastroPaciente> pacientes = Provider.of<PacientesCadastradosController>(context).pacientes;
     return Scaffold(
       appBar: const PageAppBar(titulo: "Cadastros",),
       // O RefreshIndicator é um widget que implementa um indicador de atualização. 

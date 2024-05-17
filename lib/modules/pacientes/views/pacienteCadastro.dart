@@ -1,5 +1,5 @@
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastroController.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastradoState.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
@@ -24,7 +24,7 @@ class CadastroPacienteScreen extends StatefulWidget {
 // A classe _CadastroPacienteScreenState é a classe que representa o estado da tela de cadastro de pacientes.
 
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
-  final _controllerCadastroPaciente = CadastroPacienteController();
+  final _stateCadastroPaciente = CadastroPacienteState();
   final _formKey = GlobalKey<FormState>();
   bool isChecked = false;
 
@@ -32,19 +32,19 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   void initState() {
     super.initState();
 
-    _controllerCadastroPaciente.dataNascimento.addListener(() {
+    _stateCadastroPaciente.dataNascimento.addListener(() {
       atualizaControllerIdade();
     });
   }
 
   void atualizaControllerIdade() {
-    if (_controllerCadastroPaciente.dataNascimento.text.length == 10) {
+    if (_stateCadastroPaciente.dataNascimento.text.length == 10) {
       DateTime data = DateFormat('dd/MM/yyyy')
-          .parse(_controllerCadastroPaciente.dataNascimento.text);
+          .parse(_stateCadastroPaciente.dataNascimento.text);
       String dataString = Paciente.calcularIdade(data);
-      _controllerCadastroPaciente.idade.text = dataString;
+      _stateCadastroPaciente.idade.text = dataString;
     } else {
-      _controllerCadastroPaciente.idade.text = "";
+      _stateCadastroPaciente.idade.text = "";
     }
   }
 
@@ -66,7 +66,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   // Cada um dos campos de entrada para o cadastro de pacientes, utilizando os componentes criados.
                   InputTextoAcolher(
                     label: "Nome",
-                    controller: _controllerCadastroPaciente.nome,
+                    controller: _stateCadastroPaciente.nome,
                     keyboardType: TextInputType.name,
                     validation: (value) => Mask.validations
                         .generic(value, error: "Nome inválido", min: 3),
@@ -78,7 +78,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   // InputRadioButtonsCadastroPaciente(
                   //   options: const ["Masculino", "Feminino"],
                   //   label: "Gênero",
-                  //   controller: _controllerCadastroPaciente.genero
+                  //   controller: _stateCadastroPaciente.genero
                   // ),
                   const Padding(
                     //dorpdown padrão, passe a lista e label
@@ -91,7 +91,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   ),
                   InputTextoAcolher(
                     label: "RG (Apenas Números)",
-                    controller: _controllerCadastroPaciente.rg,
+                    controller: _stateCadastroPaciente.rg,
                     keyboardType: TextInputType.number,
                     validation: (value) => Mask.validations
                         .generic(value, error: "RG inválido", min: 8),
@@ -102,7 +102,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   ),
                   InputTextoAcolher(
                     label: "Número do Cartão do SUS",
-                    controller: _controllerCadastroPaciente.numeroCartaoSus,
+                    controller: _stateCadastroPaciente.numeroCartaoSus,
                     validation: (value) => Mask.validations.generic(value,
                         error: "Número do Cartão do SUS inválido", min: 18),
                     inputFormatter: [
@@ -114,20 +114,20 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   ),
                   InputTextoAcolher(
                     label: "CPF",
-                    controller: _controllerCadastroPaciente.cpf,
+                    controller: _stateCadastroPaciente.cpf,
                     validation: (value) => Mask.validations.cpf(value),
                     inputFormatter: [Mask.cpf()],
                     keyboardType: TextInputType.number,
                   ),
                   InputCaixaDeTextoAcolhimento(
                     label: "Motivo do Acolhimento",
-                    controller: _controllerCadastroPaciente.motivoAcolhimento,
+                    controller: _stateCadastroPaciente.motivoAcolhimento,
                   ),
                   InputRadioButtonsCadastroPaciente(
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
                     controller: TextEditingController(),
-                    optionalController:_controllerCadastroPaciente.acolhimentoAnterior,
+                    optionalController:_stateCadastroPaciente.acolhimentoAnterior,
                     isChecked: isChecked,
                   ),
                   Container(
@@ -141,7 +141,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             label: "Data de Nascimento",
                             hintText: "    /    /",
                             controller:
-                                _controllerCadastroPaciente.dataNascimento,
+                                _stateCadastroPaciente.dataNascimento,
                             keyboardType: TextInputType.datetime,
                             icone: Icons.date_range_outlined,
                             validation: (value) => Mask.validations.date(value),
@@ -155,7 +155,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           child: InputTextoAcolher(
                             label: "Idade",
                             hintText: "..a ..m ..d",
-                            controller: _controllerCadastroPaciente.idade,
+                            controller: _stateCadastroPaciente.idade,
                             readOnly: true,
                           ),
                         ),
@@ -164,13 +164,13 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   ),
                   InputTextoAcolher(
                     label: "Senha",
-                    controller: _controllerCadastroPaciente.nome,
+                    controller: _stateCadastroPaciente.nome,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                   ),
                   InputTextoAcolher(
                     label: "Editar",
-                    controller: _controllerCadastroPaciente.nome,
+                    controller: _stateCadastroPaciente.nome,
                     icone: Icons.edit,
                   ),
                   Padding(
@@ -226,9 +226,9 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                                                   // Chama o método de cadastro de paciente do Provider, através
                                                   context
                                                       .read<
-                                                          PacientesCadastradosProvider>()
+                                                          PacientesCadastradosController>()
                                                       .cadastrarPaciente(
-                                                          _controllerCadastroPaciente
+                                                          _stateCadastroPaciente
                                                               .cadastro())
                                                       .then((value) {
                                                     Navigator.pop(context);

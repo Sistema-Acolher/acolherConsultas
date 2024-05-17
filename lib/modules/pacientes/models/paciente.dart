@@ -2,35 +2,42 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart';
 
 // A classe Paciente é a classe que representa um paciente.
 // Ela contém os atributos nome, gênero, número do cartão do SUS, RG, CPF, observações, encaminhamentos, motivo do acolhimento, acolhimento anterior e data de nascimento.
 // Gerada automaticamente pela extensão "Dart Data Class Generator".
 // Possui métodos para converter um objeto Paciente em um Map e vice-versa, além de converter um objeto Paciente em JSON e vice-versa.
 // Além disso, possui um método copyWith para copiar um objeto Paciente e alterar seus atributos, e o método toString, alteração da função == e definição do hashCode.
-class Paciente {
+class Paciente{
   String nome;
-  String genero;
-  String numeroCartaoSus;
-  String rg;
+  bool ativo;
   String cpf;
-  String observacoes;
-  String encaminhamentos;
+  String rg;
+  String numeroCartaoSus;
+  DateTime dataNasc;
+  String genero;
   String motivoAcolhimento;
-  bool acolhimentoAnterior;
-  DateTime dataNascimento;
+  String acolhimentoAnterior;
+  HistoriaPregressa? historiaPregressa;
+  String? orientacoes;
+  String? encaminhamentos;
+  String casaDeApoioId;
 
   Paciente({
     required this.nome,
-    required this.genero,
-    required this.numeroCartaoSus,
-    required this.rg,
+    required this.ativo,
     required this.cpf,
-    required this.dataNascimento,
-    this.observacoes = "",
-    this.encaminhamentos = "",
+    required this.rg,
+    required this.numeroCartaoSus,
+    required this.dataNasc,
+    required this.genero,
     required this.motivoAcolhimento,
     required this.acolhimentoAnterior,
+    this.historiaPregressa,
+    this.orientacoes,
+    this.encaminhamentos,
+    required this.casaDeApoioId,
   });
 
   // Método que calcula a idade do paciente a partir da data de nascimento e retorna uma string com a idade formatada.
@@ -109,67 +116,82 @@ class Paciente {
       numeroCartaoSus: doc['numeroCartaoSus'] as String,
       rg: doc['rg'] as String,
       cpf: doc['cpf'] as String,
-      observacoes: doc['observacoes'] as String,
+      orientacoes: doc['orientacoes'] as String,
       encaminhamentos: doc['encaminhamentos'] as String,
       motivoAcolhimento: doc['motivoAcolhimento'] as String,
-      acolhimentoAnterior: doc['acolhimentoAnterior'] as bool,
-      dataNascimento: doc['dataNascimento'].toDate() as DateTime
+      acolhimentoAnterior: doc['acolhimentoAnterior'] as String,
+      dataNasc: doc['dataNascimento'].toDate() as DateTime, 
+      ativo: doc['ativo'] as bool, 
+      historiaPregressa: doc['historiaPregressa'] as HistoriaPregressa, 
+      casaDeApoioId: doc['casaDeApoioId'] as String,
     );
   }
 
   Paciente copyWith({
     String? nome,
-    String? genero,
-    String? numeroCartaoSus,
-    String? rg,
+    bool? ativo,
     String? cpf,
-    String? observacoes,
-    String? encaminhamentos,
+    String? rg,
+    String? numeroCartaoSus,
+    DateTime? dataNasc,
+    String? genero,
     String? motivoAcolhimento,
-    bool? acolhimentoAnterior,
-    DateTime? dataNascimento,
+    String? acolhimentoAnterior,
+    HistoriaPregressa? historiaPregressa,
+    String? orientacoes,
+    String? encaminhamentos,
+    String? casaDeApoioId,
   }) {
     return Paciente(
       nome: nome ?? this.nome,
-      genero: genero ?? this.genero,
-      numeroCartaoSus: numeroCartaoSus ?? this.numeroCartaoSus,
-      rg: rg ?? this.rg,
+      ativo: ativo ?? this.ativo,
       cpf: cpf ?? this.cpf,
-      observacoes: observacoes ?? this.observacoes,
-      encaminhamentos: encaminhamentos ?? this.encaminhamentos,
+      rg: rg ?? this.rg,
+      numeroCartaoSus: numeroCartaoSus ?? this.numeroCartaoSus,
+      dataNasc: dataNasc ?? this.dataNasc,
+      genero: genero ?? this.genero,
       motivoAcolhimento: motivoAcolhimento ?? this.motivoAcolhimento,
       acolhimentoAnterior: acolhimentoAnterior ?? this.acolhimentoAnterior,
-      dataNascimento: dataNascimento ?? this.dataNascimento,
+      historiaPregressa: historiaPregressa ?? this.historiaPregressa,
+      orientacoes: orientacoes ?? this.orientacoes,
+      encaminhamentos: encaminhamentos ?? this.encaminhamentos,
+      casaDeApoioId: casaDeApoioId ?? this.casaDeApoioId,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'nome': nome,
-      'genero': genero,
-      'numeroCartaoSus': numeroCartaoSus,
-      'rg': rg,
+      'ativo': ativo,
       'cpf': cpf,
-      'observacoes': observacoes,
-      'encaminhamentos': encaminhamentos,
+      'rg': rg,
+      'numeroCartaoSus': numeroCartaoSus,
+      'dataNasc': dataNasc.millisecondsSinceEpoch,
+      'genero': genero,
       'motivoAcolhimento': motivoAcolhimento,
       'acolhimentoAnterior': acolhimentoAnterior,
-      'dataNascimento': dataNascimento,
+      'historiaPregressa': historiaPregressa?.toMap(),
+      'orientacoes': orientacoes,
+      'encaminhamentos': encaminhamentos,
+      'casaDeApoioId': casaDeApoioId,
     };
   }
 
   factory Paciente.fromMap(Map<String, dynamic> map) {
     return Paciente(
       nome: map['nome'] as String,
-      genero: map['genero'] as String,
-      numeroCartaoSus: map['numeroCartaoSus'] as String,
-      rg: map['rg'] as String,
+      ativo: map['ativo'] as bool,
       cpf: map['cpf'] as String,
-      observacoes: map['observacoes'] as String,
-      encaminhamentos: map['encaminhamentos'] as String,
+      rg: map['rg'] as String,
+      numeroCartaoSus: map['numeroCartaoSus'] as String,
+      dataNasc: (map['dataNasc'] as Timestamp).toDate(),
+      genero: map['genero'] as String,
       motivoAcolhimento: map['motivoAcolhimento'] as String,
-      acolhimentoAnterior: map['acolhimentoAnterior'] as bool,
-      dataNascimento: (map['dataNascimento'] as Timestamp).toDate(),
+      acolhimentoAnterior: map['acolhimentoAnterior'] as String,
+      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>): null,
+      orientacoes: map['orientacoes'] != null ? map['orientacoes'] as String: null,
+      encaminhamentos: map['orientacoes'] != null ? map['encaminhamentos'] as String: null,
+      casaDeApoioId: map['casaDeApoioId'] as String,
     );
   }
 
@@ -178,8 +200,8 @@ class Paciente {
   factory Paciente.fromJson(String source) => Paciente.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString(){
-    return 'Paciente(nome: $nome, genero: $genero, numeroCartaoSus: $numeroCartaoSus, rg: $rg, cpf: $cpf, observacoes: $observacoes, encaminhamentos: $encaminhamentos, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, dataNascimento: $dataNascimento, idade: ${calcularIdade(dataNascimento)}';
+  String toString() {
+    return 'Paciente(nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, genero: $genero, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
   }
 
   @override
@@ -188,28 +210,34 @@ class Paciente {
   
     return 
       other.nome == nome &&
-      other.genero == genero &&
-      other.numeroCartaoSus == numeroCartaoSus &&
-      other.rg == rg &&
+      other.ativo == ativo &&
       other.cpf == cpf &&
-      other.observacoes == observacoes &&
-      other.encaminhamentos == encaminhamentos &&
+      other.rg == rg &&
+      other.numeroCartaoSus == numeroCartaoSus &&
+      other.dataNasc == dataNasc &&
+      other.genero == genero &&
       other.motivoAcolhimento == motivoAcolhimento &&
       other.acolhimentoAnterior == acolhimentoAnterior &&
-      other.dataNascimento == dataNascimento;
+      other.historiaPregressa == historiaPregressa &&
+      other.orientacoes == orientacoes &&
+      other.encaminhamentos == encaminhamentos &&
+      other.casaDeApoioId == casaDeApoioId;
   }
 
   @override
   int get hashCode {
     return nome.hashCode ^
-      genero.hashCode ^
-      numeroCartaoSus.hashCode ^
-      rg.hashCode ^
+      ativo.hashCode ^
       cpf.hashCode ^
-      observacoes.hashCode ^
-      encaminhamentos.hashCode ^
+      rg.hashCode ^
+      numeroCartaoSus.hashCode ^
+      dataNasc.hashCode ^
+      genero.hashCode ^
       motivoAcolhimento.hashCode ^
       acolhimentoAnterior.hashCode ^
-      dataNascimento.hashCode;
+      historiaPregressa.hashCode ^
+      orientacoes.hashCode ^
+      encaminhamentos.hashCode ^
+      casaDeApoioId.hashCode;
   }
 }

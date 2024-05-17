@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CustomNavbar(
         icons:              [ Symbols.stethoscope,  Icons.date_range, Icons.home,         Icons.menu_book,          Icons.description], 
-        titles:             [ "Consultas",          "Agenda",         " ",                "Cadastro",               "Relatório"], 
+        titles:             [ "Consultar",          "Agenda",         " ",                "Cadastro",               "Relatório"], 
         screens:            [ ConsultaNovaScreen(), Agenda(),         Sumario(),          PacienteListaScreen(),    RelatorioCasasScreen()], 
         activeIconColors:   [ verdeEscuro,          vermelhoEscuro,   amarelo,            azulEscuro,               cinza], 
         inactiveIconColors: [ verdeIcon,            vermelhoIcon,     amareloEscuro,      azulIcon,                 cinzaIcon]
