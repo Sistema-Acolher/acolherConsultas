@@ -1,4 +1,3 @@
-import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:flutter/material.dart';
