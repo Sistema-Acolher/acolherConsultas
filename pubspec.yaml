@@ -48,6 +48,7 @@ dependencies:
   provider: ^6.1.2
   auto_size_text: ^3.0.0
   another_flutter_splash_screen: ^1.2.0
+  firebase_auth: ^4.19.5
 
 dev_dependencies:
   flutter_test:

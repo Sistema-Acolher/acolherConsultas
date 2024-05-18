@@ -1,11 +1,15 @@
 import 'package:acolherconsultas/modules/sistema/views/home.dart';
+import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
+import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/buttons/loginButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask/mask/mask.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -107,12 +111,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: LoginButton(
                       text: "Entrar", 
                       onPressed: () {
-                        if(_formKey.currentState!.validate()){
-                          Navigator.pushReplacement(
-                            context, 
-                            MaterialPageRoute(builder: (context) => const HomePage())
+                        // Até fazer o cadastro, fica comentado e vai direto para a Home
+                        // if(_formKey.currentState!.validate()){
+                        //   login(context);
+                        // }
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePage()
+                            )
                           );
-                        }
                       },
                       
                     ),
@@ -136,5 +144,77 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  login(BuildContext context) async{
+    try {
+      // Implementar loading aqui
+      NivelAcesso? nivelUsuario = await context.read<UsuarioProvider>().login(
+        _emailController.text.trim().toLowerCase(),
+        _senhaController.text
+      );
+
+      switch (nivelUsuario){
+        case NivelAcesso.admin:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage()
+            )
+          );
+          break;
+        case NivelAcesso.acolher:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage()
+            )
+          );
+          break;
+        case NivelAcesso.casaDeApoio:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage()
+            )
+          );
+          break;
+        default:
+          //Mostrar erro genérico de login
+          break;
+      }
+      } on FirebaseAuthException catch (e) {
+      // TODO: implementar erros de login. Abaixo são apenas exemplos padrões do FirebaseAuth.
+      print(e.code);
+      if (e.code.contains("user-not-found")) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Usuário não encontrado"),
+            backgroundColor: Colors.red,
+          )
+        );
+      } else if(e.code.contains("invalid-password")){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Senha incorreta"),
+            backgroundColor: Colors.red,
+          )
+        );
+      } else if(e.code.contains("invalid-email")){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Email inválido"),
+            backgroundColor: Colors.red,
+          )
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Erro ao realizar login"),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+    }
   }
 }

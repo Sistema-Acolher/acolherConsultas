@@ -1,5 +1,9 @@
+import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
+import 'package:acolherconsultas/modules/usuarios/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
+import 'package:provider/provider.dart';
 
 class UserDropdown extends StatefulWidget {
   final String userName;
@@ -62,12 +66,13 @@ class _UserDropdownState extends State<UserDropdown> {
         ),
         onChanged: (value) {
           if (value == 'Sair') {
-            /*setState(() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SairScreen()),
-              );
-            });*/
+            setState(() {
+              // Até fazer o cadastro, fica comentado
+              // context.read<UsuarioProvider>().logout();
+              // pushWithoutNavBar(context, MaterialPageRoute(
+              //   builder: (context) => const LoginScreen()
+              // ));
+            });
           }
         },
       ),

@@ -1,6 +1,6 @@
 
 import 'package:acolherconsultas/modules/sistema/views/home.dart';
-import 'package:acolherconsultas/modules/sistema/views/login.dart';
+import 'package:acolherconsultas/modules/usuarios/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 
