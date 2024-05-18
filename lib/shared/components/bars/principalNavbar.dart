@@ -46,6 +46,7 @@ class CustomNavbar extends StatelessWidget {
     }
 
     return PersistentTabView(
+      gestureNavigationEnabled: true,
       controller: PersistentTabController(initialIndex: 2),
       tabs: tabs,
       navBarBuilder: (navBarConfig) => Style13BottomNavBar(

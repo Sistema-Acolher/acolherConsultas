@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
+import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
@@ -43,7 +44,16 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
         // O ListView.builder é um widget que implementa uma lista de widgets filhos, onde os itens são construídos a partir de uma lista de dados.
         child: ListaSemIconeAcolher(listaObjeto: pacientes)
       ),
-      floatingActionButton: StandartRoundButton(icon: Icons.add_box_outlined, text: "Novo cadastro"),
+      floatingActionButton: StandartRoundButton(
+        icon: Icons.add_box_outlined, 
+        text: "Novo cadastro",
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CadastroPacienteScreen())
+          );
+        }
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

@@ -74,12 +74,8 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                       FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
                       LengthLimitingTextInputFormatter(50),
                     ],
+                    emptyMessage: "Informe o nome",
                   ),
-                  // InputRadioButtonsCadastroPaciente(
-                  //   options: const ["Masculino", "Feminino"],
-                  //   label: "Gênero",
-                  //   controller: _stateCadastroPaciente.genero
-                  // ),
                   const Padding(
                     //dorpdown padrão, passe a lista e label
                     padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
@@ -99,6 +95,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                       LengthLimitingTextInputFormatter(11),
                     ],
+                    emptyMessage: "Informe o RG",
                   ),
                   InputTextoAcolher(
                     label: "Número do Cartão do SUS",
@@ -111,6 +108,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           hashtag: Hashtag.numbers)
                     ],
                     keyboardType: TextInputType.number,
+                    emptyMessage: "Informe o número do cartão do SUS",
                   ),
                   InputTextoAcolher(
                     label: "CPF",
@@ -118,6 +116,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     validation: (value) => Mask.validations.cpf(value),
                     inputFormatter: [Mask.cpf()],
                     keyboardType: TextInputType.number,
+                    emptyMessage: "Informe o CPF",
                   ),
                   InputCaixaDeTextoAcolhimento(
                     label: "Motivo do Acolhimento",
@@ -139,7 +138,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           flex: 1,
                           child: InputTextoAcolher(
                             label: "Data de Nascimento",
-                            hintText: "    /    /",
+                            placeHolder: "    /    /",
                             controller:
                                 _stateCadastroPaciente.dataNascimento,
                             keyboardType: TextInputType.datetime,
@@ -147,6 +146,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             validation: (value) => Mask.validations.date(value),
                             inputFormatter: [Mask.date()],
                             readOnly: true,
+                            emptyMessage: "Informe a data de nascimento",
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -154,24 +154,14 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           flex: 1,
                           child: InputTextoAcolher(
                             label: "Idade",
-                            hintText: "..a ..m ..d",
+                            placeHolder: "..a ..m ..d",
                             controller: _stateCadastroPaciente.idade,
                             readOnly: true,
+                            emptyMessage: "Informe a idade",
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  InputTextoAcolher(
-                    label: "Senha",
-                    controller: _stateCadastroPaciente.nome,
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                  ),
-                  InputTextoAcolher(
-                    label: "Editar",
-                    controller: _stateCadastroPaciente.nome,
-                    icone: Icons.edit,
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
