@@ -1,6 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/shared/databases/repositories/pacientesCadastradosRepository.dart';
+import 'package:acolherconsultas/shared/databases/repositories/pacienteRepository.dart';
 import 'package:flutter/foundation.dart';
 
 // A classe PacientesCadastradosController é a classe que controla os pacientes cadastrados.

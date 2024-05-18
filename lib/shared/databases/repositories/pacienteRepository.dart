@@ -1,6 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
-import 'package:acolherconsultas/shared/databases/dataSources/dataSourceCadastroPacientes.dart';
-import 'package:acolherconsultas/shared/databases/firebase/dataSourceFirebaseCadastroPacientes.dart';
+import 'package:acolherconsultas/shared/databases/dataSources/dataSourcePaciente.dart';
+import 'package:acolherconsultas/shared/databases/firebase/dataSourceFirebasePaciente.dart';
 
 // Repositório de pacientes cadastrados, com métodos de CRUD e controle de qual fonte de dados será utilizada.
 

@@ -1,11 +1,11 @@
-import 'package:acolherconsultas/shared/databases/dataSources/dataSourceCadastroPacientes.dart';
+import 'package:acolherconsultas/shared/databases/dataSources/dataSourcePaciente.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Class que implementa a classe abstrata DataSourcePacientes, e é responsável por realizar a comunicação com o banco de dados Firebase.
 
 class DataSourceFirebasePacientes extends DataSourcePacientes {
   // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Future<void> atualizar(Map<String, dynamic> paciente) async {
@@ -13,8 +13,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
 
   @override
   Future<String> criar(Map<String, dynamic> paciente) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference<Map<String, dynamic>> pacienteAdicionado = await firestore.collection("pacientes").add(paciente);
+    DocumentReference<Map<String, dynamic>> pacienteAdicionado = await _firestore.collection("pacientes").add(paciente);
 
     return pacienteAdicionado.id;
   }
@@ -26,7 +25,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
   // Quatro métodos que realizam uma query no banco de dados do Firebase Firestore para encontrar um paciente em específico, utilizando diferentes parâmetros.
   @override
   Future<Map<String, dynamic>?> selecionar(String cpf, String rg, String numeroCartaoSus) async {
-    QuerySnapshot querySnapshot = await firestore.collection("pacientes")
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes")
                                           .where("paciente.cpf", isEqualTo: cpf)
                                           .where("paciente.rg", isEqualTo: rg)
                                           .where("paciente.numeroCartaoSus", isEqualTo: numeroCartaoSus)
@@ -41,7 +40,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
 
   @override
   Future<Map<String, dynamic>?> selecionarCpf(String cpf) async {
-    QuerySnapshot querySnapshot = await firestore.collection("pacientes").where("paciente.cpf", isEqualTo: cpf).get();
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.cpf", isEqualTo: cpf).get();
 
     if(querySnapshot.docs.isEmpty){
       return null;
@@ -52,7 +51,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
   
   @override
   Future<Map<String, dynamic>?> selecionarNumeroCartaoSus(String numeroCartaoSus) async {
-    QuerySnapshot querySnapshot = await firestore.collection("pacientes").where("paciente.numeroCartaoSus", isEqualTo: numeroCartaoSus).get();
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.numeroCartaoSus", isEqualTo: numeroCartaoSus).get();
 
     if(querySnapshot.docs.isEmpty){
       return null;
@@ -63,7 +62,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
   
   @override
   Future<Map<String, dynamic>?> selecionarRg(String rg) async {
-    QuerySnapshot querySnapshot = await firestore.collection("pacientes").where("paciente.rg", isEqualTo: rg).get();
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.rg", isEqualTo: rg).get();
 
     if(querySnapshot.docs.isEmpty){
       return null;
@@ -74,8 +73,7 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
 
   @override
   Future<List<Map<String, dynamic>>> selecionarTodos() async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    QuerySnapshot querySnapshot = await firestore.collection("pacientes").get();
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").get();
     List<Map<String, dynamic>> pacientes = [];
 
     for (var element in querySnapshot.docs) {
