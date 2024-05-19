@@ -4,14 +4,20 @@ import 'package:acolherconsultas/shared/databases/firebase/dataSourceFirebaseUsu
 
 class UsuarioRepository {
 
-  // Instância da classe DataSourceConsulta que será utilizada, inicializada com a classe DataSourceFirebaseConsulta.
+  // Instância da classe DataSourceUsuario que será utilizada, inicializada com a classe DataSourceFirebaseUsuario.
   final DataSourceUsuario _dbFirebase = DataSourceFirebaseUsuario();
   // Posteriormente será adicionada uma variável de um banco de dados local.
   
-  // CRUD de pacientes cadastrados, no caso, está sendo utilizado apenas o firebase.
+  // CRUD de usuários cadastrados, no caso, está sendo utilizado apenas o firebase.
 
-  Future<String> criar(Usuario usuario) async {
-    return _dbFirebase.criar(usuario.toMap());
+  Future<Usuario?> criar(Usuario usuario) async {
+    final user = await _dbFirebase.criar(usuario.toMap());
+    
+    if(user != null) {
+      return Usuario.fromMap(user);
+    }
+
+    return null;
   }
 
   Future<void> atualizar(Usuario usuario) async {

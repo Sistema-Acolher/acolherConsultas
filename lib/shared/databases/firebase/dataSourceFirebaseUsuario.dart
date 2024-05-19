@@ -12,10 +12,14 @@ class DataSourceFirebaseUsuario extends DataSourceUsuario {
   }
 
   @override
-  Future<String> criar(Map<String, dynamic> usuario) async {
-    DocumentReference<Map<String, dynamic>> usuarioAdicionado = await _firestore.collection("usuarios").add(usuario);
+  Future<Map<String, dynamic>?> criar(Map<String, dynamic> usuario) async {
+    // Remove o id do map usuário, pois o id é gerado automaticamente pelo Firebase.
+    final id = usuario["id"];
+    usuario.remove("id");
+    // Adiciona o usuário no banco de dados com o nome do documento sendo o id do usuário.
+    await _firestore.collection("usuarios").doc(id).set(usuario);
 
-    return usuarioAdicionado.id;
+    return usuario;
   }
 
   @override
