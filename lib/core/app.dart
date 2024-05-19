@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/core/redirectScreen.dart';
 import 'package:acolherconsultas/core/splashScreen.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
@@ -49,7 +50,10 @@ class MyApp extends StatelessWidget {
           fontFamily: "Montserrat",
         ),
         // O home é uma propriedade que define a página inicial do aplicativo.
-        home: SplashScreen(),
+        home: const SplashScreen(
+          nextScreen: RedirectScreen(),
+          duration: Duration(milliseconds: 3515),
+        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
+import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
 import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppbar({super.key});
@@ -27,11 +29,12 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       leadingWidth: 220,
       centerTitle: true,
-      actions: const [
+      actions: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: UserDropdown(
-            userName: "Nome usuário",
+            // Passa o nome do usuário logado para o componente
+            userName: context.read<UsuarioProvider>().usuarioAtual!.nome,
           ),
         ),
       ],

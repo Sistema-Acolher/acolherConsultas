@@ -1,4 +1,3 @@
-import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:flutter/material.dart';
 
 class UsuarioLoginState {

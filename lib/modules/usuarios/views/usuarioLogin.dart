@@ -1,35 +1,34 @@
-import 'package:acolherconsultas/modules/sistema/views/home.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
-import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
+import 'package:acolherconsultas/modules/usuarios/states/usuarioLoginState.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/buttons/loginButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class UsuarioLoginScreen extends StatefulWidget {
+  const UsuarioLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<UsuarioLoginScreen> createState() => _UsuarioLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _senhaController = TextEditingController();
+  final _usuarioLoginController = UsuarioLoginState();
+
+  // Cores do "gradiente" de cima
   final listaCoresCima = [
     verdeEscuro,
-    Color(0xFF363636),
-    Color(0xFF363636),
+    const Color(0xFF363636),
+    const Color(0xFF363636),
     amarelo,
     amarelo,
     azul,
   ];
+  // Cores do "gradiente" de baixo
   final listaCoresBaixo = [
     vermelho,
     verdeEscuro,
@@ -39,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     amarelo,
   ];
 
+  // Paradas do "gradiente" 
   final listaParadas = [0.25, 0.25, 0.5, 0.5, 0.75, 0.75];
 
   @override
@@ -90,37 +90,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   InputTextoAcolher(
                     label: "Usuário",
                     placeHolder: "Email",
-                    controller: _emailController,
+                    controller: _usuarioLoginController.email,
                     validation: (value) => Mask.validations.email(
                       value,
                       error: "Email inválido"
                     ),
+                    keyboardType: TextInputType.emailAddress,
                     emptyMessage: "Informe o email",
                   ),
                   InputTextoAcolher(
                     label: "Senha", 
                     placeHolder: "Senha",
-                    controller: _senhaController,
+                    controller: _usuarioLoginController.senha,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     emptyMessage: "Informe a senha",
                   ),
-                  SizedBox(height: size.height * 0.01),
+                  SizedBox(height: size.height * 0.03),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: LoginButton(
                       text: "Entrar", 
                       onPressed: () {
-                        // Até fazer o cadastro, fica comentado e vai direto para a Home
-                        // if(_formKey.currentState!.validate()){
-                        //   login(context);
-                        // }
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomePage()
-                            )
-                          );
+                        // Se os campos estiverem válidos, tenta realizar o login
+                        if(_formKey.currentState!.validate()){
+                          login();
+                        }
                       },
                       
                     ),
@@ -146,75 +141,46 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  login(BuildContext context) async{
+  // Função que faz a requisição no firebase para realizar o login
+  // Loga com sucesso ou mostra mensagem de erro
+  login() async{
     try {
-      // Implementar loading aqui
-      NivelAcesso? nivelUsuario = await context.read<UsuarioProvider>().login(
-        _emailController.text.trim().toLowerCase(),
-        _senhaController.text
-      );
-
-      switch (nivelUsuario){
-        case NivelAcesso.admin:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage()
-            )
-          );
-          break;
-        case NivelAcesso.acolher:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage()
-            )
-          );
-          break;
-        case NivelAcesso.casaDeApoio:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const HomePage()
-            )
-          );
-          break;
-        default:
-          //Mostrar erro genérico de login
-          break;
-      }
+        await context.read<UsuarioProvider>().login(
+          _usuarioLoginController.email.text.trim().toLowerCase(),
+          _usuarioLoginController.senha.text
+        );
+        _usuarioLoginController.limparCampos();
       } on FirebaseAuthException catch (e) {
-      // TODO: implementar erros de login. Abaixo são apenas exemplos padrões do FirebaseAuth.
-      print(e.code);
-      if (e.code.contains("user-not-found")) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Usuário não encontrado"),
-            backgroundColor: Colors.red,
-          )
-        );
-      } else if(e.code.contains("invalid-password")){
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Senha incorreta"),
-            backgroundColor: Colors.red,
-          )
-        );
-      } else if(e.code.contains("invalid-email")){
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Email inválido"),
-            backgroundColor: Colors.red,
-          )
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Erro ao realizar login"),
-            backgroundColor: Colors.red,
-          )
-        );
-      }
+        // TODO: implementar erros de login. Abaixo são apenas exemplos padrões do FirebaseAuth.
+        if (e.code.contains("user-not-found")) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Usuário não encontrado"),
+              backgroundColor: Colors.red,
+            )
+          );
+        } else if(e.code.contains("invalid-password")){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Senha incorreta"),
+              backgroundColor: Colors.red,
+            )
+          );
+        } else if(e.code.contains("invalid-email")){
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Email inválido"),
+              backgroundColor: Colors.red,
+            )
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Erro ao realizar login"),
+              backgroundColor: Colors.red,
+            )
+          );
+        }
     }
   }
 }
