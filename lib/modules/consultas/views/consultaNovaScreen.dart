@@ -12,13 +12,12 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: PageAppBar(titulo: "Consultar"),
-      body: Center(
-        child: Text(
-          "Consultar",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      )
-    );
+        appBar: PageAppBar(titulo: "Consultar"),
+        body: Center(
+          child: Text(
+            "Consultar",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ));
   }
 }
