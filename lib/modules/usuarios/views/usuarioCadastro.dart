@@ -21,7 +21,7 @@ class CadastroUsuarioScreen extends StatefulWidget {
 class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usuarioCadastroState = UsuarioCadastroState();
-  bool isChecked = false;
+  ValueNotifier<bool> isCheckedNotifier = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,12 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
         text: "Cadastrar",
         icon: Symbols.book,
         onPressed: (){
-          if (_formKey.currentState!.validate() && _usuarioCadastroState.nivelAcesso.text.isNotEmpty) {
+          if (isCheckedNotifier.value == false){
+            setState(() {
+              isCheckedNotifier.value = true;
+            });
+          }
+          if (_formKey.currentState!.validate()) {
             if(_usuarioCadastroState.senha.text != _usuarioCadastroState.confirmarSenha.text){
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -98,7 +103,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                   ], 
                   label: "Nível de Acesso", 
                   controller: _usuarioCadastroState.nivelAcesso, 
-                  isChecked: isChecked
+                  isChecked: isCheckedNotifier
                 )
               ],
             ),

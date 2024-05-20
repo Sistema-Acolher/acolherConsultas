@@ -11,15 +11,22 @@ class InputCaixaDeTextoAcolhimento extends StatefulWidget {
 }
 
 class _InputCaixaDeTextoAcolhimentoState extends State<InputCaixaDeTextoAcolhimento> {
+  Color corDaCaixa = Colors.black;
+
+  void validate(cor){
+    setState(() {
+      corDaCaixa = cor;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [      
+      children: [
         Container(
           margin: const EdgeInsets.only(top: 20),
           decoration: BoxDecoration(
-            border: Border.all(width: 1.2, color: Colors.black),
+            border: Border.all(width: 1.2, color: corDaCaixa),
           ),
 
           child: Column(
@@ -38,6 +45,14 @@ class _InputCaixaDeTextoAcolhimentoState extends State<InputCaixaDeTextoAcolhime
                 ),
               ),
               TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty){
+                    validate(Colors.red);
+                    return 'Informe o ${widget.label} por favor.';
+                  }
+                  validate(Colors.black);                
+                  return null;
+                },
                 controller: widget.controller,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
