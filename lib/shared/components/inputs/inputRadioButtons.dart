@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:flutter/material.dart';
 
 class InputRadioButtonsCadastroPaciente extends StatefulWidget {
@@ -67,7 +67,7 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
           ],
         ),
         if (showTextBox)
-          InputCaixaDeTextoAcolhimento(
+          InputCaixaDeTexto(
             controller: widget.optionalController!,            
           )
       ],

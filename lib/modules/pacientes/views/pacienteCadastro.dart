@@ -4,7 +4,7 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
-import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +121,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     keyboardType: TextInputType.number,
                     emptyMessage: "Informe o CPF",
                   ),
-                  InputCaixaDeTextoAcolhimento(
+                  InputCaixaDeTexto(
                     label: "Motivo do Acolhimento",
                     controller: _stateCadastroPaciente.motivoAcolhimento,
                   ),
