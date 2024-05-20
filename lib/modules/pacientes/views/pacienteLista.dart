@@ -49,12 +49,12 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
         icon: Icons.add_box_outlined, 
         text: "Novo cadastro",
         onPressed: () {
-            pushWithoutNavBar(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CadastroUsuarioScreen()
-              )
-            );
+          pushWithoutNavBar(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CadastroUsuarioScreen()
+            )
+          );
         }
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

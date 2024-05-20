@@ -48,7 +48,10 @@ class _PacienteAppbar extends State<PacienteAppbar> {
           )
           ,
         if(widget.ativo)
-          const SizedBox() //Adicionar Checkbox
+          const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: SizedBox() //Adicionar Checkbox
+          ) 
       ],
     );
   }
