@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
+import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/usuarios/views/usuarioCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/searchButton.dart';
@@ -75,7 +76,7 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
           pushWithoutNavBar(
             context,
             MaterialPageRoute(
-              builder: (context) => const CadastroUsuarioScreen()
+              builder: (context) => const CadastroPacienteScreen()
             )
           );
         }

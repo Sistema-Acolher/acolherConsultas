@@ -28,7 +28,7 @@ class CadastroPacienteScreen extends StatefulWidget {
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _stateCadastroPaciente = CadastroPacienteState();
   final _formKey = GlobalKey<FormState>();
-  bool isChecked = false;
+  ValueNotifier<bool> isCheckedNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -129,9 +129,9 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
                     controller: TextEditingController(),
-                    optionalController:_stateCadastroPaciente.acolhimentoAnterior,
-                    isChecked: isChecked,
-                  ),
+                    optionalController: _stateCadastroPaciente.acolhimentoAnterior,
+                    isChecked: isCheckedNotifier,
+                  ),                    
                   Container(
                     width: size.width,
                     constraints: BoxConstraints(maxWidth: size.width),
@@ -170,6 +170,11 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                     child: ElevatedButton(
                         onPressed: () {
+                          if (isCheckedNotifier.value == false){
+                            setState(() {
+                              isCheckedNotifier.value = true;
+                            });
+                          }
                           // Se o formulário for válido, exibe um diálogo de confirmação.
                           if (_formKey.currentState!.validate()) {
                             showDialog(

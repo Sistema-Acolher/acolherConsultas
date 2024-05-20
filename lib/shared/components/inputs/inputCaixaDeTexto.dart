@@ -22,16 +22,23 @@ class InputCaixaDeTexto extends StatefulWidget {
 }
 
 class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
+  Color corDaCaixa = Colors.black;
+
+  void validate(cor){
+    setState(() {
+      corDaCaixa = cor;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 12,right: 12,top: 6,bottom: 0),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          top:    BorderSide(width:1.2, color: Colors.black),
-          left:   BorderSide(width:1.2, color: Colors.black),
-          right:  BorderSide(width:1.2, color: Colors.black),
-          bottom: BorderSide(width:2, color: Colors.black),
+          top:    BorderSide(width:1.2, color: corDaCaixa),
+          left:   BorderSide(width:1.2, color: corDaCaixa),
+          right:  BorderSide(width:1.2, color: corDaCaixa),
+          bottom: BorderSide(width:2,   color: corDaCaixa),
         ),
       ),
       child: Column(
@@ -47,6 +54,14 @@ class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
             ),
           ),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty){
+                validate(Colors.red);
+                return 'Informe o ${widget.label} por favor.';
+              }
+              validate(Colors.black);                
+              return null;
+            },
             controller: widget.controller,
             maxLines: null,
             keyboardType: TextInputType.multiline,
