@@ -1,10 +1,11 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
-import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
+import 'package:acolherconsultas/modules/usuarios/views/usuarioCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
 // A classe PacienteListaScreen é a tela que exibe a lista de pacientes cadastrados.
@@ -48,10 +49,12 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
         icon: Icons.add_box_outlined, 
         text: "Novo cadastro",
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CadastroPacienteScreen())
-          );
+            pushWithoutNavBar(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CadastroUsuarioScreen()
+              )
+            );
         }
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

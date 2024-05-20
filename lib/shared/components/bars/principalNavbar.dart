@@ -10,13 +10,13 @@ class CustomNavbar extends StatelessWidget {
   final List<Color> inactiveIconColors;
 
   const CustomNavbar({
-    Key? key,
+    super.key,
     required this.icons,
     required this.titles,
     required this.screens,
     required this.activeIconColors,
     required this.inactiveIconColors,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class CustomNavbar extends StatelessWidget {
       gestureNavigationEnabled: true,
       controller: PersistentTabController(initialIndex: 2),
       tabs: tabs,
-      navBarBuilder: (navBarConfig) => Style13BottomNavBar(
+      navBarBuilder: (navBarConfig) => Style15BottomNavBar(
         navBarDecoration: const NavBarDecoration(color: amareloNavbar),
         navBarConfig: navBarConfig,
       ),

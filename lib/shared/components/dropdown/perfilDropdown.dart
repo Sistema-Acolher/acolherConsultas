@@ -1,8 +1,6 @@
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
-import 'package:acolherconsultas/modules/usuarios/views/usuarioCadastro.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
 class UserDropdown extends StatefulWidget {
@@ -70,13 +68,6 @@ class _UserDropdownState extends State<UserDropdown> {
               // Desloga o usuário e redireciona para a tela de login
               context.read<UsuarioProvider>().logout();
             });
-          } else if(value == "Divider"){
-            pushWithoutNavBar(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CadastroUsuarioScreen()
-              )
-            );
           }
         },
       ),

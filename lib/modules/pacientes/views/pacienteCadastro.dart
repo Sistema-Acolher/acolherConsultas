@@ -1,6 +1,7 @@
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTextoAcolhimento.dart';
@@ -15,7 +16,8 @@ import 'package:provider/provider.dart';
 // A classe CadastroPacienteScreen é a tela de cadastro de pacientes.
 
 class CadastroPacienteScreen extends StatefulWidget {
-  const CadastroPacienteScreen({super.key});
+  final Paciente? paciente;
+  const CadastroPacienteScreen({super.key, this.paciente});
 
   @override
   State<CadastroPacienteScreen> createState() => _CadastroPacienteScreenState();
@@ -52,6 +54,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: PacienteAppbar(paciente: widget.paciente,),
         body: Center(
           child: Container(
             // Define o espaçamento em volta da decoração e do widget filho do Container.

@@ -1,6 +1,6 @@
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/states/usuarioCadastroState.dart';
-import 'package:acolherconsultas/shared/colors.dart';
+import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
@@ -26,6 +26,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const PacienteAppbar(),
       resizeToAvoidBottomInset: false,
       floatingActionButton: StandartRoundButton(
         text: "Cadastrar",
@@ -44,10 +45,6 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
             }
           }
         },
-      ),
-      appBar: AppBar(
-        title: const Text("Cadastro de Usuário"),
-        backgroundColor: amareloNavbar,
       ),
       body: Center(
         child: Container(

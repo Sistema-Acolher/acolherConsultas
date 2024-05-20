@@ -1,17 +1,15 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:acolherconsultas/modules/sistema/views/homePaciente.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ListaSemIconeAcolher<T> extends StatefulWidget {
-  const ListaSemIconeAcolher({Key? key, required this.listaObjeto});
+  const ListaSemIconeAcolher({super.key, required this.listaObjeto});
 
   final List<T> listaObjeto;
 
   @override
-  _ListaSemIconeAcolherState<T> createState() =>
-      _ListaSemIconeAcolherState<T>();
+  _ListaSemIconeAcolherState<T> createState() => _ListaSemIconeAcolherState<T>();
 }
 
 class _ListaSemIconeAcolherState<T> extends State<ListaSemIconeAcolher<T>> {
@@ -39,7 +37,11 @@ class _ListaSemIconeAcolherState<T> extends State<ListaSemIconeAcolher<T>> {
           Divider(color: Colors.grey), // Linha horizontal cinza
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => HomePaciente(paciente: item.paciente))
+        );
+      },
     );
   } else if(item is Consulta) {
     final horario = TimeOfDay.fromDateTime(item.dataHorario).format(context); //so o horario da consulta
