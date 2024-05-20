@@ -1,12 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/dropdown/casasDropdown.dart';
 import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeAppbar({super.key});
+  final bool admin;
+  const HomeAppbar({super.key, this.admin=false});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -17,9 +20,9 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: amareloNavbar,
       toolbarHeight: 50,
-      leading: const Padding(
-        padding: EdgeInsets.only(left: 20),
-        child: CasasDropdown(
+      leading:  Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: admin?const CasaItem(text: "Admin", color: Color(0xFF7A7A7A)):const CasasDropdown(
           casas: [
             {'name': 'Servos', 'color': Color(0xFF2277AE)},
             {'name': 'Maria Paola', 'color': Color(0xFFFF0000)},
