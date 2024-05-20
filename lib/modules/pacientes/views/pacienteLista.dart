@@ -2,6 +2,7 @@ import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastrad
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/usuarios/views/usuarioCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
+import 'package:acolherconsultas/shared/components/buttons/searchButton.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
 import 'package:flutter/material.dart';
@@ -40,11 +41,33 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
       appBar: const PageAppBar(titulo: "Cadastros",),
       // O RefreshIndicator é um widget que implementa um indicador de atualização. 
       // Ao se fazer o gesto de 'puxar para baixo', a função onRefresh é chamada e a lista é atualizada.
-      body: RefreshIndicator(
-        onRefresh: _refreshPacientes,
-        // O ListView.builder é um widget que implementa uma lista de widgets filhos, onde os itens são construídos a partir de uma lista de dados.
-        child: ListaSemIconeAcolher(listaObjeto: pacientes)
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Spacer(), //direita
+                SearchButton(
+                  icon: Icons.search,
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    print('SearchButton');
+                  },
+                ),
+              ]
+            ),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshPacientes,
+              // O ListView.builder é um widget que implementa uma lista de widgets filhos, onde os itens são construídos a partir de uma lista de dados.
+              child: ListaSemIconeAcolher(listaObjeto: pacientes)
+            ),
+          ),
+        ],
       ),
+
       floatingActionButton: StandartRoundButton(
         icon: Icons.add_box_outlined, 
         text: "Novo cadastro",
