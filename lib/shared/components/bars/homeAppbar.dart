@@ -9,7 +9,7 @@ import 'package:acolherconsultas/shared/components/dropdown/perfilDropdown.dart'
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool admin;
-  const HomeAppbar({super.key, this.admin=false});
+  const HomeAppbar({super.key, this.admin = false});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -20,15 +20,17 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       backgroundColor: amareloNavbar,
       toolbarHeight: 50,
-      leading:  Padding(
+      leading: Padding(
         padding: const EdgeInsets.only(left: 20),
-        child: admin?const CasaItem(text: "Admin", color: Color(0xFF7A7A7A)):const CasasDropdown(
-          casas: [
-            {'name': 'Servos', 'color': Color(0xFF2277AE)},
-            {'name': 'Maria Paola', 'color': Color(0xFFFF0000)},
-            {'name': 'Santa Isabel', 'color': Color(0xFF78B158)},
-          ],
-        ),
+        child: admin
+            ? const CasaItem(text: "Admin", color: 0xFF7A7A7A)
+            : const CasasDropdown(
+                casas: [
+                  {'name': 'Servos', 'color': 0xFF2277AE},
+                  {'name': 'Maria Paola', 'color': 0xFFFF0000},
+                  {'name': 'Santa Isabel', 'color': 0xFF78B158},
+                ],
+              ),
       ),
       leadingWidth: 220,
       centerTitle: true,
@@ -37,7 +39,9 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: UserDropdown(
             // Passa o nome do usuário logado para o componente
-            userName: context.read<UsuarioProvider>().usuarioAtual!.nome,
+            // userName: context.read<UsuarioProvider>().usuarioAtual!.nome,
+            userName: context.read<UsuarioProvider>().usuarioAtual?.nome ??
+                'Nome usuario',
           ),
         ),
       ],

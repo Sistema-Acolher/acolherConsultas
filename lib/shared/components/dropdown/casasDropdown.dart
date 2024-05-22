@@ -34,7 +34,7 @@ class _CasasDropdownState extends State<CasasDropdown> {
           items: widget.casas.map((casa) {
             return DropdownMenuItem<String>(
               value: casa['name'],
-              child: CasaItem(text:casa['name'], color:casa['color']),
+              child: CasaItem(text: casa['name'], color: casa['color']),
             );
           }).toList(),
           buttonStyleData: const ButtonStyleData(
@@ -59,18 +59,22 @@ class _CasasDropdownState extends State<CasasDropdown> {
 
 class CasaItem extends StatelessWidget {
   final String text;
-  final Color color;
+  final int color;
   final bool reverse;
-  const CasaItem({super.key, required this.text, required this.color, this.reverse=false});
+  const CasaItem(
+      {super.key,
+      required this.text,
+      required this.color,
+      this.reverse = false});
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: reverse?TextDirection.rtl:TextDirection.ltr,
+      textDirection: reverse ? TextDirection.rtl : TextDirection.ltr,
       children: [
         Icon(
           Icons.cottage_outlined,
-          color: color,
+          color: Color(color),
           size: 40,
         ),
         Padding(
