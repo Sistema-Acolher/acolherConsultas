@@ -76,7 +76,7 @@ class _CalendarioState extends State<Calendario> {
       consultasDoDia.clear();
       consultasDoDia.addAll(Provider.of<ConsultaController>(context, listen: false).consultas.where((element) =>element.dataHorario.day==selectedDay.day).toList());
     });
-    _dialogBuilder(context);
+    _dialogBuilder(context,selectedDay);
   }
 
   @override
@@ -215,14 +215,14 @@ class _CalendarioState extends State<Calendario> {
   }
 
   // Dialog que abre a lista de horários do dia.
-  Future<void> _dialogBuilder(BuildContext context) {
+  Future<void> _dialogBuilder(BuildContext context, DateTime selectedDay) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: const EdgeInsets.all(10),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-          content: ListaHorario(consultasDoDia: consultasDoDia, paciente: widget.paciente)
+          content: ListaHorario(consultasDoDia: consultasDoDia, paciente: widget.paciente, dia: selectedDay)
         );
       },
     );

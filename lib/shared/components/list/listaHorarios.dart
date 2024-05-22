@@ -8,11 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ListaHorario extends StatefulWidget {
+  final DateTime? dia;
   final List<Consulta> consultasDoDia;
   final Paciente? paciente;
 
   const ListaHorario({
-    super.key, required this.consultasDoDia, this.paciente
+    super.key, required this.consultasDoDia, this.paciente, this.dia
   });
 
   @override
@@ -93,6 +94,15 @@ class _ListaHorarioState extends State<ListaHorario> {
   }
 
   Future<void> _dialogBuilder(BuildContext context, String pacienteNome, DateTime horario) {
+    if(widget.dia !=null){
+      horario = DateTime(
+        widget.dia!.year,
+        widget.dia!.month,
+        widget.dia!.day,
+        horario.hour,
+        horario.minute
+      );
+    }
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
