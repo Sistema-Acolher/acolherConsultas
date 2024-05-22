@@ -1,70 +1,58 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
-import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/sistema/views/homePaciente.dart';
 import 'package:flutter/material.dart';
 
-class ListaSemIconeAcolher<T> extends StatefulWidget {
-  const ListaSemIconeAcolher({super.key, required this.listaObjeto});
+class ListaSemIcone extends StatelessWidget {
+  const ListaSemIcone({super.key, required this.listaObjeto});
 
-  final List<T> listaObjeto;
+  final List<CadastroPaciente> listaObjeto;
 
-  @override
-  _ListaSemIconeAcolherState<T> createState() => _ListaSemIconeAcolherState<T>();
-}
-
-class _ListaSemIconeAcolherState<T> extends State<ListaSemIconeAcolher<T>> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.listaObjeto.length,
-      itemBuilder: (context, index) {
-        final item = widget.listaObjeto[index];
-        return ListTile(
-          title: _getTitle(item),
-        );
-      },
-    );
-  }
-
-  Widget _getTitle(T item) {
-    if (item is CadastroPaciente) {
-    return ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(item.paciente.nome),
-          SizedBox(height: 0), 
-          Divider(color: Colors.grey), // Linha horizontal cinza
-        ],
-      ),
-      onTap: () {
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(builder: (context) => HomePaciente(paciente: item.paciente))
-        );
-      },
-    );
-  } else if(item is Consulta) {
-    final horario = TimeOfDay.fromDateTime(item.dataHorario).format(context); //so o horario da consulta
-      return ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  List<Widget> data(BuildContext context){
+    List<Widget> listaWidgets=[];
+    for (var item in listaObjeto) {
+      listaWidgets.add(
+        Padding(
+          padding: EdgeInsets.only(top: item!=listaObjeto.first?8.0:0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(item.pacienteId), 
-              Text(horario), 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(builder: (context) => HomePaciente(paciente: item.paciente))
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        item.paciente.nome,
+                        textAlign: TextAlign.start,
+                        style: const TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 20
+                        )
+                      ),
+                    )
+                  ),
+                ],
+              ),
+              item!=listaObjeto.last?const Divider(thickness: 1, height: 0,color: Color(0x1E212121),):const SizedBox.shrink()
             ],
           ),
-          SizedBox(height: 4), 
-          Divider(color: Colors.grey), 
-        ],
-      ),
-      onTap: () {
-      },
-    );
-    }else{
-      return Container();
+        )
+      );
     }
+    return listaWidgets;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+  return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: data(context),
+    );
   }
 }

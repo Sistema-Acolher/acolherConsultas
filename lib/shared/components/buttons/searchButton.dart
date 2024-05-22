@@ -22,37 +22,25 @@ class SearchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return IconButton(
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(backgroundColor),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           EdgeInsets.symmetric(
-              horizontal: horizontalPaddingFactor * 2,
-              vertical: verticalPaddingFactor * 2),
+            vertical: verticalPaddingFactor * 8),
         ),
         shape: MaterialStateProperty.all<OutlinedBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(4.0),
           ),
         ),
       ),
-      child: ButtonBar(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            Align(
-              alignment: Alignment.center,
-              child: Icon(
-              icon,
-              color: Colors.white,
-              size: iconSizeFactor * 20,
-            ),
-            ),
-          ],
-        ],
-      ),
-    
+      icon: Icon(
+        icon,
+        color: Colors.white,
+        size: iconSizeFactor * 25,
+      )
     );
   }
 }
