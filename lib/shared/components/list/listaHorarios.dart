@@ -11,9 +11,10 @@ class ListaHorario extends StatefulWidget {
   final DateTime? dia;
   final List<Consulta> consultasDoDia;
   final Paciente? paciente;
+  final bool fundo;
 
   const ListaHorario({
-    super.key, required this.consultasDoDia, this.paciente, this.dia
+    super.key, required this.consultasDoDia, this.paciente, this.dia, this.fundo =false
   });
 
   @override
@@ -87,9 +88,16 @@ class _ListaHorarioState extends State<ListaHorario> {
     var pacientes=Provider.of<PacientesCadastradosController>(context).pacientes;
     widget.consultasDoDia.sort((a,b)=>a.dataHorario.compareTo(b.dataHorario));
     
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: data(pacientes)
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.fundo?Colors.white:null,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: data(pacientes)
+      ),
     );
   }
 

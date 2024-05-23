@@ -49,6 +49,7 @@ dependencies:
   auto_size_text: ^3.0.0
   another_flutter_splash_screen: ^1.2.0
   firebase_auth: ^4.19.5
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:

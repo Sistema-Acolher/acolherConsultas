@@ -220,7 +220,7 @@ class _CalendarioState extends State<Calendario> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.all(10),
+          contentPadding: const EdgeInsets.all(2),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
           content: ListaHorario(consultasDoDia: consultasDoDia, paciente: widget.paciente, dia: selectedDay)
         );
