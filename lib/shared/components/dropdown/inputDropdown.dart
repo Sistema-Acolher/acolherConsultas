@@ -4,9 +4,9 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 class InputDropdown extends StatefulWidget {
   final List<String> list;
   final String label;
+  final ValueNotifier<bool> checkNotifier; 
 
-  const InputDropdown({Key? key, required this.list, required this.label})
-      : super(key: key);
+  const InputDropdown({super.key, required this.list, required this.label, required this.checkNotifier});
 
   @override
   _InputDropdownState createState() => _InputDropdownState();
@@ -14,6 +14,7 @@ class InputDropdown extends StatefulWidget {
 
 class _InputDropdownState extends State<InputDropdown> {
   String? _selectedItem;
+  bool mostrarErro = true;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,8 @@ class _InputDropdownState extends State<InputDropdown> {
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedItem = newValue;
+                  widget.checkNotifier.value = true;
+                  mostrarErro = false;
                 });
               },
               buttonStyleData: ButtonStyleData(
@@ -73,6 +76,14 @@ class _InputDropdownState extends State<InputDropdown> {
             ),
           ),
         ),
+        if (mostrarErro && widget.checkNotifier.value)
+          const Text(
+            'Selecione pelo menos uma opção.',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 13,
+            ),
+          ),
       ],
     );
   }

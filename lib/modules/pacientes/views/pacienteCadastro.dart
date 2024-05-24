@@ -30,7 +30,8 @@ class CadastroPacienteScreen extends StatefulWidget {
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _stateCadastroPaciente = CadastroPacienteState();
   final _formKey = GlobalKey<FormState>();
-  ValueNotifier<bool> isCheckedNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> dropdownNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -62,9 +63,14 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
         text: "Salvar",
         icon: Symbols.book,
         onPressed:  () {
-          if (isCheckedNotifier.value == false){
+          if (radiobuttonNotifier.value == false){
+            setState(() {              
+              radiobuttonNotifier.value = true;
+            });
+          }
+          if (dropdownNotifier.value == false){
             setState(() {
-              isCheckedNotifier.value = true;
+              dropdownNotifier.value = true;
             });
           }
           // Se o formulário for válido, exibe um diálogo de confirmação.
@@ -243,15 +249,16 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom:15.0),
+                Padding(
+                  padding: const EdgeInsets.only(bottom:15.0),
                   child: InputDropdown(
                     label: 'Gênero',
-                    list: [
+                    list: const [
                       'Masculino',
                       'Feminino',
                       'Prefiro não responder'
-                    ]
+                    ],
+                    checkNotifier: dropdownNotifier,
                   ),
                 ),
                 InputCaixaDeTexto(
@@ -263,7 +270,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   label: "Acolhimento anterior",
                   controller: TextEditingController(),
                   optionalController: _stateCadastroPaciente.acolhimentoAnterior,
-                  isChecked: isCheckedNotifier,
+                  isChecked: radiobuttonNotifier,
                 ),
               ],
             ),
