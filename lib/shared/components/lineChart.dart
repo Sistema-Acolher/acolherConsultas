@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import "package:collection/collection.dart";
-
-import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 
 class ConsultasLineChart extends StatefulWidget {
   const ConsultasLineChart({super.key});
@@ -16,30 +16,27 @@ class ConsultasLineChart extends StatefulWidget {
 }
 
 class _ConsultasLineChartState extends State<ConsultasLineChart> {
-  late ValueNotifier<List<FlSpot>> displayedData;
-  String dropdownValue = '7 dias';
-
+  // Data de hoje
   DateTime endDate = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  // Intervalo da legenda do eixo x do gráfico de acordo com a quantidade de dias
+  Map<int, double> intervalGraph = { 10: 1.5, 11: 1.7, 12: 1.9, 13: 2.0, 14: 2.2, 15: 2.4, 16: 2.5, 17: 2.7, 18: 2.9, 19: 3.0, 20: 3.2, 21: 3.4, 22: 3.5, 23: 3.7, 24: 3.9, 25: 4.1, 26: 4.3, 27: 4.5, 28: 4.7, 29: 4.7,};
+  late ValueNotifier<List<FlSpot>> displayedData;
+  late Map<DateTime,double> consultasPdia;
+  String dropdownValue = '7 dias';
 
   @override
   void initState() {
     super.initState();
     displayedData = ValueNotifier([]);
-    context.read<ConsultaController>().getConsultas();
-    updateDisplayedData();
+    loadConsultas();
   }
 
-  void loadConsultas(diasAtras){
+  void createPoints(int diasAtras){
     DateTime startDate = endDate.subtract(Duration(days: diasAtras));
-    // Mapeia as consultas do banco em quantidade por dia
-    Map<DateTime,double> consultasPDia = Provider.of<ConsultaController>(context, listen: false).consultas
-      .where((element) => 
-        element.dataHorario.isAfter(startDate) && 
-        element.dataHorario.isBefore(endDate) &&
-        element.estado == "concluida")
-      .sortedBy((element) => element.dataHorario)
-      .groupListsBy((element) => DateTime.utc(element.dataHorario.year,element.dataHorario.month,element.dataHorario.day))
-      .map((key, value) => MapEntry(key, value.length.toDouble()));
+
+    var consultas=consultasPdia;
+    consultas.removeWhere((key, value) => key.isBefore(startDate));
+
     int numberOfDays = endDate.difference(startDate).inDays;
     var displayedDias = List.generate(numberOfDays, (index) => startDate.add(Duration(days: index)));
 
@@ -47,7 +44,7 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
     double counter = 0;
     // Transforma map em lista de pontos, adicionando dias não presentes como 0
     for (var element in displayedDias) {
-      listaTemp.add(FlSpot(counter, consultasPDia[element]??0));
+      listaTemp.add(FlSpot(counter, consultas[element]??0));
       counter++;
     }
     // Reseta os dados carregados
@@ -55,24 +52,38 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
     displayedData.value=listaTemp;
   }
 
-    void updateDisplayedData() {
-      setState(() {
-        switch (dropdownValue) {
-          case 'Mês Atual':
-            loadConsultas(DateTime.now().day-1);
-            break;
-          case '30 dias':
-            loadConsultas(30);
-            break;
-          case '90 dias':
-            loadConsultas(90);
-            break;
-          case '7 dias':
-            loadConsultas(7);
-            break;
-        }
-      });
-    }
+  void loadConsultas(){
+    // Mapeia as consultas do banco em quantidade por dia
+    consultasPdia = Provider.of<ConsultaController>(context, listen: false).consultas
+      .where((element) => 
+        element.dataHorario.isAfter(endDate.subtract(const Duration(days: 90))) && 
+        element.dataHorario.isBefore(endDate) &&
+        element.estado == "concluida")
+      .sorted((a, b) => a.dataHorario.compareTo(b.dataHorario))
+      .groupListsBy((element) => DateTime.utc(element.dataHorario.year,element.dataHorario.month,element.dataHorario.day))
+      .map((key, value) => MapEntry(key, value.length.toDouble()));
+      
+    updateDisplayedData();
+  }
+
+  void updateDisplayedData() {
+    setState(() {
+      switch (dropdownValue) {
+        case 'Mês Atual':
+          createPoints(DateTime.now().day-1);
+          break;
+        case '30 dias':
+          createPoints(30);
+          break;
+        case '90 dias':
+          createPoints(90);
+          break;
+        case '7 dias':
+          createPoints(7);
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +130,6 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
               ],
             ),
           ),
-          // Escuta a variavel displayedData (lista de quantidade de consultas por dia)
           ValueListenableBuilder<List<FlSpot>>(
             valueListenable: displayedData,
             builder: (context,data,child) {
@@ -178,7 +188,7 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                       // Legenda de baixo
                       bottomTitles: AxisTitles(
                         sideTitles:  SideTitles(
-                          interval: data.length>30?15:null,
+                          interval: data.length>30?15:data.length>=10?intervalGraph[data.length]:1,
                           showTitles: true,
                           // Define a legenda de baixo baseado nos dias carregados
                           getTitlesWidget: (value,meta) {
@@ -217,7 +227,7 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                 ),
               );
             }
-          ),
+          )
         ],
       ),
     );

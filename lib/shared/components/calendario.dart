@@ -39,6 +39,7 @@ class _CalendarioState extends State<Calendario> {
   List<Consulta> consultasDoDia = [];
   final ValueNotifier<DateTime> _focusedDay = ValueNotifier(DateTime.now());
   DateTime _selectedDay = DateTime.now();
+  // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
   late Future<void> _loadConsultasFuture;
 
   late PageController _pageController;
