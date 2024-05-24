@@ -60,7 +60,7 @@ class _ListaHorarioState extends State<ListaHorario> {
               children: [
                 GestureDetector(
                   onTap: () { 
-                    if (nome==null && widget.paciente!=null) {
+                    if (nome==null && widget.paciente!=null && widget.dia!=null &&widget.dia!.isAfter(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day-1))) {
                       _dialogBuilder(context, widget.paciente?.nome ?? "",item);
                     }
                   },

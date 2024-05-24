@@ -5,6 +5,7 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/list/listaHorarios.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -38,13 +39,14 @@ class _CalendarioState extends State<Calendario> {
   List<Consulta> consultasDoDia = [];
   final ValueNotifier<DateTime> _focusedDay = ValueNotifier(DateTime.now());
   DateTime _selectedDay = DateTime.now();
+  late Future<void> _loadConsultasFuture;
 
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    context.read<ConsultaController>().getConsultas();
+    _loadConsultasFuture = loadConsultas();
   }
 
   @override
@@ -54,12 +56,13 @@ class _CalendarioState extends State<Calendario> {
   }
 
   // Carrega as consultas para a variavel kEvents, para ser usado na HASH de dias
-  void loadConsultas(){
-    List<DateTime> dias = Provider.of<ConsultaController>(context).consultas
+   Future<void> loadConsultas() async{
+    await context.read<ConsultaController>().getConsultas();
+    List<DateTime> dias = Provider.of<ConsultaController>(context,listen: false).consultas
       .where((element) => element.dataHorario.isAfter(DateTime.utc(DateTime.now().year,1,1)) && element.dataHorario.isBefore(DateTime.utc(DateTime.now().year,12,31)))
       .toList()
       .map((e) => e.dataHorario).toSet().toList();
-    var source = { for (var e in dias) e : Provider.of<ConsultaController>(context).consultas.where((element) =>element.dataHorario.day==e.day).toList() };
+    var source = { for (var e in dias) e : Provider.of<ConsultaController>(context,listen: false).consultas.where((element) =>element.dataHorario.day==e.day).toList() };
     kEvents.addAll(source);
   }
 
@@ -81,7 +84,6 @@ class _CalendarioState extends State<Calendario> {
 
   @override
   Widget build(BuildContext context) {
-    loadConsultas();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
       child: Column(
@@ -94,97 +96,108 @@ class _CalendarioState extends State<Calendario> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16)
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Column(
-                    children: [
-                      // Controlador pra trocar de mês
-                      ValueListenableBuilder<DateTime>(
-                        valueListenable: _focusedDay,
-                        builder: (context, value, _) {
-                          return _CalendarHeader(
-                            focusedDay: value,
-                            onLeftArrowTap: () {
-                              _pageController.previousPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                              );
-                            },
-                            onRightArrowTap: () {
-                              _pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      // Calendário
-                      TableCalendar<Consulta>(
-                        locale: "pt_BR",
-                        firstDay: DateTime.utc(DateTime.now().year,1,1),
-                        lastDay: DateTime.utc(DateTime.now().year,12,31),
-                        focusedDay: _focusedDay.value,
-                        // Usando header customizado
-                        headerVisible: false,
-                        calendarFormat: CalendarFormat.month,
-                        selectedDayPredicate: (day) => _selectedDay==day,
-                        eventLoader: _getEventsForDay,
-                        onDaySelected: _onDaySelected,
-                        // Para trocar página do mês
-                        onCalendarCreated: (controller) => _pageController = controller,
-                        onPageChanged: (focusedDay) => _focusedDay.value = focusedDay,
-                        calendarBuilders: CalendarBuilders(
-                          // Customização do hoje
-                          todayBuilder: (context, day, focusedDay) => Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.all(Radius.circular(8))
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
-                              ),
-                            ),
-                          ),
-                          // Customização do marcador de quantidade de consultas
-                          markerBuilder: (context, day, event) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Container(
-                              width: 30,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color:  event.length>p80?const Color(0xFFFF1111):
-                                        event.length>p50?const Color(0xFFEFF340):
-                                        event.length>p20?const Color(0xFF2E992C):null,
-                                borderRadius: const BorderRadius.all(Radius.circular(3))
-                              ),
-                            ),
-                          ),
-                          // Customização do dia selecionado
-                          selectedBuilder: (context, day, focusedDay) => Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF333333),
-                                  borderRadius: BorderRadius.all(Radius.circular(8))
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
-                              ),
-                            ),
-                          ),
+                FutureBuilder(
+                  future: _loadConsultasFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Erro ao carregar consultas: ${snapshot.error}'));
+                    } else {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16)
                         ),
-                      ),
-                    ],
-                  ),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Column(
+                          children: [
+                            // Controlador pra trocar de mês
+                            ValueListenableBuilder<DateTime>(
+                              valueListenable: _focusedDay,
+                              builder: (context, value, _) {
+                                return _CalendarHeader(
+                                  focusedDay: value,
+                                  onLeftArrowTap: () {
+                                    _pageController.previousPage(
+                                      duration: const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                  },
+                                  onRightArrowTap: () {
+                                    _pageController.nextPage(
+                                      duration: const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            // Calendário
+                            TableCalendar<Consulta>(
+                              locale: "pt_BR",
+                              firstDay: DateTime.utc(DateTime.now().year,1,1),
+                              lastDay: DateTime.utc(DateTime.now().year,12,31),
+                              focusedDay: _focusedDay.value,
+                              // Usando header customizado
+                              headerVisible: false,
+                              calendarFormat: CalendarFormat.month,
+                              selectedDayPredicate: (day) => _selectedDay==day,
+                              eventLoader: _getEventsForDay,
+                              onDaySelected: _onDaySelected,
+                              // Para trocar página do mês
+                              onCalendarCreated: (controller) => _pageController = controller,
+                              onPageChanged: (focusedDay) => _focusedDay.value = focusedDay,
+                              calendarBuilders: CalendarBuilders(
+                                // Customização do hoje
+                                todayBuilder: (context, day, focusedDay) => Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.all(Radius.circular(8))
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
+                                    ),
+                                  ),
+                                ),
+                                // Customização do marcador de quantidade de consultas
+                                markerBuilder: (context, day, event) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Container(
+                                    width: 30,
+                                    height: 5,
+                                    decoration: BoxDecoration(
+                                      color:  event.length>p80?const Color(0xFFFF1111):
+                                              event.length>p50?const Color(0xFFEFF340):
+                                              event.length>p20?const Color(0xFF2E992C):null,
+                                      borderRadius: const BorderRadius.all(Radius.circular(3))
+                                    ),
+                                  ),
+                                ),
+                                // Customização do dia selecionado
+                                selectedBuilder: (context, day, focusedDay) => Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF333333),
+                                        borderRadius: BorderRadius.all(Radius.circular(8))
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }
                 ),
                 const SizedBox(height: 16,),
                 // Legenda
