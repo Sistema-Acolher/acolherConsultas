@@ -75,9 +75,7 @@ flutter:
   assets:
     - src/images/
     - src/gifs/
-    - src/icons/mariaPaola.svg
-    - src/icons/santaIsabel.svg
-    - src/icons/servos.svg
+    - src/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

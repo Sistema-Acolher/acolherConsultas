@@ -1,9 +1,11 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/sistema/views/homePaciente.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class ListaSemIcone extends StatelessWidget {
-  const ListaSemIcone({super.key, required this.listaObjeto});
+class ListaPacientes extends StatelessWidget {
+  const ListaPacientes({super.key, required this.listaObjeto});
 
   final List<CadastroPaciente> listaObjeto;
 
@@ -17,7 +19,7 @@ class ListaSemIcone extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -37,6 +39,34 @@ class ListaSemIcone extends StatelessWidget {
                       ),
                     )
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2,right: 10),
+                    child: 
+                    // IntrinsicHeight(
+                    //   child: Row(
+                    //     children: [
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 2),
+                    //         child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: item.paciente.genero=="masculino"?Colors.black:Colors.grey,),
+                    //       ),
+                    //       const VerticalDivider(
+                    //         width: 10,
+                    //         thickness: 2,
+                    //         color: Colors.black,
+                    //       ),
+                    //       SvgPicture.asset("src/icons/menina.svg",height: 35, color: item.paciente.genero=="feminino"?Colors.black:Colors.grey),
+                    //     ],
+                    //   ),
+                    // ),
+                    item.paciente.genero=="masculino"?
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: Colors.black),
+                      ):
+                    item.paciente.genero=="feminino"?
+                      SvgPicture.asset("src/icons/menina.svg",height: 35, color: Colors.black):
+                      const SizedBox.shrink()
+                  )
                 ],
               ),
               item!=listaObjeto.last?const Divider(thickness: 1, height: 0,color: Color(0x1E212121),):const SizedBox.shrink()

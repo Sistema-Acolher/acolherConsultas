@@ -4,7 +4,7 @@ import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/searchButton.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
-import 'package:acolherconsultas/shared/components/list/listaSemIcone.dart';
+import 'package:acolherconsultas/shared/components/list/listaPacientes.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
@@ -122,7 +122,7 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
                     ),
                     child: ValueListenableBuilder<List<CadastroPaciente>>(
                       valueListenable: _pacientesFiltrados,
-                      builder: (context, pacientes, child) => ListaSemIcone(listaObjeto: pacientes)
+                      builder: (context, pacientes, child) => ListaPacientes(listaObjeto: pacientes)
                     ),
                   ),
                 ],
