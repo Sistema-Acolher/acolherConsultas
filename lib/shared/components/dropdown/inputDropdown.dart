@@ -23,6 +23,9 @@ class _InputDropdownState extends State<InputDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    String? _selectedItem = widget.controller.text == ''
+        ? null
+        : widget.controller.text;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,10 +60,11 @@ class _InputDropdownState extends State<InputDropdown> {
                   child: Text(value),
                 );
               }).toList(),
-              value: widget.controller.text,
+              value: _selectedItem,
               onChanged: (String? newValue) {
                 setState(() {
-                  widget.controller.text = newValue ?? '';
+                  _selectedItem = newValue ?? '';
+                  widget.controller.text = _selectedItem!;
                   widget.checkNotifier.value = true;
                   mostrarErro = false;
                 });
