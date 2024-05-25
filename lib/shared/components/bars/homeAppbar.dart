@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,12 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
+
   @override
   Widget build(BuildContext context) {
+    final casaDeApoioSelecionada = context.read<CasaDeApoioProvider>().casaDeApoioSelecionada;
+    final listaCasasDeApoio = context.read<CasaDeApoioProvider>().casasDeApoio;
+    final listMapCasasDeApoio = listaCasasDeApoio.map((e) => {'name': e.nome, 'color': e.cor}).toList();
     var usuario =context.read<UsuarioProvider>().usuarioAtual;
     return AppBar(
       automaticallyImplyLeading: false,
@@ -27,14 +32,10 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         child: usuario?.nivelAcesso==NivelAcesso.admin
             ? const CasaItem(text: "Admin", color: 0xFF7A7A7A)
             : usuario?.nivelAcesso==NivelAcesso.acolher
-            ? const CasasDropdown(
-                casas: [
-                  {'name': 'Servos', 'color': 0xFF2277AE},
-                  {'name': 'Maria Paola', 'color': 0xFFFF0000},
-                  {'name': 'Santa Isabel', 'color': 0xFF78B158},
-                ],
+            ? CasasDropdown(
+                casas: listMapCasasDeApoio
               )
-            : const CasaItem(text: "Servos", color: 0xFF2277AE)),
+            : CasaItem(text: casaDeApoioSelecionada.value.nome ?? "", color: casaDeApoioSelecionada.value.cor ?? 0xFF000000)),
       leadingWidth: 220,
       centerTitle: true,
       actions: [

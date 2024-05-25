@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
@@ -50,99 +51,104 @@ class _PacienteListaState extends State<PacienteLista> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const PageAppBar(titulo: "Pacientes"),
-      body: FutureBuilder<void>(
-        future: _loadPacientesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Erro ao carregar pacientes: ${snapshot.error}'));
-          } else {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Color(widget.cor))
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            style: const TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 16,
-                              color: Colors.black
-                            ),
-                            decoration: const InputDecoration(
-                              hintStyle: TextStyle(color: Color(0xFF757575)),
-                              hintText: "Qual paciente...",
-                              contentPadding: EdgeInsets.only(left: 8, right: 4, bottom: 4),
-                              border: InputBorder.none
-                            ),
-                            controller: _busca,
-                          ),
+    return ValueListenableBuilder(
+      valueListenable: context.read<CasaDeApoioProvider>().casaDeApoioSelecionada,
+      builder: (context, casaDeApoio, child) {
+        return Scaffold(
+          appBar: PageAppBar(titulo: "Pacientes", casaDeApoioSelecionada: casaDeApoio),
+          body: FutureBuilder<void>(
+            future: _loadPacientesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Erro ao carregar pacientes: ${snapshot.error}'));
+              } else {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Color(widget.cor))
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: Color(widget.cor),
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(color: Color(widget.cor))
-                          ),
-                          child: Center(
-                            child: SearchButton(
-                              backgroundColor: Color(widget.cor),
-                              icon: Icons.search,
-                              onPressed: _filtrarPacientes,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                style: const TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 16,
+                                  color: Colors.black
+                                ),
+                                decoration: const InputDecoration(
+                                  hintStyle: TextStyle(color: Color(0xFF757575)),
+                                  hintText: "Qual paciente...",
+                                  contentPadding: EdgeInsets.only(left: 8, right: 4, bottom: 4),
+                                  border: InputBorder.none
+                                ),
+                                controller: _busca,
+                              ),
                             ),
-                          ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: Color(widget.cor),
+                                borderRadius: BorderRadius.circular(7),
+                                border: Border.all(color: Color(widget.cor))
+                              ),
+                              child: Center(
+                                child: SearchButton(
+                                  backgroundColor: Color(widget.cor),
+                                  icon: Icons.search,
+                                  onPressed: _filtrarPacientes,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.14),
+                              spreadRadius: 0,
+                              blurRadius: 10,
+                            )
+                          ]
+                        ),
+                        child: ValueListenableBuilder<List<CadastroPaciente>>(
+                          valueListenable: _pacientesFiltrados,
+                          builder: (context, pacientes, child) => ListaPacientes(listaObjeto: pacientes)
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.14),
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        )
-                      ]
-                    ),
-                    child: ValueListenableBuilder<List<CadastroPaciente>>(
-                      valueListenable: _pacientesFiltrados,
-                      builder: (context, pacientes, child) => ListaPacientes(listaObjeto: pacientes)
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-      floatingActionButton: StandartRoundButton(
-          verticalPaddingFactor: 0.8,
-          icon: Icons.add_box_outlined,
-          text: "Novo cadastro",
-          onPressed: () {
-            pushWithoutNavBar(
-              context,
-              MaterialPageRoute(builder: (context) => const CadastroPacienteScreen())
-            );
-          }
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+                );
+              }
+            },
+          ),
+          floatingActionButton: StandartRoundButton(
+              verticalPaddingFactor: 0.8,
+              icon: Icons.add_box_outlined,
+              text: "Novo cadastro",
+              onPressed: () {
+                pushWithoutNavBar(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CadastroPacienteScreen())
+                );
+              }
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        );
+      }
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/core/redirectScreen.dart';
 import 'package:acolherconsultas/core/splashScreen.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         // O ChangeNotifierProvider é um provedor de estado que notifica os 'ouvintes' quando o objeto fornecido muda.
         ChangeNotifierProvider(create: (_) => PacientesCadastradosController()),
         ChangeNotifierProvider(create: (_) => ConsultaController()),
-        ChangeNotifierProvider(create: (_) => UsuarioProvider())
+        ChangeNotifierProvider(create: (_) => UsuarioProvider()),
+        ChangeNotifierProvider(create: (_) => CasaDeApoioProvider())
       ],
       // O MaterialApp é um widget que define a interface do aplicativo (apenas um por aplicativo).
       child: MaterialApp(

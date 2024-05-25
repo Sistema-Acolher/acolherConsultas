@@ -2,13 +2,15 @@
 import 'dart:convert';
 
 class CasaDeApoio {
-  String nome;
-  String cep;
-  String rua;
-  String numero;
-  String bairro;
-  String cidade;
-  int cor;
+  String? nome;
+  String? cep;
+  String? rua;
+  String? numero;
+  String? bairro;
+  String? cidade;
+  String? id;  
+  int? cor;
+
   CasaDeApoio({
     required this.nome,
     required this.cep,
@@ -17,7 +19,10 @@ class CasaDeApoio {
     required this.bairro,
     required this.cidade,
     required this.cor,
+    this.id
   });
+
+  CasaDeApoio.vazio();
 
   CasaDeApoio copyWith({
     String? nome,
@@ -26,6 +31,7 @@ class CasaDeApoio {
     String? numero,
     String? bairro,
     String? cidade,
+    String? id,
     int? cor,
   }) {
     return CasaDeApoio(
@@ -35,6 +41,7 @@ class CasaDeApoio {
       numero: numero ?? this.numero,
       bairro: bairro ?? this.bairro,
       cidade: cidade ?? this.cidade,
+      id: id ?? this.id,
       cor: cor ?? this.cor,
     );
   }
@@ -47,6 +54,7 @@ class CasaDeApoio {
       'numero': numero,
       'bairro': bairro,
       'cidade': cidade,
+      'id': id,
       'cor': cor,
     };
   }
@@ -59,6 +67,7 @@ class CasaDeApoio {
       numero: map['numero'] as String,
       bairro: map['bairro'] as String,
       cidade: map['cidade'] as String,
+      id: map['id'] as String,
       cor: map['cor'] as int,
     );
   }
@@ -69,7 +78,7 @@ class CasaDeApoio {
 
   @override
   String toString() {
-    return 'CasaDeApoio(nome: $nome, cep: $cep, rua: $rua, numero: $numero, bairro: $bairro, cidade: $cidade, cor: $cor)';
+    return 'CasaDeApoio(nome: $nome, cep: $cep, rua: $rua, numero: $numero, bairro: $bairro, cidade: $cidade, id: $id, cor: $cor)';
   }
 
   @override
@@ -83,6 +92,7 @@ class CasaDeApoio {
       other.numero == numero &&
       other.bairro == bairro &&
       other.cidade == cidade &&
+      other.id == id &&
       other.cor == cor;
   }
 
@@ -94,6 +104,7 @@ class CasaDeApoio {
       numero.hashCode ^
       bairro.hashCode ^
       cidade.hashCode ^
+      id.hashCode ^
       cor.hashCode;
   }
 }

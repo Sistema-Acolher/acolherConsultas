@@ -1,5 +1,7 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ConsultaNovaScreen extends StatefulWidget {
   const ConsultaNovaScreen({super.key});
@@ -11,13 +13,19 @@ class ConsultaNovaScreen extends StatefulWidget {
 class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        appBar: PageAppBar(titulo: "Consultar"),
-        body: Center(
-          child: Text(
-            "Consultar",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-        ));
+    return ValueListenableBuilder(
+      valueListenable: context.read<CasaDeApoioProvider>().casaDeApoioSelecionada,
+      builder: (context, casaDeApoio, child) {
+        return Scaffold(
+            appBar: PageAppBar(titulo: "Consultar", casaDeApoioSelecionada: casaDeApoio),
+            body: const Center(
+              child: Text(
+                "Consultar",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            )
+        );
+      }
+    );
   }
 }

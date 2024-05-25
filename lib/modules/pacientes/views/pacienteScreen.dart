@@ -17,7 +17,7 @@ class PacienteScreen extends StatelessWidget {
     var usuario =context.read<UsuarioProvider>().usuarioAtual;
     return CustomTabBar(
       appBar: PacienteAppbar(paciente: paciente), 
-      fabs_: usuario?.nivelAcesso==NivelAcesso.instituicao?[
+      fabs_: usuario?.nivelAcesso==NivelAcesso.casaDeApoio?[
         BigRoundButton(text: "Observações", icon: Icons.comment_outlined, onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => PacienteObservacoes(paciente: paciente)))),
         BigRoundButton(text: "Observações", icon: Icons.comment_outlined, onPressed: () => Navigator.of(context).push(

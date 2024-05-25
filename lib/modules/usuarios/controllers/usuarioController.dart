@@ -1,6 +1,7 @@
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/databases/repositories/usuarioRepository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class UsuarioProvider extends ChangeNotifier {
@@ -54,8 +55,11 @@ class UsuarioProvider extends ChangeNotifier {
   // Função de cadastro de novos usuários do controller
   Future<Usuario?> cadastrar(Usuario usuario, String senha) async {
     try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(email: usuario.email, password: senha);
+      FirebaseApp tempApp = await Firebase.initializeApp(name: 'Temporário', options: Firebase.app().options);
+      final userCredential = await FirebaseAuth.instanceFor(app: tempApp).createUserWithEmailAndPassword(email: usuario.email, password: senha);
+      
       usuario.id = userCredential.user!.uid;
+      await tempApp.delete();
 
       await _usuarioRepository.criar(usuario);
       notifyListeners();

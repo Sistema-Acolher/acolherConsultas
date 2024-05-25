@@ -1,6 +1,8 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:provider/provider.dart';
 
 class CasasDropdown extends StatefulWidget {
   final List<Map<String, dynamic>> casas;
@@ -12,7 +14,13 @@ class CasasDropdown extends StatefulWidget {
 }
 
 class _CasasDropdownState extends State<CasasDropdown> {
-  String _selectedItem = 'Servos';
+  String _selectedItem = "Servos";
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItem = context.read<CasaDeApoioProvider>().casaDeApoioSelecionada.value.nome ?? "Servos";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,9 @@ class _CasasDropdownState extends State<CasasDropdown> {
           onChanged: (String? newValue) {
             setState(() {
               _selectedItem = newValue!;
-              //  _handleSelectedItem(context, newValue);
+              context.read<CasaDeApoioProvider>().selecionarCasaDeApoio(
+                context.read<CasaDeApoioProvider>().casasDeApoio.firstWhere((element) => element.nome == newValue)
+              );
             });
           },
           items: widget.casas.map((casa) {

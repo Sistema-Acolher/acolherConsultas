@@ -1,6 +1,8 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/calendario.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Agenda extends StatelessWidget {
   const Agenda({super.key, this.cor = 0xFF2277AE});
@@ -8,9 +10,14 @@ class Agenda extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: PageAppBar(titulo: "Agenda"),
-      body: Calendario()
+    return ValueListenableBuilder(
+      valueListenable: context.read<CasaDeApoioProvider>().casaDeApoioSelecionada,
+      builder: (context, casaDeApoio, child) {
+        return Scaffold(
+          appBar: PageAppBar(titulo: "Agenda", casaDeApoioSelecionada: casaDeApoio),
+          body: const Calendario()
+        );
+      }
     );
   }
 }

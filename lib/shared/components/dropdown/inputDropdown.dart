@@ -19,7 +19,6 @@ class InputDropdown extends StatefulWidget {
 }
 
 class _InputDropdownState extends State<InputDropdown> {
-  String? _selectedItem;
   bool mostrarErro = true;
 
   @override
@@ -58,10 +57,9 @@ class _InputDropdownState extends State<InputDropdown> {
                   child: Text(value),
                 );
               }).toList(),
-              value: _selectedItem,
+              value: widget.controller.text,
               onChanged: (String? newValue) {
                 setState(() {
-                  _selectedItem = newValue;
                   widget.controller.text = newValue ?? '';
                   widget.checkNotifier.value = true;
                   mostrarErro = false;

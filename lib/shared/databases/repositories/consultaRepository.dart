@@ -17,11 +17,11 @@ class ConsultaRepository{
     return _dbFirebase.criar(consulta.toMap());
   }
 
-  Future<void> atualizar(Map<String, dynamic> paciente) async {
+  Future<void> atualizar(Map<String, dynamic> consulta) async {
 
   }
 
-  Future<void> remover(CadastroPaciente pacienteDeletado) async {
+  Future<void> remover(CadastroPaciente consultaDeletado) async {
 
   }
   Future<List<Map<String, dynamic>>> selecionarTodos() async {
