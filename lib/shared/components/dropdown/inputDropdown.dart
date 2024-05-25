@@ -4,9 +4,15 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 class InputDropdown extends StatefulWidget {
   final List<String> list;
   final String label;
-  final ValueNotifier<bool> checkNotifier; 
+  final TextEditingController controller;
+  final ValueNotifier<bool> checkNotifier;
 
-  const InputDropdown({super.key, required this.list, required this.label, required this.checkNotifier});
+  const InputDropdown(
+      {super.key,
+      required this.list,
+      required this.label,
+      required this.checkNotifier,
+      required this.controller});
 
   @override
   _InputDropdownState createState() => _InputDropdownState();
@@ -56,6 +62,7 @@ class _InputDropdownState extends State<InputDropdown> {
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedItem = newValue;
+                  widget.controller.text = newValue ?? '';
                   widget.checkNotifier.value = true;
                   mostrarErro = false;
                 });

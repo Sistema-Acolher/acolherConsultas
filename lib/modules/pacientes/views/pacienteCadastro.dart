@@ -57,225 +57,221 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: PacienteAppbar(paciente: widget.paciente,),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: StandartRoundButton(
-        text: "Salvar",
-        icon: Symbols.book,
-        onPressed:  () {
-          if (radiobuttonNotifier.value == false){
-            setState(() {              
-              radiobuttonNotifier.value = true;
-            });
-          }
-          if (dropdownNotifier.value == false){
-            setState(() {
-              dropdownNotifier.value = true;
-            });
-          }
-          // Se o formulário for válido, exibe um diálogo de confirmação.
-          if (_formKey.currentState!.validate()) {
-            showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
+        appBar: PacienteAppbar(
+          paciente: widget.paciente,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: StandartRoundButton(
+          text: "Salvar",
+          icon: Symbols.book,
+          onPressed: () {
+            if (radiobuttonNotifier.value == false) {
+              setState(() {
+                radiobuttonNotifier.value = true;
+              });
+            }
+            if (dropdownNotifier.value == false) {
+              setState(() {
+                dropdownNotifier.value = true;
+              });
+            }
+            // Se o formulário for válido, exibe um diálogo de confirmação.
+            if (_formKey.currentState!.validate()) {
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Certeza de que deseja prosseguir?",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                  child: const Text("Revisar Dados"),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                  }),
+                              TextButton(
+                                  child: const Text("Cadastrar"),
+                                  onPressed: () async {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text('Cadastrando paciente...'),
+                                            duration: Duration()));
+                                    // Chama o método de cadastro de paciente do Provider, através
+                                    context
+                                        .read<PacientesCadastradosController>()
+                                        .cadastrarPaciente(
+                                            _stateCadastroPaciente.cadastro())
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .hideCurrentSnackBar();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(value)),
+                                      );
+                                      if (!value.toLowerCase().contains("erro"))
+                                        Navigator.pop(context);
+                                    });
+                                  }),
+                            ],
+                          )
+                        ],
+                      ),
+                    )),
+              );
+            }
+          },
+        ),
+        body: Center(
+          child: Container(
+            // Define o espaçamento em volta da decoração e do widget filho do Container.
+            margin: const EdgeInsets.all(20),
+            // Form é um widget que implementa um formulário.
+            child: Form(
+              // Atribui uma chave única ao formulário para validação.
+              key: _formKey,
+              // ListView é um widget que implementa uma lista de widgets filhos, onde os itens são organizados em uma lista vertical e com scroll.
+              child: ListView(
+                children: [
+                  // Cada um dos campos de entrada para o cadastro de pacientes, utilizando os componentes criados.
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: InputTextoAcolher(
+                      label: "Nome",
+                      controller: _stateCadastroPaciente.nome,
+                      keyboardType: TextInputType.name,
+                      validation: (value) => Mask.validations
+                          .generic(value, error: "Nome inválido", min: 3),
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                        LengthLimitingTextInputFormatter(50),
+                      ],
+                      emptyMessage: "Informe o nome",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: InputTextoAcolher(
+                      label: "CPF",
+                      controller: _stateCadastroPaciente.cpf,
+                      validation: (value) => Mask.validations.cpf(value),
+                      inputFormatter: [Mask.cpf()],
+                      keyboardType: TextInputType.number,
+                      emptyMessage: "Informe o CPF",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: InputTextoAcolher(
+                      label: "RG (Apenas Números)",
+                      controller: _stateCadastroPaciente.rg,
+                      keyboardType: TextInputType.number,
+                      validation: (value) => Mask.validations
+                          .generic(value, error: "RG inválido", min: 8),
+                      inputFormatter: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                        LengthLimitingTextInputFormatter(11),
+                      ],
+                      emptyMessage: "Informe o RG",
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: InputTextoAcolher(
+                      label: "Número do Cartão do SUS",
+                      controller: _stateCadastroPaciente.numeroCartaoSus,
+                      validation: (value) => Mask.validations.generic(value,
+                          error: "Número do Cartão do SUS inválido", min: 18),
+                      inputFormatter: [
+                        Mask.generic(
+                            masks: ["### #### #### ####"],
+                            hashtag: Hashtag.numbers)
+                      ],
+                      keyboardType: TextInputType.number,
+                      emptyMessage: "Informe o número do cartão do SUS",
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    width: size.width,
+                    constraints: BoxConstraints(maxWidth: size.width),
+                    child: Row(
                       children: [
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Certeza de que deseja prosseguir?",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15
+                        Expanded(
+                          flex: 1,
+                          child: InputTextoAcolher(
+                            label: "Data de Nascimento",
+                            placeHolder: "    /    /",
+                            controller: _stateCadastroPaciente.dataNascimento,
+                            keyboardType: TextInputType.datetime,
+                            icone: Icons.date_range_outlined,
+                            validation: (value) => Mask.validations.date(value),
+                            inputFormatter: [Mask.date()],
+                            readOnly: true,
+                            emptyMessage: "Informe a data de nascimento",
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                                child: const Text("Revisar Dados"),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                }),
-                            TextButton(
-                                child: const Text("Cadastrar"),
-                                onPressed: () async {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                          content: Text(
-                                              'Cadastrando paciente...'),
-                                          duration:
-                                              Duration()));
-                                  // Chama o método de cadastro de paciente do Provider, através
-                                  context
-                                      .read<
-                                          PacientesCadastradosController>()
-                                      .cadastrarPaciente(
-                                          _stateCadastroPaciente
-                                              .cadastro())
-                                      .then((value) {
-                                    Navigator.pop(context);
-                                    ScaffoldMessenger.of(
-                                            context)
-                                        .hideCurrentSnackBar();
-                                    ScaffoldMessenger.of(
-                                            context)
-                                        .showSnackBar(
-                                      SnackBar(
-                                          content: Text(value)),
-                                    );
-                                    if (!value
-                                        .toLowerCase()
-                                        .contains("erro"))
-                                      Navigator.pop(context);
-                                  });
-                                }),
-                          ],
-                        )
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 1,
+                          child: InputTextoAcolher(
+                            label: "Idade",
+                            placeHolder: "..a ..m ..d",
+                            controller: _stateCadastroPaciente.idade,
+                            readOnly: true,
+                            emptyMessage: "Informe a idade",
+                          ),
+                        ),
                       ],
                     ),
-                  )),
-            );
-          }
-        },
-      ),
-      body: Center(
-        child: Container(
-          // Define o espaçamento em volta da decoração e do widget filho do Container.
-          margin: const EdgeInsets.all(20),
-          // Form é um widget que implementa um formulário.
-          child: Form(
-            // Atribui uma chave única ao formulário para validação.
-            key: _formKey,
-            // ListView é um widget que implementa uma lista de widgets filhos, onde os itens são organizados em uma lista vertical e com scroll.
-            child: ListView(
-              children: [
-                // Cada um dos campos de entrada para o cadastro de pacientes, utilizando os componentes criados.
-                Padding(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  child: InputTextoAcolher(
-                    label: "Nome",
-                    controller: _stateCadastroPaciente.nome,
-                    keyboardType: TextInputType.name,
-                    validation: (value) => Mask.validations
-                        .generic(value, error: "Nome inválido", min: 3),
-                    inputFormatter: [
-                      FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
-                      LengthLimitingTextInputFormatter(50),
-                    ],
-                    emptyMessage: "Informe o nome",
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  child: InputTextoAcolher(
-                    label: "CPF",
-                    controller: _stateCadastroPaciente.cpf,
-                    validation: (value) => Mask.validations.cpf(value),
-                    inputFormatter: [Mask.cpf()],
-                    keyboardType: TextInputType.number,
-                    emptyMessage: "Informe o CPF",
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: InputDropdown(
+                      label: 'Gênero',
+                      list: const [
+                        'Masculino',
+                        'Feminino',
+                        'Prefiro não responder'
+                      ],
+                      controller: _stateCadastroPaciente.genero,
+                      checkNotifier: dropdownNotifier,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  child: InputTextoAcolher(
-                    label: "RG (Apenas Números)",
-                    controller: _stateCadastroPaciente.rg,
-                    keyboardType: TextInputType.number,
-                    validation: (value) => Mask.validations
-                        .generic(value, error: "RG inválido", min: 8),
-                    inputFormatter: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      LengthLimitingTextInputFormatter(11),
-                    ],
-                    emptyMessage: "Informe o RG",
+                  InputCaixaDeTexto(
+                    label: "Motivo do Acolhimento",
+                    controller: _stateCadastroPaciente.motivoAcolhimento,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  child: InputTextoAcolher(
-                    label: "Número do Cartão do SUS",
-                    controller: _stateCadastroPaciente.numeroCartaoSus,
-                    validation: (value) => Mask.validations.generic(value,
-                        error: "Número do Cartão do SUS inválido", min: 18),
-                    inputFormatter: [
-                      Mask.generic(
-                          masks: ["### #### #### ####"],
-                          hashtag: Hashtag.numbers)
-                    ],
-                    keyboardType: TextInputType.number,
-                    emptyMessage: "Informe o número do cartão do SUS",
+                  InputRadioButtonsCadastroPaciente(
+                    options: const ["Sim", "Não"],
+                    label: "Acolhimento anterior",
+                    controller: TextEditingController(),
+                    optionalController:
+                        _stateCadastroPaciente.acolhimentoAnterior,
+                    isChecked: radiobuttonNotifier,
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(bottom:5.0),
-                  width: size.width,
-                  constraints: BoxConstraints(maxWidth: size.width),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: InputTextoAcolher(
-                          label: "Data de Nascimento",
-                          placeHolder: "    /    /",
-                          controller:
-                              _stateCadastroPaciente.dataNascimento,
-                          keyboardType: TextInputType.datetime,
-                          icone: Icons.date_range_outlined,
-                          validation: (value) => Mask.validations.date(value),
-                          inputFormatter: [Mask.date()],
-                          readOnly: true,
-                          emptyMessage: "Informe a data de nascimento",
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 1,
-                        child: InputTextoAcolher(
-                          label: "Idade",
-                          placeHolder: "..a ..m ..d",
-                          controller: _stateCadastroPaciente.idade,
-                          readOnly: true,
-                          emptyMessage: "Informe a idade",
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom:15.0),
-                  child: InputDropdown(
-                    label: 'Gênero',
-                    list: const [
-                      'Masculino',
-                      'Feminino',
-                      'Prefiro não responder'
-                    ],
-                    checkNotifier: dropdownNotifier,
-                  ),
-                ),
-                InputCaixaDeTexto(
-                  label: "Motivo do Acolhimento",
-                  controller: _stateCadastroPaciente.motivoAcolhimento,
-                ),
-                InputRadioButtonsCadastroPaciente(
-                  options: const ["Sim", "Não"],
-                  label: "Acolhimento anterior",
-                  controller: TextEditingController(),
-                  optionalController: _stateCadastroPaciente.acolhimentoAnterior,
-                  isChecked: radiobuttonNotifier,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ));
+        ));
   }
 }
