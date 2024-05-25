@@ -43,7 +43,7 @@ class StandartRoundButton extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: iconSizeFactor*40,
+              size: iconSizeFactor*42,
             ),
             const SizedBox(width: 4)
           ],
@@ -52,7 +52,8 @@ class StandartRoundButton extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: fontSizeFactor*16.0,
-              fontFamily: "BobbyJonesSoft"
+              fontFamily: "BobbyJonesSoft",
+              height: 1.1,
             ),
           ),
         ],

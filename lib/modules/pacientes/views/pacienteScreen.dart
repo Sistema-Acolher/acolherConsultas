@@ -1,7 +1,12 @@
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/modules/pacientes/views/pacienteObservacoes.dart';
+import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
+import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/tabBar.dart';
+import 'package:acolherconsultas/shared/components/buttons/bigRoundButton.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PacienteScreen extends StatelessWidget {
   final Paciente? paciente;
@@ -9,8 +14,15 @@ class PacienteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var usuario =context.read<UsuarioProvider>().usuarioAtual;
     return CustomTabBar(
       appBar: PacienteAppbar(paciente: paciente), 
+      fabs_: usuario?.nivelAcesso==NivelAcesso.instituicao?[
+        BigRoundButton(text: "Observações", icon: Icons.comment_outlined, onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => PacienteObservacoes(paciente: paciente)))),
+        BigRoundButton(text: "Observações", icon: Icons.comment_outlined, onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => PacienteObservacoes(paciente: paciente))))
+      ]:null,
       tabs_: const [
         "Informações\n\t\t\tPessoais",
         "\t\tHistória\nPregressa"

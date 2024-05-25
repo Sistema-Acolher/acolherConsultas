@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
-class PacienteListaScreen extends StatefulWidget {
-  const PacienteListaScreen({super.key, this.cor = 0xFF2277AE});
+class PacienteLista extends StatefulWidget {
+  const PacienteLista({super.key, this.cor = 0xFF2277AE});
   final int cor;
 
   @override
-  State<PacienteListaScreen> createState() => _PacienteListaScreenState();
+  State<PacienteLista> createState() => _PacienteListaState();
 }
 
-class _PacienteListaScreenState extends State<PacienteListaScreen> {
+class _PacienteListaState extends State<PacienteLista> {
   // Responsável pelo texto da barra de busca
   late TextEditingController _busca;
   // Responsável por armazenar os pacientes filtrados após a busca
@@ -51,7 +51,7 @@ class _PacienteListaScreenState extends State<PacienteListaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PageAppBar(titulo: "Cadastros",),
+      appBar: const PageAppBar(titulo: "Pacientes"),
       body: FutureBuilder<void>(
         future: _loadPacientesFuture,
         builder: (context, snapshot) {

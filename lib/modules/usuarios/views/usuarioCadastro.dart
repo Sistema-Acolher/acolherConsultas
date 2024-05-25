@@ -26,10 +26,10 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PacienteAppbar(),
+      appBar: const PacienteAppbar( admin: true,),
       resizeToAvoidBottomInset: false,
       floatingActionButton: StandartRoundButton(
-        text: "Cadastrar",
+        text: "Salvar",
         icon: Symbols.book,
         onPressed: (){
           if (isCheckedNotifier.value == false){
@@ -99,7 +99,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                   options: const [
                     "Admin",
                     "Acolher",
-                    "Instituição",
+                    "Instituicao",
                   ], 
                   label: "Nível de Acesso", 
                   controller: _usuarioCadastroState.nivelAcesso, 
@@ -117,7 +117,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     try {
       // Cria um objeto de usuário e tenta cadastrar no firebase
       final cadastro = _usuarioCadastroState.cadastroUsuario();
-      await context.read<UsuarioProvider>().cadastrar(cadastro, _usuarioCadastroState.senha.text);
+      await context.read<UsuarioProvider>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then((value) => Navigator.of(context).pop());
     } on FirebaseAuthException catch (e) {
       if(e.code.contains("email-already-in-use")){
         ScaffoldMessenger.of(context).showSnackBar(

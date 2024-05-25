@@ -1,11 +1,10 @@
-import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatefulWidget {
   final PreferredSizeWidget appBar;
   final List<String> tabs_;
   final List<Widget> views_;
-  final List<StandartRoundButton>? fabs_;
+  final List<Widget>? fabs_;
   const CustomTabBar({super.key, required this.appBar, required this.tabs_, required this.views_, this.fabs_});
 
   @override
@@ -38,7 +37,7 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
     var listTabs = widget.tabs_.map<Tab>((e) => Tab(text: e)).toList();
     return Scaffold(
       appBar: widget.appBar,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: widget.fabs_ != null ? widget.fabs_![_tabController.index] : null,
       body: Padding(
         padding: const EdgeInsets.only(bottom: 50, top: 15, left: 20, right: 20),

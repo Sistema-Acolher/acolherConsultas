@@ -28,13 +28,23 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
   void initState() {
     super.initState();
     displayedData = ValueNotifier([]);
-    loadConsultas();
+    updateDisplayedData();
   }
 
-  void createPoints(int diasAtras){
+  void loadConsultas(int diasAtras){
     DateTime startDate = endDate.subtract(Duration(days: diasAtras));
-
-    var consultas=consultasPdia;
+    // Mapeia as consultas do banco em quantidade por dia
+    consultasPdia = Provider.of<ConsultaController>(context, listen: false).consultas
+      .where((element) => 
+        element.dataHorario.isAfter(startDate) && 
+        element.dataHorario.isBefore(endDate) &&
+        element.estado == "concluida")
+      .sorted((a, b) => a.dataHorario.compareTo(b.dataHorario))
+      .groupListsBy((element) => DateTime.utc(element.dataHorario.year,element.dataHorario.month,element.dataHorario.day))
+      .map((key, value) => MapEntry(key, value.length.toDouble()));
+      
+    Map<DateTime, double> consultas={};
+    consultas=consultasPdia;
     consultas.removeWhere((key, value) => key.isBefore(startDate));
 
     int numberOfDays = endDate.difference(startDate).inDays;
@@ -52,34 +62,20 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
     displayedData.value=listaTemp;
   }
 
-  void loadConsultas(){
-    // Mapeia as consultas do banco em quantidade por dia
-    consultasPdia = Provider.of<ConsultaController>(context, listen: false).consultas
-      .where((element) => 
-        element.dataHorario.isAfter(endDate.subtract(const Duration(days: 90))) && 
-        element.dataHorario.isBefore(endDate) &&
-        element.estado == "concluida")
-      .sorted((a, b) => a.dataHorario.compareTo(b.dataHorario))
-      .groupListsBy((element) => DateTime.utc(element.dataHorario.year,element.dataHorario.month,element.dataHorario.day))
-      .map((key, value) => MapEntry(key, value.length.toDouble()));
-      
-    updateDisplayedData();
-  }
-
   void updateDisplayedData() {
     setState(() {
       switch (dropdownValue) {
         case 'Mês Atual':
-          createPoints(DateTime.now().day-1);
+          loadConsultas(DateTime.now().day-1);
           break;
         case '30 dias':
-          createPoints(30);
+          loadConsultas(30);
           break;
         case '90 dias':
-          createPoints(90);
+          loadConsultas(90);
           break;
         case '7 dias':
-          createPoints(7);
+          loadConsultas(7);
           break;
       }
     });
