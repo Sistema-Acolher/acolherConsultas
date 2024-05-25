@@ -68,6 +68,10 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
             ),
           ),
           Container(
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.15),
+            child: const Image(image: AssetImage('src/images/logo.gif'))
+          ),
+          Container(
             padding: const EdgeInsets.all(20),
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.07),
             decoration: const BoxDecoration(
@@ -110,19 +114,22 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
                     obscureText: true,
                     emptyMessage: "Informe a senha",
                   ),
-                  SizedBox(height: size.height * 0.01),
                   if (mostrarErroFirebase && erroFirebase != "")
-                    Center(
-                      child: Text(
-                        erroFirebase,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: size.height * 0.008),
+                          child: Center(
+                            child: Text(
+                              erroFirebase,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  SizedBox(height: size.height * 0.03),
+                  if (!mostrarErroFirebase && erroFirebase == "")
+                    SizedBox(height: size.height * 0.04),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: LoginButton(
@@ -133,12 +140,14 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
                           login();
                         }
                       },
-                      
                     ),
                   ),
                 ],
               ),
             )
+          ),
+          SizedBox(
+            height: size.height * 0.075,
           ),
           Container(
             height: size.height * 0.065,
@@ -167,7 +176,6 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
         );
         _usuarioLoginController.limparCampos();
       } on FirebaseAuthException catch (e) {
-        // TODO: implementar erros de login. Abaixo são apenas exemplos padrões do FirebaseAuth.
         if (e.code.contains("invalid-credential")) {
           setState(() {
             erroFirebase = "Usuário ou senha inválidos";
