@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/core/splashScreen.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/sistema/views/homeAcolher.dart';
 import 'package:acolherconsultas/modules/sistema/views/homeAdmin.dart';
 import 'package:acolherconsultas/modules/sistema/views/homeInstituicao.dart';
@@ -19,26 +20,36 @@ class RedirectScreen extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: context.read<UsuarioProvider>().auth.authStateChanges(), 
       builder: (context, snapshot) {
+        // Podemos tirar esse if, mas isso faz com que seja redirecionado para uma nova tela de login enquanto carrega
         if(snapshot.connectionState == ConnectionState.waiting){
           return const Scaffold();
         } else if(snapshot.connectionState == ConnectionState.active && snapshot.hasData){
           // Widget que verifica o nível de acesso do usuário
           // E redireciona para a tela correta
           return FutureBuilder(
-            future: context.read<UsuarioProvider>().checkUser(),
-            builder: (context, nivelAcesso){
-              if(nivelAcesso.connectionState == ConnectionState.waiting){
-                return const SplashScreen();
-              } else if(nivelAcesso.connectionState == ConnectionState.done){
-                switch (nivelAcesso.data){
+            future: Future.wait([context.read<UsuarioProvider>().checkUser(), context.read<CasaDeApoioProvider>().getCasasDeApoio()]),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot){
+              // Podemos tirar esse if, mas isso faz com que seja redirecionado para uma nova tela de login enquanto carrega
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Scaffold();
+              } else if(snapshot.connectionState == ConnectionState.done){
+                switch (snapshot.data![0]){
                   case NivelAcesso.admin:
                     return const HomeAdmin();
                   case NivelAcesso.acolher:
+                    // Seleciona a casa de apoio Servos como padrão
+                    context.read<CasaDeApoioProvider>().selecionarCasaDeApoio(
+                      context.read<CasaDeApoioProvider>().casasDeApoio.firstWhere((element) => element.nome == "Servos")
+                    );
                     return const HomeAcolher();
-                  case NivelAcesso.instituicao:
+                  case NivelAcesso.casaDeApoio:
+                    // Seleciona a casa de apoio do usuário da instituição
+                    context.read<CasaDeApoioProvider>().selecionarCasaDeApoio(
+                      context.read<CasaDeApoioProvider>().casasDeApoio.firstWhere((element) => element.id == context.read<UsuarioProvider>().usuarioAtual!.casaDeApoioId)
+                    );
                     return const HomeInstituicao();
                   default: {
-                    context.read<UsuarioProvider>().auth.signOut();
+                    context.read<UsuarioProvider>().logout();
                     return const UsuarioLoginScreen();
                   }
                 }

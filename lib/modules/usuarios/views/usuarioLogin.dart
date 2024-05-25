@@ -41,6 +41,10 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
   // Paradas do "gradiente" 
   final listaParadas = [0.25, 0.25, 0.5, 0.5, 0.75, 0.75];
 
+  // Variáveis para mostrar erro do firebase
+  bool mostrarErroFirebase = false;
+  String erroFirebase = "";
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -106,6 +110,18 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
                     obscureText: true,
                     emptyMessage: "Informe a senha",
                   ),
+                  SizedBox(height: size.height * 0.01),
+                  if (mostrarErroFirebase && erroFirebase != "")
+                    Center(
+                      child: Text(
+                        erroFirebase,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
                   SizedBox(height: size.height * 0.03),
                   Align(
                     alignment: Alignment.bottomRight,
@@ -152,34 +168,16 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
         _usuarioLoginController.limparCampos();
       } on FirebaseAuthException catch (e) {
         // TODO: implementar erros de login. Abaixo são apenas exemplos padrões do FirebaseAuth.
-        if (e.code.contains("user-not-found")) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Usuário não encontrado"),
-              backgroundColor: Colors.red,
-            )
-          );
-        } else if(e.code.contains("invalid-password")){
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Senha incorreta"),
-              backgroundColor: Colors.red,
-            )
-          );
-        } else if(e.code.contains("invalid-email")){
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Email inválido"),
-              backgroundColor: Colors.red,
-            )
-          );
+        if (e.code.contains("invalid-credential")) {
+          setState(() {
+            erroFirebase = "Usuário ou senha inválidos";
+            mostrarErroFirebase = true;
+          });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Erro ao realizar login"),
-              backgroundColor: Colors.red,
-            )
-          );
+          setState(() {
+            erroFirebase = "Erro ao realizar login";
+            mostrarErroFirebase = true;
+          });
         }
     }
   }
