@@ -75,6 +75,10 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
               });
               cadastrar();
             }
+            setState(() {
+              dropdownNotifier.value = false;
+              radiobuttonNotifier.value = false;
+            });            
           }
         },
       ),

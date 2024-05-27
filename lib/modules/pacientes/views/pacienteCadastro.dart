@@ -77,6 +77,10 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
             }
             // Se o formulário for válido, exibe um diálogo de confirmação.
             if (_formKey.currentState!.validate()) {
+              setState(() {
+                radiobuttonNotifier.value = false;
+                dropdownNotifier.value = false;
+              });
               showDialog(
                 context: context,
                 builder: (context) => Dialog(
