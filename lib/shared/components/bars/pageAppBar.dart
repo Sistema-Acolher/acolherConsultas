@@ -22,7 +22,7 @@ class PageAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _PageAppBarState extends State<PageAppBar> {
   @override
   Widget build(BuildContext context) {
-  var usuario =context.read<UsuarioProvider>().usuarioAtual;
+  var usuario =context.read<UsuarioController>().usuarioAtual;
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: amareloNavbar,

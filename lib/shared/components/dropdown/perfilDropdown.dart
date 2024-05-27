@@ -66,7 +66,7 @@ class _UserDropdownState extends State<UserDropdown> {
           if (value == 'Sair') {
             setState(() {
               // Desloga o usuário e redireciona para a tela de login
-              context.read<UsuarioProvider>().logout();
+              context.read<UsuarioController>().logout();
             });
           }
         },

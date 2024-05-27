@@ -170,7 +170,7 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
   // Loga com sucesso ou mostra mensagem de erro
   login() async{
     try {
-        await context.read<UsuarioProvider>().login(
+        await context.read<UsuarioController>().login(
           _usuarioLoginController.email.text.trim().toLowerCase(),
           _usuarioLoginController.senha.text
         );

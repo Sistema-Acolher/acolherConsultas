@@ -19,7 +19,7 @@ class _RelatorioCasasScreenState extends State<RelatorioCasasScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: context.read<CasaDeApoioProvider>().casaDeApoioSelecionada,
+      valueListenable: context.read<CasaDeApoioController>().casaDeApoioSelecionada,
       builder: (context, casaDeApoio, child) {
         return Scaffold(
           appBar: PageAppBar(titulo: "Relatorios", casaDeApoioSelecionada: casaDeApoio),

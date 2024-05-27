@@ -14,7 +14,7 @@ class PacienteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var usuario =context.read<UsuarioProvider>().usuarioAtual;
+    var usuario =context.read<UsuarioController>().usuarioAtual;
     return CustomTabBar(
       appBar: PacienteAppbar(paciente: paciente), 
       fabs_: usuario?.nivelAcesso==NivelAcesso.casaDeApoio?[

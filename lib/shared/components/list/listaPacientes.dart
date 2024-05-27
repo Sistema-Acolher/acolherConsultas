@@ -14,7 +14,7 @@ class ListaPacientes extends StatelessWidget {
   final List<CadastroPaciente> listaObjeto;
 
   List<Widget> data(BuildContext context){
-    var usuario =context.read<UsuarioProvider>().usuarioAtual;
+    var usuario =context.read<UsuarioController>().usuarioAtual;
     List<Widget> listaWidgets=[];
     for (var item in listaObjeto) {
       listaWidgets.add(

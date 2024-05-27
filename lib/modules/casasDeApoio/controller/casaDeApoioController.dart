@@ -3,8 +3,8 @@ import 'package:acolherconsultas/shared/databases/repositories/casaDeApoioReposi
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// A classe CasaDeApoioProvider é a classe que controla os casasDeApoio.
-class CasaDeApoioProvider extends ChangeNotifier {
+// A classe CasaDeApoioController é a classe que controla os casasDeApoio.
+class CasaDeApoioController extends ChangeNotifier {
   // Repositório de casasDeApoio, com métodos de CRUD.
   final _repository = CasaDeApoioRepository();
 

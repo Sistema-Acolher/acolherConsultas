@@ -40,7 +40,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     _usuarioCadastroState.nivelAcesso.addListener(() {
       nivelSelecionadoNotifier.value = _usuarioCadastroState.nivelAcesso.text;
     });
-    casasDeApoioCadastradas = context.read<CasaDeApoioProvider>().casasDeApoio;
+    casasDeApoioCadastradas = context.read<CasaDeApoioController>().casasDeApoio;
   }
 
   @override
@@ -171,7 +171,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     try {
       // Cria um objeto de usuário e tenta cadastrar no firebase
       final cadastro = _usuarioCadastroState.cadastroUsuario(casasDeApoioCadastradas);
-      await context.read<UsuarioProvider>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then((value) => Navigator.of(context).pop());
+      await context.read<UsuarioController>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then((value) => Navigator.of(context).pop());
     } on FirebaseAuthException catch (e) {
       if(e.code.contains("email-already-in-use")){
         setState(() {

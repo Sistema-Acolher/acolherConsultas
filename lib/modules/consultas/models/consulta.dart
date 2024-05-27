@@ -5,11 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Consulta {
   String? id;
+  String casaDeApoioId;
   String? pacienteNome;
   String pacienteId;
   DateTime dataHorario;
   String estado;
   Consulta({
+    this.id,
+    required this.casaDeApoioId,
     this.pacienteNome,
     required this.pacienteId,
     required this.dataHorario,
@@ -17,12 +20,16 @@ class Consulta {
   });
 
   Consulta copyWith({
+    String? id,
+    String? casaDeApoioId,
     String? pacienteNome,
     String? pacienteId,
     DateTime? dataHorario,
     String? estado,
   }) {
     return Consulta(
+      id: id ?? this.id,
+      casaDeApoioId: casaDeApoioId ?? this.casaDeApoioId,
       pacienteNome: pacienteNome ?? this.pacienteNome,
       pacienteId: pacienteId ?? this.pacienteId,
       dataHorario: dataHorario ?? this.dataHorario,
@@ -32,6 +39,8 @@ class Consulta {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
+      'casaDeApoioId': casaDeApoioId,
       'pacienteNome': pacienteNome,
       'pacienteId': pacienteId,
       'dataHorario': dataHorario.millisecondsSinceEpoch,
@@ -41,6 +50,8 @@ class Consulta {
 
   factory Consulta.fromMap(Map<String, dynamic> map) {
     return Consulta(
+      id: map['id'] != null ? map['id'] as String : null,
+      casaDeApoioId: map['casaDeApoioId'] as String,
       pacienteNome: map['pacienteNome'] != null ? map['pacienteNome'] as String : null,
       pacienteId: map['pacienteId'] as String,
       dataHorario: (map['dataHorario'] as Timestamp).toDate(),
@@ -54,7 +65,7 @@ class Consulta {
 
   @override
   String toString() {
-    return 'Consulta(pacienteNome: $pacienteNome, pacienteId: $pacienteId, dataHorario: $dataHorario, estado: $estado)';
+    return 'Consulta(id: $id, casaDeApoioId: $casaDeApoioId, pacienteNome: $pacienteNome, pacienteId: $pacienteId, dataHorario: $dataHorario, estado: $estado)';
   }
 
   @override
@@ -62,6 +73,8 @@ class Consulta {
     if (identical(this, other)) return true;
   
     return 
+      other.id == id &&
+      other.casaDeApoioId == casaDeApoioId &&
       other.pacienteNome == pacienteNome &&
       other.pacienteId == pacienteId &&
       other.dataHorario == dataHorario &&
@@ -70,7 +83,9 @@ class Consulta {
 
   @override
   int get hashCode {
-    return pacienteNome.hashCode ^
+    return id.hashCode ^
+      casaDeApoioId.hashCode ^
+      pacienteNome.hashCode ^
       pacienteId.hashCode ^
       dataHorario.hashCode ^
       estado.hashCode;

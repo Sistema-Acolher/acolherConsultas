@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
         // O ChangeNotifierProvider é um provedor de estado que notifica os 'ouvintes' quando o objeto fornecido muda.
         ChangeNotifierProvider(create: (_) => PacientesCadastradosController()),
         ChangeNotifierProvider(create: (_) => ConsultaController()),
-        ChangeNotifierProvider(create: (_) => UsuarioProvider()),
-        ChangeNotifierProvider(create: (_) => CasaDeApoioProvider())
+        ChangeNotifierProvider(create: (_) => UsuarioController()),
+        ChangeNotifierProvider(create: (_) => CasaDeApoioController())
       ],
       // O MaterialApp é um widget que define a interface do aplicativo (apenas um por aplicativo).
       child: MaterialApp(

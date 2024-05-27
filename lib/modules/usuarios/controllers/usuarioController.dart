@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class UsuarioProvider extends ChangeNotifier {
+class UsuarioController extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final UsuarioRepository _usuarioRepository = UsuarioRepository();
   NivelAcesso? _nivelAcesso;

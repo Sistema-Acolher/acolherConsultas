@@ -19,7 +19,7 @@ class _CasasDropdownState extends State<CasasDropdown> {
   @override
   void initState() {
     super.initState();
-    _selectedItem = context.read<CasaDeApoioProvider>().casaDeApoioSelecionada.value.nome ?? "Servos";
+    _selectedItem = context.read<CasaDeApoioController>().casaDeApoioSelecionada.value.nome ?? "Servos";
   }
 
   @override
@@ -36,8 +36,8 @@ class _CasasDropdownState extends State<CasasDropdown> {
           onChanged: (String? newValue) {
             setState(() {
               _selectedItem = newValue!;
-              context.read<CasaDeApoioProvider>().selecionarCasaDeApoio(
-                context.read<CasaDeApoioProvider>().casasDeApoio.firstWhere((element) => element.nome == newValue)
+              context.read<CasaDeApoioController>().selecionarCasaDeApoio(
+                context.read<CasaDeApoioController>().casasDeApoio.firstWhere((element) => element.nome == newValue)
               );
             });
           },

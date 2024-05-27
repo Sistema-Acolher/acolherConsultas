@@ -18,10 +18,10 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final casaDeApoioSelecionada = context.read<CasaDeApoioProvider>().casaDeApoioSelecionada;
-    final listaCasasDeApoio = context.read<CasaDeApoioProvider>().casasDeApoio;
+    final casaDeApoioSelecionada = context.read<CasaDeApoioController>().casaDeApoioSelecionada;
+    final listaCasasDeApoio = context.read<CasaDeApoioController>().casasDeApoio;
     final listMapCasasDeApoio = listaCasasDeApoio.map((e) => {'name': e.nome, 'color': e.cor}).toList();
-    var usuario =context.read<UsuarioProvider>().usuarioAtual;
+    var usuario =context.read<UsuarioController>().usuarioAtual;
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: amareloNavbar,
@@ -44,7 +44,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           child: UserDropdown(
             // Passa o nome do usuário logado para o componente
             // userName: context.read<UsuarioProvider>().usuarioAtual!.nome,
-            userName: context.read<UsuarioProvider>().usuarioAtual?.nome ??
+            userName: context.read<UsuarioController>().usuarioAtual?.nome ??
                 'Nome usuario',
           ),
         ),
