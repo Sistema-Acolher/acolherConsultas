@@ -38,7 +38,6 @@ class _PacienteListaState extends State<PacienteLista> {
 
   // Carrega os pacientes do banco, busca todos os pacientes e os filtra de acordo com o campo _busca
   Future<void> _filtrarPacientes() async {
-    await context.read<PacientesCadastradosController>().getPacientes();
     List<CadastroPaciente> todosPacientes = Provider.of<PacientesCadastradosController>(context, listen: false).pacientes
       .where((element) => 
         element.paciente.casaDeApoioId==Provider.of<CasaDeApoioController>(context, listen: false).casaDeApoioSelecionada.value.id

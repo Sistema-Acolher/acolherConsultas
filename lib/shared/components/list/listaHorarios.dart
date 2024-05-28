@@ -117,7 +117,7 @@ class _ListaHorarioState extends State<ListaHorario> {
         return AlertDialog(
           contentPadding: const EdgeInsets.only(top: 10,left: 10,right: 10),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-          content: Confirmacao(nome: pacienteNome, dataHorario: horario)
+          content: Confirmacao(nome: pacienteNome, dataHorario: horario, confimacao: (){},)
         );
       },
     );
