@@ -63,8 +63,6 @@ class _RelatorioCasasScreenState extends State<RelatorioCasasScreen> {
                     options: const ["Servos", "Maria Paola", "Santa Isabel"],
                     label: "Casas",
                     controller: _controllerRelatorioCasas.casas,
-                    icones: const ['src/icons/servos.svg', 'src/icons/mariaPaola.svg', 'src/icons/santaIsabel.svg'],
-                    labelPosition: "right",
                   )
                 ],
               ),
