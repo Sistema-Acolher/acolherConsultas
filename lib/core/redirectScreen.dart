@@ -1,3 +1,5 @@
+import 'package:acolherconsultas/core/splashScreen.dart';
+import 'package:acolherconsultas/modules/sistema/views/loadingLogo.dart';
 import "package:collection/collection.dart";
 import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/sistema/views/homeAcolher.dart';
@@ -22,7 +24,7 @@ class RedirectScreen extends StatelessWidget {
       builder: (context, snapshot) {
         // Podemos tirar esse if, mas isso faz com que seja redirecionado para uma nova tela de login enquanto carrega
         if(snapshot.connectionState == ConnectionState.waiting){
-          return const Scaffold();
+          return const LoadingLogo();
         } else if(snapshot.connectionState == ConnectionState.active && snapshot.hasData){
           // Widget que verifica o nível de acesso do usuário
           // E redireciona para a tela correta
@@ -31,7 +33,7 @@ class RedirectScreen extends StatelessWidget {
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot){
               // Podemos tirar esse if, mas isso faz com que seja redirecionado para uma nova tela de login enquanto carrega
               if(snapshot.connectionState == ConnectionState.waiting){
-                return const Scaffold();
+                return const LoadingLogo();
               } else if(snapshot.connectionState == ConnectionState.done){
                 switch (snapshot.data![0]){
                   case NivelAcesso.admin:

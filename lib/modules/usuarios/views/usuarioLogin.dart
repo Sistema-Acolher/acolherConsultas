@@ -69,7 +69,10 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.15),
-            child: const Image(image: AssetImage('src/images/logo.gif'))
+            child: const Hero(
+              tag: "logo",
+              child: Image(image: AssetImage('src/images/logo.gif'))
+            )
           ),
           Container(
             padding: const EdgeInsets.all(20),
@@ -181,9 +184,15 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> {
             erroFirebase = "Usuário ou senha inválidos";
             mostrarErroFirebase = true;
           });
-        } else {
+        } else if(e.code.contains("network-request-failed")) {
           setState(() {
-            erroFirebase = "Erro ao realizar login";
+            erroFirebase = "Erro: Sem conexão com a internet";
+            mostrarErroFirebase = true;
+          });
+        } else {
+          print(e.code);
+          setState(() {
+            erroFirebase = "Erro: ${e.code}";
             mostrarErroFirebase = true;
           });
         }

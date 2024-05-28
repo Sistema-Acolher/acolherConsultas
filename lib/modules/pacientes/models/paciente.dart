@@ -166,7 +166,7 @@ class Paciente{
       'cpf': cpf,
       'rg': rg,
       'numeroCartaoSus': numeroCartaoSus,
-      'dataNasc': dataNasc.millisecondsSinceEpoch,
+      'dataNasc': dataNasc,
       'genero': genero,
       'motivoAcolhimento': motivoAcolhimento,
       'acolhimentoAnterior': acolhimentoAnterior,

@@ -161,7 +161,17 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                       label: "Casa de Apoio", 
                       checkNotifier: dropdownNotifier, 
                       controller: _usuarioCadastroState.casaDeApoio
-                    )
+                    ),
+                  if(mostrarErroFirebase && erroFirebase.contains("Erro"))
+                    Center(
+                      child: Text(
+                        erroFirebase,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 13
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -187,9 +197,15 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
           erroFirebase = "A senha deve ter no mínimo 6 caracteres";
           mostrarErroFirebase = true;
         });
-      } else {
+      } else if(e.code.contains("network-request-failed")) {
         setState(() {
-          erroFirebase = "Erro ao cadastrar";
+          erroFirebase = "Erro: Sem conexão com a internet";
+          mostrarErroFirebase = true;
+        });
+      } else {
+        print(e.code);
+        setState(() {
+          erroFirebase = "Erro: ${e.code}";
           mostrarErroFirebase = true;
         });
       }
