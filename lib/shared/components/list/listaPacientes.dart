@@ -23,17 +23,17 @@ class ListaPacientes extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(builder: (context) => 
-                          usuario?.nivelAcesso==NivelAcesso.acolher?HomePaciente(paciente: item.paciente):PacienteScreen(paciente: item.paciente))
-                      );
-                    },
-                    child: Padding(
+              InkWell(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(builder: (context) => 
+                      usuario?.nivelAcesso==NivelAcesso.acolher?HomePaciente(paciente: item.paciente):PacienteScreen(paciente: item.paciente))
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         item.paciente.nome,
@@ -43,37 +43,37 @@ class ListaPacientes extends StatelessWidget {
                           fontSize: 20
                         )
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2,right: 10),
+                      child: 
+                      // IntrinsicHeight(
+                      //   child: Row(
+                      //     children: [
+                      //       Padding(
+                      //         padding: const EdgeInsets.only(right: 2),
+                      //         child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: item.paciente.genero=="masculino"?Colors.black:Colors.grey,),
+                      //       ),
+                      //       const VerticalDivider(
+                      //         width: 10,
+                      //         thickness: 2,
+                      //         color: Colors.black,
+                      //       ),
+                      //       SvgPicture.asset("src/icons/menina.svg",height: 35, color: item.paciente.genero=="feminino"?Colors.black:Colors.grey),
+                      //     ],
+                      //   ),
+                      // ),
+                      item.paciente.genero=="masculino"?
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: Colors.black),
+                        ):
+                      item.paciente.genero=="feminino"?
+                        SvgPicture.asset("src/icons/menina.svg",height: 35, color: Colors.black):
+                        const SizedBox.shrink()
                     )
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 2,right: 10),
-                    child: 
-                    // IntrinsicHeight(
-                    //   child: Row(
-                    //     children: [
-                    //       Padding(
-                    //         padding: const EdgeInsets.only(right: 2),
-                    //         child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: item.paciente.genero=="masculino"?Colors.black:Colors.grey,),
-                    //       ),
-                    //       const VerticalDivider(
-                    //         width: 10,
-                    //         thickness: 2,
-                    //         color: Colors.black,
-                    //       ),
-                    //       SvgPicture.asset("src/icons/menina.svg",height: 35, color: item.paciente.genero=="feminino"?Colors.black:Colors.grey),
-                    //     ],
-                    //   ),
-                    // ),
-                    item.paciente.genero=="masculino"?
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: Colors.black),
-                      ):
-                    item.paciente.genero=="feminino"?
-                      SvgPicture.asset("src/icons/menina.svg",height: 35, color: Colors.black):
-                      const SizedBox.shrink()
-                  )
-                ],
+                  ],
+                ),
               ),
               item!=listaObjeto.last?const Divider(thickness: 1, height: 0,color: Color(0x1E212121),):const SizedBox.shrink()
             ],

@@ -15,7 +15,7 @@ class Agenda extends StatelessWidget {
       builder: (context, casaDeApoio, child) {
         return Scaffold(
           appBar: PageAppBar(titulo: "Agenda", casaDeApoioSelecionada: casaDeApoio),
-          body: const Calendario()
+          body: Calendario(casaDeApoio: casaDeApoio,)
         );
       }
     );

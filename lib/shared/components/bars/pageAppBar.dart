@@ -20,6 +20,7 @@ class PageAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _PageAppBarState extends State<PageAppBar> {
+  
   @override
   Widget build(BuildContext context) {
   var usuario =context.read<UsuarioController>().usuarioAtual;
@@ -35,7 +36,7 @@ class _PageAppBarState extends State<PageAppBar> {
       title: TextoColorido(palavra: widget.titulo),
       actions: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.only(right: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -49,7 +50,11 @@ class _PageAppBarState extends State<PageAppBar> {
                 ),
               ),
               Text(
-                widget.casaDeApoioSelecionada.nome ?? "",
+                widget.casaDeApoioSelecionada.nome != null
+                ? (widget.casaDeApoioSelecionada.nome!.split(" ").length > 1
+                    ? "${widget.casaDeApoioSelecionada.nome!.split(" ")[0]} ${widget.casaDeApoioSelecionada.nome!.split(" ")[1][0]}."
+                    : widget.casaDeApoioSelecionada.nome!)
+                : "",
                 style: const TextStyle(
                   fontFamily: "BobbyJonesSoft",
                   fontSize: 18,

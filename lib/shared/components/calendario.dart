@@ -1,11 +1,13 @@
 import 'dart:collection';
 
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/list/listaHorarios.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -26,9 +28,10 @@ int getHashCode(DateTime key) {
   return key.day * 1000000 + key.month * 10000 + key.year;
 }
 
+
 class Calendario extends StatefulWidget {
-  const Calendario({super.key, this.cor = 0xFF2277AE, this.paciente});
-  final int cor;
+  const Calendario({super.key, this.paciente, this.casaDeApoio});
+  final CasaDeApoio? casaDeApoio;
   final Paciente? paciente;
 
   @override
@@ -51,6 +54,14 @@ class _CalendarioState extends State<Calendario> {
   }
 
   @override
+  void didUpdateWidget(Calendario oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.casaDeApoio != oldWidget.casaDeApoio) {
+      _loadConsultasFuture = loadConsultas();
+    }
+  }
+
+  @override
   void dispose() {
     _focusedDay.dispose();
     super.dispose();
@@ -58,12 +69,22 @@ class _CalendarioState extends State<Calendario> {
 
   // Carrega as consultas para a variavel kEvents, para ser usado na HASH de dias
    Future<void> loadConsultas() async{
+    String casaId="";
+    if (widget.paciente != null) {
+      casaId=widget.paciente!.casaDeApoioId;
+    }else{
+      casaId=widget.casaDeApoio?.id ?? "";
+    }
     await context.read<ConsultaController>().getConsultas();
     List<DateTime> dias = Provider.of<ConsultaController>(context,listen: false).consultas
-      .where((element) => element.dataHorario.isAfter(DateTime.utc(DateTime.now().year,1,1)) && element.dataHorario.isBefore(DateTime.utc(DateTime.now().year,12,31)))
+      .where((element) => 
+        element.dataHorario.isAfter(DateTime.utc(DateTime.now().year,1,1)) && 
+        element.dataHorario.isBefore(DateTime.utc(DateTime.now().year,12,31)) &&
+        element.casaDeApoioId == casaId)
       .toList()
       .map((e) => e.dataHorario).toSet().toList();
     var source = { for (var e in dias) e : Provider.of<ConsultaController>(context,listen: false).consultas.where((element) =>element.dataHorario.day==e.day).toList() };
+    kEvents.clear();
     kEvents.addAll(source);
   }
 
@@ -78,7 +99,10 @@ class _CalendarioState extends State<Calendario> {
       _selectedDay=selectedDay;
       _focusedDay.value = focusedDay;
       consultasDoDia.clear();
-      consultasDoDia.addAll(Provider.of<ConsultaController>(context, listen: false).consultas.where((element) =>element.dataHorario.day==selectedDay.day).toList());
+      consultasDoDia.addAll(
+        Provider.of<ConsultaController>(context, listen: false).consultas.where((element) =>
+          element.dataHorario.day==selectedDay.day
+        ).toList());
     });
     _dialogBuilder(context,selectedDay);
   }
@@ -91,7 +115,7 @@ class _CalendarioState extends State<Calendario> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Color(widget.cor),
+              color: Color(widget.casaDeApoio?.cor??azul.value).withOpacity(0.7),
               borderRadius: BorderRadius.circular(16)
             ),
             padding: const EdgeInsets.all(20),
@@ -160,7 +184,7 @@ class _CalendarioState extends State<Calendario> {
                                         borderRadius: BorderRadius.all(Radius.circular(8))
                                       ),
                                       padding: const EdgeInsets.all(8),
-                                      child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
+                                      child: Center(child: AutoSizeText(day.day.toString(), style: const TextStyle(color: Colors.white))),
                                     ),
                                   ),
                                 ),
@@ -188,7 +212,7 @@ class _CalendarioState extends State<Calendario> {
                                         borderRadius: BorderRadius.all(Radius.circular(8))
                                       ),
                                       padding: const EdgeInsets.all(8),
-                                      child: Center(child: Text(day.day.toString(), style: const TextStyle(color: Colors.white))),
+                                      child: Center(child: AutoSizeText(day.day.toString(), style: const TextStyle(color: Colors.white))),
                                     ),
                                   ),
                                 ),

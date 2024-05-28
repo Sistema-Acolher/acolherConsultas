@@ -38,7 +38,7 @@ class _ListaHorarioState extends State<ListaHorario> {
     List<Widget> list = [];
     for (var item in horarios) {
       String? nome;
-      if (widget.consultasDoDia.isNotEmpty && consultaAtual<widget.consultasDoDia.length && widget.consultasDoDia[consultaAtual].dataHorario.difference(item)<const Duration(minutes: 5)) {
+      if (widget.consultasDoDia.isNotEmpty && consultaAtual<widget.consultasDoDia.length && widget.consultasDoDia[consultaAtual].dataHorario.hour==item.hour) {
         nome=pacientes.where((paciente) => paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull
           ?.paciente.nome;
         consultaAtual++;

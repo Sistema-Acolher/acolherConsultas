@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 // Classe que cria um campo de entrada de texto com checkboxes.
 class InputCheckBoxAcolher extends StatefulWidget {

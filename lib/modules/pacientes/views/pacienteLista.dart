@@ -1,7 +1,9 @@
 import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/searchButton.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
@@ -11,8 +13,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
 class PacienteLista extends StatefulWidget {
-  const PacienteLista({super.key, this.cor = 0xFF2277AE});
-  final int cor;
+  const PacienteLista({super.key});
 
   @override
   State<PacienteLista> createState() => _PacienteListaState();
@@ -25,6 +26,7 @@ class _PacienteListaState extends State<PacienteLista> {
   late ValueNotifier<List<CadastroPaciente>> _pacientesFiltrados;
   // Responsável por aguardar os dados vindos do banco
   late Future<void> _loadPacientesFuture;
+  late CasaDeApoio casaDeApoioSelected;
 
   @override
   void initState() {
@@ -35,9 +37,12 @@ class _PacienteListaState extends State<PacienteLista> {
   }
 
   // Carrega os pacientes do banco, busca todos os pacientes e os filtra de acordo com o campo _busca
-  Future<void>  _filtrarPacientes() async {
+  Future<void> _filtrarPacientes() async {
     await context.read<PacientesCadastradosController>().getPacientes();
-    List<CadastroPaciente> todosPacientes = Provider.of<PacientesCadastradosController>(context, listen: false).pacientes;
+    List<CadastroPaciente> todosPacientes = Provider.of<PacientesCadastradosController>(context, listen: false).pacientes
+      .where((element) => 
+        element.paciente.casaDeApoioId==Provider.of<CasaDeApoioController>(context, listen: false).casaDeApoioSelecionada.value.id
+      ).toList();
     String query = _busca.text.toLowerCase();
 
     if (query.isNotEmpty) {
@@ -54,6 +59,9 @@ class _PacienteListaState extends State<PacienteLista> {
     return ValueListenableBuilder(
       valueListenable: context.read<CasaDeApoioController>().casaDeApoioSelecionada,
       builder: (context, casaDeApoio, child) {
+        // Reinicializa o future quando casaDeApoio muda
+        _loadPacientesFuture = _filtrarPacientes();
+
         return Scaffold(
           appBar: PageAppBar(titulo: "Pacientes", casaDeApoioSelecionada: casaDeApoio),
           body: FutureBuilder<void>(
@@ -72,7 +80,7 @@ class _PacienteListaState extends State<PacienteLista> {
                         margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Color(widget.cor))
+                          border: Border.all(color: Color(casaDeApoio.cor??azul.value))
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,13 +104,13 @@ class _PacienteListaState extends State<PacienteLista> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
-                                color: Color(widget.cor),
+                                color: Color(casaDeApoio.cor??azul.value),
                                 borderRadius: BorderRadius.circular(7),
-                                border: Border.all(color: Color(widget.cor))
+                                border: Border.all(color: Color(casaDeApoio.cor??azul.value))
                               ),
                               child: Center(
                                 child: SearchButton(
-                                  backgroundColor: Color(widget.cor),
+                                  backgroundColor: Color(casaDeApoio.cor??azul.value),
                                   icon: Icons.search,
                                   onPressed: _filtrarPacientes,
                                 ),
