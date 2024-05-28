@@ -46,7 +46,7 @@ class CadastroPaciente {
 
   factory CadastroPaciente.fromMap(Map<String, dynamic> map) {
     return CadastroPaciente(
-      paciente: Paciente.fromMap(map['paciente'] as Map<String,dynamic>),
+      paciente: Paciente.fromMap(map['paciente'] as Map<String,dynamic>,id: map['id']),
       dataCadastro: (map['dataCadastro'] as Timestamp).toDate(),
       dataAtualizacao: (map['dataAtualizacao'] as Timestamp).toDate(),
     );

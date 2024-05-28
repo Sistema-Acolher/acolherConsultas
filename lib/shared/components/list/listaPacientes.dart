@@ -4,12 +4,11 @@ import 'package:acolherconsultas/modules/sistema/views/homePaciente.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class ListaPacientes extends StatelessWidget {
-  const ListaPacientes({super.key, required this.listaObjeto});
+class ListaDePacientes extends StatelessWidget {
+  const ListaDePacientes({super.key, required this.listaObjeto});
 
   final List<CadastroPaciente> listaObjeto;
 

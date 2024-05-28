@@ -134,7 +134,7 @@ class _PacienteListaState extends State<PacienteLista> {
                         ),
                         child: ValueListenableBuilder<List<CadastroPaciente>>(
                           valueListenable: _pacientesFiltrados,
-                          builder: (context, pacientes, child) => ListaPacientes(listaObjeto: pacientes)
+                          builder: (context, pacientes, child) => ListaDePacientes(listaObjeto: pacientes)
                         ),
                       ),
                     ],

@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart';
 
 // A classe Paciente é a classe que representa um paciente.
@@ -9,7 +10,8 @@ import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart
 // Gerada automaticamente pela extensão "Dart Data Class Generator".
 // Possui métodos para converter um objeto Paciente em um Map e vice-versa, além de converter um objeto Paciente em JSON e vice-versa.
 // Além disso, possui um método copyWith para copiar um objeto Paciente e alterar seus atributos, e o método toString, alteração da função == e definição do hashCode.
-class Paciente{
+class Paciente {
+  String? id;
   String nome;
   bool ativo;
   String cpf;
@@ -25,6 +27,7 @@ class Paciente{
   String casaDeApoioId;
 
   Paciente({
+    this.id,
     required this.nome,
     required this.ativo,
     required this.cpf,
@@ -128,6 +131,7 @@ class Paciente{
   }
 
   Paciente copyWith({
+    String? id,
     String? nome,
     bool? ativo,
     String? cpf,
@@ -143,6 +147,7 @@ class Paciente{
     String? casaDeApoioId,
   }) {
     return Paciente(
+      id: id ?? this.id,
       nome: nome ?? this.nome,
       ativo: ativo ?? this.ativo,
       cpf: cpf ?? this.cpf,
@@ -161,6 +166,7 @@ class Paciente{
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'nome': nome,
       'ativo': ativo,
       'cpf': cpf,
@@ -177,8 +183,9 @@ class Paciente{
     };
   }
 
-  factory Paciente.fromMap(Map<String, dynamic> map) {
+  factory Paciente.fromMap(Map<String, dynamic> map,{String? id}) {
     return Paciente(
+      id: id??"",
       nome: map['nome'] as String,
       ativo: map['ativo'] as bool,
       cpf: map['cpf'] as String,
@@ -188,9 +195,9 @@ class Paciente{
       genero: map['genero'] as String,
       motivoAcolhimento: map['motivoAcolhimento'] as String,
       acolhimentoAnterior: map['acolhimentoAnterior'] as String,
-      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>): null,
-      orientacoes: map['orientacoes'] != null ? map['orientacoes'] as String: null,
-      encaminhamentos: map['orientacoes'] != null ? map['encaminhamentos'] as String: null,
+      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
+      orientacoes: map['orientacoes'] != null ? map['orientacoes'] as String : null,
+      encaminhamentos: map['encaminhamentos'] != null ? map['encaminhamentos'] as String : null,
       casaDeApoioId: map['casaDeApoioId'] as String,
     );
   }
@@ -201,7 +208,7 @@ class Paciente{
 
   @override
   String toString() {
-    return 'Paciente(nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, genero: $genero, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
+    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, genero: $genero, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
   }
 
   @override
@@ -209,6 +216,7 @@ class Paciente{
     if (identical(this, other)) return true;
   
     return 
+      other.id == id &&
       other.nome == nome &&
       other.ativo == ativo &&
       other.cpf == cpf &&
@@ -226,7 +234,8 @@ class Paciente{
 
   @override
   int get hashCode {
-    return nome.hashCode ^
+    return id.hashCode ^
+      nome.hashCode ^
       ativo.hashCode ^
       cpf.hashCode ^
       rg.hashCode ^
