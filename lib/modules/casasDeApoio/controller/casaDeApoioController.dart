@@ -17,7 +17,7 @@ class CasaDeApoioController extends ChangeNotifier {
   ValueNotifier<CasaDeApoio> get casaDeApoioSelecionada => _casaDeApoioSelecionada;
 
   // Método que busca a lista de casasDeApoio e notifica os 'ouvintes'.
-  Future<void> getCasasDeApoio() async {
+  Future<List<CasaDeApoio>?> getCasasDeApoio() async {
     _casasDeApoio.clear();
 
     // Busca a lista de casasDeApoio no repositório de casasDeApoio e adiciona na lista de casasDeApoio do provedor.
@@ -26,8 +26,8 @@ class CasaDeApoioController extends ChangeNotifier {
       c.id = casaDeApoio["id"];
       _casasDeApoio.add(c);
     }
-
     notifyListeners();
+    return _casasDeApoio;
   }
 
   // Método que seleciona uma casaDeApoio.
