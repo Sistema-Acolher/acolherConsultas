@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Agenda extends StatelessWidget {
-  const Agenda({super.key, this.cor = 0xFF2277AE});
-  final int cor;
+  const Agenda({super.key});
 
   @override
   Widget build(BuildContext context) {

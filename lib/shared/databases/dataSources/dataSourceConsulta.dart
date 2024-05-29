@@ -3,9 +3,11 @@
 abstract class DataSourceConsulta{
   Future<String> criar(Map<String, dynamic> consulta);
 
-  Future<void> remover(Map<String, dynamic> consulta);
+  Future<void> remover(String consultaId);
 
-  Future<void> atualizar(Map<String, dynamic> consulta);
+  Future<void> atualizar(Map<String, dynamic> consulta, String consultaId);
+
+  Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario);
 
   Future<List<Map<String, dynamic>>> selecionarTodos();
 }

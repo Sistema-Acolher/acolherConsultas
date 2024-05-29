@@ -1,13 +1,17 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
+import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultaAgendar.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultaNovaScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
+import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:provider/provider.dart';
 
 class ListaComIcone extends StatefulWidget {
   const ListaComIcone({super.key, this.listaConsulta, this.listaCasaApoio, this.listaUsuario, this.paciente, required this.label});
@@ -121,7 +125,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
                     
                   }
                   else if(item.estado=="agendada"||item.estado=="atrasada"){
-                    _optionsDialogBuilder(context);
+                    _optionsDialogBuilder(context,item);
                   }
                 }
               )
@@ -141,24 +145,33 @@ class _ListaComIconeState extends State<ListaComIcone> {
   }
 
   // Dialog que abre a opcao de reagendar e de consultar.
-  Future<void> _optionsDialogBuilder(BuildContext context) {
+  Future<void> _optionsDialogBuilder(BuildContext context, Consulta consulta) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               CircleButton(title: "Reagendar", icon: Icons.edit_calendar_outlined, onPressed: (){
-                Navigator.of(context, rootNavigator: true).pop(false);
-                Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder:(context) => ConsultaAgendar(paciente: widget.paciente,)));
+                Navigator.pop(context);
+                Navigator.of(context).push(MaterialPageRoute(builder:(context) => ConsultaAgendar(paciente: widget.paciente,consulta: consulta,)));
               }),
-              CircleButton(title: "Consultar", icon: Icons.edit_calendar_outlined, onPressed: (){
-                Navigator.of(context, rootNavigator: true).pop(false);
-                Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder:(context) => ConsultaNovaScreen(pacienteConsulta: widget.paciente,)));
-              })
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: CircleButton(title: "Consultar", icon: Icons.content_paste, onPressed: (){
+                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context) => ConsultaNovaScreen(pacienteConsulta: widget.paciente,)));
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: CircleButton(title: "Cancelar", icon: Icons.delete, onPressed: (){
+                  _consultaDeleteDialogBuilder(context,consulta);
+                }),
+              )
             ],
           )
         );
@@ -166,7 +179,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
     );
   }
 
-  // Dialog que abre as consultas.
+  // Dialog que abre o resto das consultas.
   Future<void> _consultasDialogBuilder(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -190,4 +203,29 @@ class _ListaComIconeState extends State<ListaComIcone> {
       },
     );
   }
+
+  // Dialog que confirma deletar a consulta.
+  Future<void> _consultaDeleteDialogBuilder(BuildContext context,Consulta consultaRemove) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.only(top: 10,left: 10,right: 10),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+          content: Confirmacao(
+            body: false, 
+            nome:"", dataHorario: DateTime.now(), confimacao: () async {
+            await context.read<ConsultaController>().remover(consultaRemove.id??"").then((value){
+                Navigator.pop(context);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cancelada com sucesso")));
+              });
+          })
+        );
+      },
+    );
+  }
+
+
 }

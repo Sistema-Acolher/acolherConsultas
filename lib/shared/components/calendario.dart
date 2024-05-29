@@ -30,7 +30,8 @@ int getHashCode(DateTime key) {
 
 
 class Calendario extends StatefulWidget {
-  const Calendario({super.key, this.paciente, this.casaDeApoio});
+  const Calendario({super.key, this.paciente, this.casaDeApoio, this.consulta});
+  final Consulta? consulta;
   final CasaDeApoio? casaDeApoio;
   final Paciente? paciente;
 
@@ -260,7 +261,7 @@ class _CalendarioState extends State<Calendario> {
         return AlertDialog(
           contentPadding: const EdgeInsets.all(2),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-          content: ListaHorario(consultasDoDia: consultasDoDia, paciente: widget.paciente, dia: selectedDay)
+          content: ListaHorario(consultasDoDia: consultasDoDia, paciente: widget.paciente, dia: selectedDay,consulta: widget.consulta,)
         );
       },
     );

@@ -8,16 +8,35 @@ class DataSourceFirebaseConsulta extends DataSourceConsulta {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<void> atualizar(Map<String, dynamic> consulta) async {
+  Future<void> atualizar(Map<String, dynamic> consulta,String consultaId) async {
+    await _firestore.collection("consultas").doc(consultaId).update(consulta);
   }
 
   @override
   Future<String> criar(Map<String, dynamic> consulta) async {
-    return "";
+    DocumentReference<Map<String, dynamic>> consultaAdicionada = await _firestore.collection("consultas").add(consulta);
+
+    return consultaAdicionada.id;
   }
 
   @override
-  Future<void> remover(Map<String, dynamic> consulta) async {
+  Future<void> remover(String consultaId) async {
+    await _firestore.collection("consultas").doc(consultaId).delete();
+  }
+
+  @override
+  Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("consultas")
+      .where("casaDeApoioId", isEqualTo: casaApoioId)
+      .where("dataHorario", isGreaterThanOrEqualTo: dataHorario)
+      .where("dataHorario", isLessThan: DateTime(dataHorario.year,dataHorario.month,dataHorario.day,dataHorario.hour+1))
+      .get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+    
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
   }
 
   @override

@@ -7,7 +7,7 @@ class Confirmacao extends StatelessWidget {
   final String? titulo;
   final bool body;
   final DateTime? dataHorario;
-  final Function confimacao;
+  final Function() confimacao;
 
   const Confirmacao({super.key, required this.nome, required this.dataHorario, this.titulo, required this.confimacao, this.body=true});
 
@@ -51,7 +51,7 @@ class Confirmacao extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             IconButton(onPressed: (){Navigator.of(context, rootNavigator: true).pop(false);}, icon: const Icon(Icons.dangerous_outlined,   color: vermelho)),
-            IconButton(onPressed: () => confimacao, icon: const Icon(Icons.check_circle_outline, color: verde)),
+            IconButton(onPressed: confimacao, icon: const Icon(Icons.check_circle_outline, color: verde)),
           ],
         )
       ],

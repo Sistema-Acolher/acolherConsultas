@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
@@ -10,11 +11,13 @@ import 'package:provider/provider.dart';
 class ListaHorario extends StatefulWidget {
   final DateTime? dia;
   final List<Consulta> consultasDoDia;
+  final Function(Paciente p)? onSelect;
   final Paciente? paciente;
+  final Consulta? consulta;
   final bool fundo;
 
   const ListaHorario({
-    super.key, required this.consultasDoDia, this.paciente, this.dia, this.fundo =false
+    super.key, required this.consultasDoDia, this.paciente, this.dia, this.fundo =false, this.consulta, this.onSelect
   });
 
   @override
@@ -37,18 +40,17 @@ class _ListaHorarioState extends State<ListaHorario> {
     }
     List<Widget> list = [];
     for (var item in horarios) {
-      String? nome;
+      Paciente? p;
       if (widget.consultasDoDia.isNotEmpty && consultaAtual<widget.consultasDoDia.length && widget.consultasDoDia[consultaAtual].dataHorario.hour==item.hour) {
-        nome=pacientes.where((paciente) => paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull
-          ?.paciente.nome;
+        p=pacientes.where((paciente) => paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull?.paciente;
         consultaAtual++;
       }else {
-        nome=null;
+        p=null;
       }
-      if(nome != null){
-        List<String> parts = nome.split(' ');
+      if(p != null){
+        List<String> parts = p.nome.split(' ');
         if (parts.length > 2) {
-          nome = '${parts[0]} ${parts[1]}';
+          p.nome = '${parts[0]} ${parts[1]}';
         }
       }
       list.add(Column(
@@ -60,13 +62,16 @@ class _ListaHorarioState extends State<ListaHorario> {
               children: [
                 GestureDetector(
                   onTap: () { 
-                    if (nome==null && widget.paciente!=null && widget.dia!=null &&widget.dia!.isAfter(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day-1))) {
+                    if (widget.onSelect==null && p==null && widget.paciente!=null && widget.dia!=null && widget.dia!.isAfter(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day-1))) {
                       _dialogBuilder(context, widget.paciente?.nome ?? "",item);
+                    }
+                    else if(widget.onSelect!=null && p!=null){ 
+                      widget.onSelect!(p);
                     }
                   },
                   child: Text(
-                    nome??"Vago",
-                    style: TextStyle(color: nome==null?const Color(0xFF0AEC57):Colors.black,fontFamily: "MontSerrat",fontSize: 20)
+                    p!=null?p.nome:"Vago",
+                    style: TextStyle(color: p==null?const Color(0xFF0AEC57):Colors.black,fontFamily: "MontSerrat",fontSize: 20)
                   ),
                 ),
                 Text(
@@ -117,7 +122,28 @@ class _ListaHorarioState extends State<ListaHorario> {
         return AlertDialog(
           contentPadding: const EdgeInsets.only(top: 10,left: 10,right: 10),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-          content: Confirmacao(nome: pacienteNome, dataHorario: horario, confimacao: (){},)
+          content: Confirmacao(nome: pacienteNome, dataHorario: horario, confimacao: () async {
+            if (widget.consulta!=null) {
+              context.read<ConsultaController>().reagendar(horario,widget.consulta!).then((value){
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
+                if (!value.toLowerCase().contains("erro")) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+              });
+            }else{
+              context.read<ConsultaController>().cadastrarConsulta(widget.paciente!,horario).then((value){
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
+                if (!value.toLowerCase().contains("erro")) {
+                  Navigator.pop(context);
+                }
+              });
+            }
+          })
         );
       },
     );

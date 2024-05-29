@@ -1,5 +1,4 @@
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
-import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/databases/dataSources/dataSourceConsulta.dart';
 import 'package:acolherconsultas/shared/databases/firebase/dataSourceFirebaseConsulta.dart';
 
@@ -17,13 +16,18 @@ class ConsultaRepository{
     return _dbFirebase.criar(consulta.toMap());
   }
 
-  Future<void> atualizar(Map<String, dynamic> consulta) async {
-
+  Future<void> atualizar(Consulta consulta,String consultaId) async {
+    return _dbFirebase.atualizar(consulta.toMap(),consultaId);
   }
 
-  Future<void> remover(CadastroPaciente consultaDeletado) async {
-
+  Future<void> remover(String consultaId) async {
+    return _dbFirebase.remover(consultaId);
   }
+
+  Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
+    return _dbFirebase.horarioOcupado(casaApoioId,dataHorario);
+  }
+
   Future<List<Map<String, dynamic>>> selecionarTodos() async {
     return _dbFirebase.selecionarTodos();
   }  

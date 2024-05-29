@@ -39,11 +39,9 @@ class Consulta {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'casaDeApoioId': casaDeApoioId,
-      'pacienteNome': pacienteNome,
       'pacienteId': pacienteId,
-      'dataHorario': dataHorario.millisecondsSinceEpoch,
+      'dataHorario': dataHorario,
       'estado': estado,
     };
   }
