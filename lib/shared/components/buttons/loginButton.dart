@@ -22,16 +22,12 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF212121)),
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-          EdgeInsets.symmetric(horizontal: horizontalPaddingFactor*12, vertical: verticalPaddingFactor*10),
-        ),
-        shape: MaterialStateProperty.all<OutlinedBorder>(
-          RoundedRectangleBorder(
+      style: ElevatedButton.styleFrom(
+        backgroundColor:const Color(0xFF212121),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPaddingFactor*12, vertical: verticalPaddingFactor*10),
+        shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
-        ),
       ),
       child: Text(
         text,
@@ -41,7 +37,7 @@ class LoginButton extends StatelessWidget {
           fontSize: fontSizeFactor*16.0,
           fontFamily: "Roboto"
         ),
-      )
+      ),
     );
   }
 }
