@@ -7,6 +7,7 @@ import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.d
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -182,10 +183,32 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   }
 
   cadastrar() async{
+    context.read<UsuarioController>().showLoading(context);
     try {
       // Cria um objeto de usuário e tenta cadastrar no firebase
       final cadastro = _usuarioCadastroState.cadastroUsuario(casasDeApoioCadastradas);
-      await context.read<UsuarioController>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then((value) => Navigator.of(context).pop());
+      await context.read<UsuarioController>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then(
+        (value) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          // Snackbar informando que um email de verificação foi enviado
+          final snackBar = SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Atenção',
+                    message:
+                        'Outro e-mail de verificação foi enviado para o e-mail cadastrado.',
+                    contentType: ContentType.help,
+                  ),
+                  duration: const Duration(seconds: 10),
+                );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
+        );
     } on FirebaseAuthException catch (e) {
       if(e.code.contains("email-already-in-use")){
         setState(() {
