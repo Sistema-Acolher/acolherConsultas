@@ -62,12 +62,9 @@ class _UserDropdownState extends State<UserDropdown> {
           padding: EdgeInsets.symmetric(horizontal: 16),
           height: 27,
         ),
-        onChanged: (value) {
+        onChanged: (value) async{
           if (value == 'Sair') {
-            setState(() {
-              // Desloga o usuário e redireciona para a tela de login
-              context.read<UsuarioController>().logout();
-            });
+            await context.read<UsuarioController>().logout();
           }
         },
       ),
