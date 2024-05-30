@@ -14,13 +14,13 @@ class Paciente {
   String? id;
   String nome;
   bool ativo;
-  String cpf;
-  String rg;
-  String numeroCartaoSus;
-  DateTime dataNasc;
+  String? cpf;
+  String? rg;
+  String? numeroCartaoSus;
+  DateTime? dataNasc;
   String genero;
   String motivoAcolhimento;
-  String acolhimentoAnterior;
+  String? acolhimentoAnterior;
   HistoriaPregressa? historiaPregressa;
   String? orientacoes;
   String? encaminhamentos;
@@ -30,13 +30,13 @@ class Paciente {
     this.id,
     required this.nome,
     required this.ativo,
-    required this.cpf,
-    required this.rg,
-    required this.numeroCartaoSus,
-    required this.dataNasc,
+    this.cpf,
+    this.rg,
+    this.numeroCartaoSus,
+    this.dataNasc,
     required this.genero,
     required this.motivoAcolhimento,
-    required this.acolhimentoAnterior,
+    this.acolhimentoAnterior,
     this.historiaPregressa,
     this.orientacoes,
     this.encaminhamentos,
@@ -188,13 +188,13 @@ class Paciente {
       id: id??"",
       nome: map['nome'] as String,
       ativo: map['ativo'] as bool,
-      cpf: map['cpf'] as String,
-      rg: map['rg'] as String,
-      numeroCartaoSus: map['numeroCartaoSus'] as String,
-      dataNasc: (map['dataNasc'] as Timestamp).toDate(),
+      cpf: map['cpf'] != null ? map['cpf'] as String : null,
+      rg: map['rg'] != null? map['rg']as String: null,
+      numeroCartaoSus: map['rg'] != null ? map['numeroCartaoSus'] as String: null,
+      dataNasc: map['dataNasc'] != null ? (map['dataNasc'] as Timestamp).toDate() : null,
       genero: map['genero'] as String,
       motivoAcolhimento: map['motivoAcolhimento'] as String,
-      acolhimentoAnterior: map['acolhimentoAnterior'] as String,
+      acolhimentoAnterior: map['acolhimentoAnterior'] != null? map['acolhimentoAnterior'] as String: null,
       historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
       orientacoes: map['orientacoes'] != null ? map['orientacoes'] as String : null,
       encaminhamentos: map['encaminhamentos'] != null ? map['encaminhamentos'] as String : null,

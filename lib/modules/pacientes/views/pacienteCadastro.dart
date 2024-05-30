@@ -1,13 +1,15 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
-
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
+import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -65,11 +67,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
           text: "Salvar",
           icon: Symbols.book,
           onPressed: () {
-            if (radiobuttonNotifier.value == false) {
-              setState(() {
-                radiobuttonNotifier.value = true;
-              });
-            }
             if (dropdownNotifier.value == false) {
               setState(() {
                 dropdownNotifier.value = true;
@@ -83,63 +80,38 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
               });
               showDialog(
                 context: context,
-                builder: (context) => Dialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 10),
-                          const Text(
-                            "Certeza de que deseja prosseguir?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                  child: const Text("Revisar Dados"),
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                  }),
-                              TextButton(
-                                  child: const Text("Cadastrar"),
-                                  onPressed: () async {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content:
-                                                Text('Cadastrando paciente...'),
-                                            duration: Duration()));
-                                    // Chama o método de cadastro de paciente do Provider, através
+                builder: (context) => AlertDialog(
+                    contentPadding:
+                        const EdgeInsets.only(top: 10, left: 10, right: 10),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))),
+                    content: Confirmacao(
+                        body: false,
+                        nome: "",
+                        dataHorario: DateTime.now(),
+                        confimacao: () async {
+                            showLoading(context);
+                            context
+                                .read<PacientesCadastradosController>()
+                                .cadastrarPaciente(
+                                    _stateCadastroPaciente.cadastro(),
                                     context
-                                        .read<PacientesCadastradosController>()
-                                        .cadastrarPaciente(
-                                            _stateCadastroPaciente.cadastro())
-                                        .then((value) {
-                                      Navigator.pop(context);
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(content: Text(value)),
-                                      );
-                                      if (!value.toLowerCase().contains("erro"))
-                                        Navigator.pop(context);
-                                    });
-                                  }),
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
+                                        .read<CasaDeApoioController>()
+                                        .casaDeApoioSelecionada
+                                        .value)
+                                .then((value) {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(value)));
+                              if (!value.toLowerCase().contains("erro")) {
+                                Navigator.pop(context);
+                              }
+                            });
+                          }
+                        )),
               );
             }
           },
@@ -179,7 +151,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                       validation: (value) => Mask.validations.cpf(value),
                       inputFormatter: [Mask.cpf()],
                       keyboardType: TextInputType.number,
-                      emptyMessage: "Informe o CPF",
                     ),
                   ),
                   Padding(
@@ -194,7 +165,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                         FilteringTextInputFormatter.allow(RegExp("[0-9]")),
                         LengthLimitingTextInputFormatter(11),
                       ],
-                      emptyMessage: "Informe o RG",
                     ),
                   ),
                   Padding(
@@ -210,7 +180,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             hashtag: Hashtag.numbers)
                       ],
                       keyboardType: TextInputType.number,
-                      emptyMessage: "Informe o número do cartão do SUS",
                     ),
                   ),
                   Container(
@@ -230,7 +199,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             validation: (value) => Mask.validations.date(value),
                             inputFormatter: [Mask.date()],
                             readOnly: true,
-                            emptyMessage: "Informe a data de nascimento",
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -241,7 +209,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             placeHolder: "..a ..m ..d",
                             controller: _stateCadastroPaciente.idade,
                             readOnly: true,
-                            emptyMessage: "Informe a idade",
                           ),
                         ),
                       ],
@@ -278,4 +245,15 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
           ),
         ));
   }
+
+  showLoading(context) {
+    showDialog(
+        context: context,
+        builder: (context) => const Center(
+                child: CircularProgressIndicator(
+              color: preto,
+            )),
+        barrierDismissible: false);
+  }
 }
+  
