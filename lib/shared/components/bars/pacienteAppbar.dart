@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 class PacienteAppbar extends StatefulWidget implements PreferredSizeWidget {
   final Paciente? paciente;
   final bool admin;
-  final bool ativo;
+  final bool perfil;
 
   const PacienteAppbar(
-      {super.key, this.paciente, this.admin = false, this.ativo = false});
+      {super.key, this.paciente, this.admin = false, this.perfil = false});
 
   @override
   State<PacienteAppbar> createState() => _PacienteAppbar();
@@ -50,11 +50,27 @@ class _PacienteAppbar extends State<PacienteAppbar> {
               reverse: true,
             ),
           ),
-        if (widget.ativo)
-          const Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: SizedBox() //Adicionar Checkbox
-              )
+        if (widget.perfil == true)
+          Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Row(
+            children: [
+              const Text(
+                'Ativo',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              Checkbox(
+                activeColor: preto,
+                value: widget.paciente?.ativo,
+                onChanged: (value) {
+                  setState(() {
+                    widget.paciente?.ativo = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

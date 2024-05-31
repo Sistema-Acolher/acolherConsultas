@@ -31,6 +31,7 @@ class CadastroPacienteScreen extends StatefulWidget {
 
 class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
   final _stateCadastroPaciente = CadastroPacienteState();
+  final _controllerRadio = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ValueNotifier<bool> radiobuttonNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> dropdownNotifier = ValueNotifier<bool>(false);
@@ -57,6 +58,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: PacienteAppbar(
@@ -67,17 +69,13 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
           text: "Salvar",
           icon: Symbols.book,
           onPressed: () {
-            if (dropdownNotifier.value == false) {
-              setState(() {
+            // Se o formulário for válido, exibe um diálogo de confirmação.
+            if (_stateCadastroPaciente.genero.text.isEmpty){
+              setState((){
                 dropdownNotifier.value = true;
               });
             }
-            // Se o formulário for válido, exibe um diálogo de confirmação.
-            if (_formKey.currentState!.validate()) {
-              setState(() {
-                radiobuttonNotifier.value = false;
-                dropdownNotifier.value = false;
-              });
+            if (_formKey.currentState!.validate() && _stateCadastroPaciente.genero.text.isNotEmpty) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -234,11 +232,10 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   InputRadioButtonsCadastroPaciente(
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
-                    controller: TextEditingController(),
-                    optionalController:
-                        _stateCadastroPaciente.acolhimentoAnterior,
+                    controller: _controllerRadio,
+                    optionalController:_stateCadastroPaciente.acolhimentoAnterior,
                     isChecked: radiobuttonNotifier,
-                  ),
+                  ),                 
                 ],
               ),
             ),

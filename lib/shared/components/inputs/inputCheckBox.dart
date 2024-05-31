@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 
 // Classe que cria um campo de entrada de texto com checkboxes.
@@ -61,6 +62,7 @@ class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
         (index) => Row(
           children: [
             Checkbox(
+              activeColor: preto,
               value: widget.controller.text.contains(widget.options[index]),
               onChanged: (value) {
                 setState(() {

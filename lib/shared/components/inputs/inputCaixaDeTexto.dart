@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 
 class BotaoConfig {
@@ -24,11 +25,6 @@ class InputCaixaDeTexto extends StatefulWidget {
 class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
   Color corDaCaixa = Colors.black;
 
-  void validate(cor){
-    setState(() {
-      corDaCaixa = cor;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,20 +52,19 @@ class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty){
-                validate(Colors.red);
                 return 'Informe o ${widget.label} por favor.';
-              }
-              validate(Colors.black);                
+              }              
               return null;
             },
             controller: widget.controller,
             maxLines: null,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             keyboardType: TextInputType.multiline,
             textCapitalization: TextCapitalization.sentences,
             style: const TextStyle(
               fontSize: 13,
             ),
-            cursorColor: Colors.blue,
+            cursorColor: preto,            
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: '', // Removido o hintText para não duplicar o rótulo

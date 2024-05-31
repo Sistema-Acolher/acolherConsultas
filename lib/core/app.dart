@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
         title: 'Acolher Consultas',
         // O theme é uma propriedade que define o tema do aplicativo.
         theme: ThemeData(
+          textSelectionTheme: const TextSelectionThemeData(selectionHandleColor: amareloEscuro),
           // O colorScheme é uma propriedade que define o esquema de cores do aplicativo.
           colorScheme: ColorScheme.fromSeed(seedColor: amarelo),
           // O useMaterial3 é uma propriedade que define se o aplicativo usa o Material Design 3.

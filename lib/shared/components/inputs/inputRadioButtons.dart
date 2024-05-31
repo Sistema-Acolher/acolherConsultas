@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
                 child: Opacity(
                   opacity: widget.controller.text == widget.options[index] ? 1.0 : 0.5,
                   child: RadioListTile(
+                    activeColor: preto,
                     title: AutoSizeText(
                       maxLines: 1,
                       widget.options[index],
