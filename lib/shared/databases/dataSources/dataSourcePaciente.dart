@@ -5,7 +5,7 @@ abstract class DataSourcePacientes{
 
   Future<void> remover(Map<String, dynamic> paciente);
 
-  Future<void> atualizar(Map<String, dynamic> paciente);
+  Future<void> atualizar(Map<String, dynamic> paciente, String id);
 
   Future<Map<String, dynamic>?> selecionar(String cpf, String rg, String numeroCartaoSus);
 

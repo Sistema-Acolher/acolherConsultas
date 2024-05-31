@@ -78,4 +78,25 @@ class PacientesCadastradosController extends ChangeNotifier {
       return "Erro ao cadastrar: $e";
     }
   }
+
+  Future<String> atualizaPaciente(CadastroPaciente atualizaPaciente, String id,
+      String casaDeApoioId) async {
+    try {
+      //Paciente paciente = atualizaPaciente.paciente;
+
+      /* if (await cpfCadastrado(paciente.cpf)) {
+        return "Erro ao cadastrar: CPF já cadastrado";
+      } else if (await rgCadastrado(paciente.rg)) {
+        return "Erro ao cadastrar: RG já cadastrado";
+      } else if (await numeroCartaoSusCadastrado(paciente.numeroCartaoSus)) {
+        return "Erro ao cadastrar: Número do cartão do SUS já cadastrado";
+      } else {*/
+      atualizaPaciente.paciente.casaDeApoioId = casaDeApoioId;
+      await _repository.atualizar(atualizaPaciente, id);
+
+      return "Paciente atualizado com sucesso";
+    } on Exception catch (e) {
+      return "Erro ao cadastrar: $e";
+    }
+  }
 }

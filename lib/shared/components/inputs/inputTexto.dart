@@ -19,7 +19,9 @@ class InputTextoAcolher extends StatefulWidget {
       this.keyboardType,
       this.icone,
       this.readOnly,
-      this.emptyMessage});
+      this.emptyMessage,
+      this.checkEdit,
+      this.defaultValue});
 
   // Atributos do componente.
   final String label;
@@ -32,6 +34,8 @@ class InputTextoAcolher extends StatefulWidget {
   final IconData? icone;
   final bool? readOnly;
   final String? emptyMessage;
+  final Function? checkEdit;
+  final String? defaultValue;
 
   @override
   State<InputTextoAcolher> createState() => _InputTextoAcolherState();
@@ -42,6 +46,14 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
   bool _isSenha = false, _isEditing = false;
   IconData? _iconeFinal;
   String _textoInicial = "";
+
+  bool calculateReadOnly() {
+    if (_iconeFinal == Icons.edit) {
+      return !_isEditing;
+    } else {
+      return widget.readOnly ?? false;
+    }
+  }
 
   @override
   void initState() {
@@ -77,9 +89,9 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
             child: TextFormField(
+              initialValue: widget.defaultValue,
               // Define quando o campo de texto esta em modo de edição.
-              readOnly: widget.readOnly ??
-                  (_iconeFinal == Icons.edit ? !_isEditing : false),
+              readOnly: calculateReadOnly(),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               // Estilo do texto do campo de texto.
               style: const TextStyle(fontFamily: "Montserrat"),
@@ -186,6 +198,10 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
                                         onTap: () {
                                           setState(() {
                                             _isEditing = false;
+
+                                            if (widget.checkEdit != null) {
+                                              widget.checkEdit!();
+                                            }
                                           });
                                         },
                                         child: const Icon(
@@ -215,7 +231,7 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
                 if (value == null || value.isEmpty) {
                   return widget.emptyMessage;
                 }
-                
+
                 return null;
               },
               // Propiedade de formatação (máscara e formato) do campo de texto.

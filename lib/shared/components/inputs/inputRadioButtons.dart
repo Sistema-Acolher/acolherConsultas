@@ -86,7 +86,7 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
               fontSize: 13,
             ),
           ),
-        if (showTextBox)
+        if (showTextBox && widget.optionalController != null)
           InputCaixaDeTexto(
             label: widget.label,
             controller: widget.optionalController!,

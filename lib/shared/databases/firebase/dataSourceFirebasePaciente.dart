@@ -8,9 +8,11 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<void> atualizar(Map<String, dynamic> paciente) async {
+  Future<void> atualizar(Map<String, dynamic> paciente, String id) async {
+    await _firestore.collection("pacientes").doc(id).update(paciente).then(
+        (value) => print("paciente atualizado"),
+        onError: (e) => print("Erro ao atualizar: $e"));
   }
-
   @override
   Future<String> criar(Map<String, dynamic> paciente) async {
     DocumentReference<Map<String, dynamic>> pacienteAdicionado = await _firestore.collection("pacientes").add(paciente);
