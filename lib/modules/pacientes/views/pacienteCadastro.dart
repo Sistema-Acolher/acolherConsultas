@@ -58,7 +58,6 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: PacienteAppbar(
@@ -70,12 +69,13 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
           icon: Symbols.book,
           onPressed: () {
             // Se o formulário for válido, exibe um diálogo de confirmação.
-            if (_stateCadastroPaciente.genero.text.isEmpty){
-              setState((){
+            if (_stateCadastroPaciente.genero.text.isEmpty) {
+              setState(() {
                 dropdownNotifier.value = true;
               });
             }
-            if (_formKey.currentState!.validate() && _stateCadastroPaciente.genero.text.isNotEmpty) {
+            if (_formKey.currentState!.validate() &&
+                _stateCadastroPaciente.genero.text.isNotEmpty) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -88,28 +88,26 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                         nome: "",
                         dataHorario: DateTime.now(),
                         confimacao: () async {
-                            showLoading(context);
-                            context
-                                .read<PacientesCadastradosController>()
-                                .cadastrarPaciente(
-                                    _stateCadastroPaciente.cadastro(),
-                                    context
-                                        .read<CasaDeApoioController>()
-                                        .casaDeApoioSelecionada
-                                        .value)
-                                .then((value) {
+                          showLoading(context);
+                          context
+                              .read<PacientesCadastradosController>()
+                              .cadastrarPaciente(
+                                  _stateCadastroPaciente.cadastro(),
+                                  context
+                                      .read<CasaDeApoioController>()
+                                      .casaDeApoioSelecionada
+                                      .value)
+                              .then((value) {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(value)));
+                            if (!value.toLowerCase().contains("erro")) {
                               Navigator.pop(context);
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text(value)));
-                              if (!value.toLowerCase().contains("erro")) {
-                                Navigator.pop(context);
-                              }
-                            });
-                          }
-                        )),
+                            }
+                          });
+                        })),
               );
             }
           },
@@ -228,14 +226,16 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   InputCaixaDeTexto(
                     label: "Motivo do Acolhimento",
                     controller: _stateCadastroPaciente.motivoAcolhimento,
+                    isCadastro: true,
                   ),
                   InputRadioButtonsCadastroPaciente(
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
                     controller: _controllerRadio,
-                    optionalController:_stateCadastroPaciente.acolhimentoAnterior,
+                    optionalController:
+                        _stateCadastroPaciente.acolhimentoAnterior,
                     isChecked: radiobuttonNotifier,
-                  ),                 
+                  ),
                 ],
               ),
             ),
@@ -253,4 +253,3 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
         barrierDismissible: false);
   }
 }
-  

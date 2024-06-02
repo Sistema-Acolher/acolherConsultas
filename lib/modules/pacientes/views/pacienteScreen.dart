@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
@@ -92,13 +93,13 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context, "Nome", widget.state.nome, widget.paciente!.nome),
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context, "CPF", widget.state.cpf, widget.paciente?.cpf ?? ''),
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context, "RG", widget.state.rg, widget.paciente?.rg ?? ''),
-        _buildEditableDateTextField(
+        _buildDataEditar(
             context,
             "Data de Nascimento",
             widget.state.dataNascimento,
@@ -106,16 +107,16 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                 ? DateFormat('dd/MM/yyyy')
                     .format(widget.paciente?.dataNasc ?? DateTime.now())
                 : ''),
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context, "Gênero", widget.state.genero, widget.paciente!.genero),
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context,
             "Número do Cartão SUS",
             widget.state.numeroCartaoSus,
             widget.paciente?.numeroCartaoSus ?? ''),
-        _buildEditableTextField(context, "Motivo do Acolhimento",
+        _buildEditavelMotivoDoAcolhimento(context, "Motivo do Acolhimento",
             widget.state.motivoAcolhimento, widget.paciente!.motivoAcolhimento),
-        _buildEditableTextField(
+        _buildInputTextoEditar(
             context,
             "Acolhimento Anterior",
             widget.state.acolhimentoAnterior,
@@ -124,7 +125,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     );
   }
 
-  Widget _buildEditableTextField(BuildContext context, String label,
+  Widget _buildInputTextoEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
     bool isEditable = false;
 
@@ -160,7 +161,21 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     );
   }
 
-  Widget _buildEditableDateTextField(BuildContext context, String label,
+  Widget _buildEditavelMotivoDoAcolhimento(BuildContext context, String label,
+      TextEditingController state, String defaultValue) {
+    state.text = defaultValue;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InputCaixaDeTexto(
+        label: label,
+        controller: state,
+        editable: true,
+      ),
+    );
+  }
+
+  Widget _buildDataEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
     state.text = defaultValue;
 
