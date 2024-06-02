@@ -18,7 +18,7 @@ class InputCaixaDeTexto extends StatefulWidget {
     required this.controller,
     this.botao,
     this.editable = false,
-    this.isCadastro = false, // Novo parâmetro
+    this.isCadastro = false,
   }) : super(key: key);
 
   final BotaoConfig? botao;

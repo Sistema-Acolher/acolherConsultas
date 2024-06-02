@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
@@ -65,6 +66,8 @@ class InfoPessoais extends StatefulWidget {
 }
 
 class _InfoPessoaisState extends State<InfoPessoais> {
+  bool _isEdited = false;
+
   @override
   void initState() {
     super.initState();
@@ -85,42 +88,88 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     }
   }
 
+  void _checkIfEdited() {
+    if (widget.paciente == null) return;
+
+    setState(() {
+      _isEdited = widget.state.nome.text != widget.paciente!.nome ||
+          widget.state.cpf.text != widget.paciente!.cpf ||
+          widget.state.rg.text != widget.paciente!.rg ||
+          widget.state.genero.text != widget.paciente!.genero ||
+          widget.state.numeroCartaoSus.text !=
+              widget.paciente!.numeroCartaoSus ||
+          widget.state.dataNascimento.text !=
+              (widget.paciente?.dataNasc != null
+                  ? DateFormat('dd/MM/yyyy').format(widget.paciente!.dataNasc!)
+                  : '') ||
+          widget.state.motivoAcolhimento.text !=
+              widget.paciente!.motivoAcolhimento;
+      //  widget.state.acolhimentoAnterior.text !=
+      // widget.paciente!.acolhimentoAnterior;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.paciente == null) {
       return const Center(child: Text("Nenhum paciente selecionado."));
     }
 
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
+    return Stack(
       children: [
-        _buildInputTextoEditar(
-            context, "Nome", widget.state.nome, widget.paciente!.nome),
-        _buildInputTextoEditar(
-            context, "CPF", widget.state.cpf, widget.paciente?.cpf ?? ''),
-        _buildInputTextoEditar(
-            context, "RG", widget.state.rg, widget.paciente?.rg ?? ''),
-        _buildDataEditar(
-            context,
-            "Data de Nascimento",
-            widget.state.dataNascimento,
-            widget.paciente?.dataNasc != null
-                ? DateFormat('dd/MM/yyyy')
-                    .format(widget.paciente?.dataNasc ?? DateTime.now())
-                : ''),
-        _buildInputTextoEditar(
-            context, "Gênero", widget.state.genero, widget.paciente!.genero),
-        _buildInputTextoEditar(
-            context,
-            "Número do Cartão SUS",
-            widget.state.numeroCartaoSus,
-            widget.paciente?.numeroCartaoSus ?? ''),
-        _buildEditavelMotivoDoAcolhimento(context, "Motivo do Acolhimento",
-            widget.state.motivoAcolhimento, widget.paciente!.motivoAcolhimento),
-        _buildInputTextoEditar(
-            context,
-            "Acolhimento Anterior",
-            widget.state.acolhimentoAnterior,
-            widget.paciente?.acolhimentoAnterior ?? ''),
+        ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            _buildInputTextoEditar(
+                context, "Nome", widget.state.nome, widget.paciente!.nome),
+            _buildInputTextoEditar(
+                context, "CPF", widget.state.cpf, widget.paciente?.cpf ?? ''),
+            _buildInputTextoEditar(
+                context, "RG", widget.state.rg, widget.paciente?.rg ?? ''),
+            _buildDataEditar(
+                context,
+                "Data de Nascimento",
+                widget.state.dataNascimento,
+                widget.paciente?.dataNasc != null
+                    ? DateFormat('dd/MM/yyyy')
+                        .format(widget.paciente?.dataNasc ?? DateTime.now())
+                    : ''),
+            _buildInputTextoEditar(context, "Gênero", widget.state.genero,
+                widget.paciente!.genero),
+            _buildInputTextoEditar(
+                context,
+                "Número do Cartão SUS",
+                widget.state.numeroCartaoSus,
+                widget.paciente?.numeroCartaoSus ?? ''),
+            _buildEditavelMotivoDoAcolhimento(
+                context,
+                "Motivo do Acolhimento",
+                widget.state.motivoAcolhimento,
+                widget.paciente!.motivoAcolhimento),
+            _buildInputTextoEditar(
+                context,
+                "Acolhimento Anterior",
+                widget.state.acolhimentoAnterior,
+                widget.paciente?.acolhimentoAnterior ?? ''),
+          ],
+        ),
+        if (_isEdited)
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: StandartRoundButton(
+              text: "Salvar",
+              onPressed: () async {
+                await context
+                    .read<PacientesCadastradosController>()
+                    .atualizaPaciente(
+                        widget.state.cadastro(),
+                        widget.paciente!.id ?? "",
+                        widget.paciente!.casaDeApoioId);
+              },
+              icon: Icons.save,
+            ),
+          ),
       ],
     );
   }
@@ -128,6 +177,12 @@ class _InfoPessoaisState extends State<InfoPessoais> {
   Widget _buildInputTextoEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
     bool isEditable = false;
+
+    if (_isEdited) {
+      state.text = state.text;
+    } else {
+      state.text = defaultValue;
+    }
 
     if (label == "Acolhimento Anterior") {
       return InputRadioButtonsCadastroPaciente(
@@ -137,7 +192,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
         isChecked: ValueNotifier(false),
       );
     }
-    state.text = defaultValue;
+
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
         return Padding(
@@ -149,12 +204,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
               readOnly: !isEditable,
               emptyMessage: 'Informe o $label por favor.',
               checkEdit: () async {
-                await context
-                    .read<PacientesCadastradosController>()
-                    .atualizaPaciente(
-                        widget.state.cadastro(),
-                        widget.paciente!.id ?? "",
-                        widget.paciente!.casaDeApoioId);
+                _checkIfEdited();
               }),
         );
       },
