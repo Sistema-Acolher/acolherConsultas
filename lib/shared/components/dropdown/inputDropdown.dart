@@ -6,13 +6,18 @@ class InputDropdown extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final ValueNotifier<bool> checkNotifier;
+  final bool isEdit;
+  final Function? checkEdit;
 
-  const InputDropdown(
-      {super.key,
-      required this.list,
-      required this.label,
-      required this.checkNotifier,
-      required this.controller});
+  const InputDropdown({
+    Key? key,
+    required this.list,
+    required this.label,
+    required this.checkNotifier,
+    required this.controller,
+    this.isEdit = false,
+    this.checkEdit,
+  }) : super(key: key);
 
   @override
   _InputDropdownState createState() => _InputDropdownState();
@@ -23,9 +28,10 @@ class _InputDropdownState extends State<InputDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    String? _selectedItem = widget.controller.text == ''
-        ? null
-        : widget.controller.text;
+    String? _selectedItem = widget.list.contains(widget.controller.text)
+        ? widget.controller.text
+        : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -34,7 +40,9 @@ class _InputDropdownState extends State<InputDropdown> {
           child: Text(
             widget.label,
             style: const TextStyle(
-                fontFamily: "Roboto", fontWeight: FontWeight.bold),
+              fontFamily: "Roboto",
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -57,7 +65,12 @@ class _InputDropdownState extends State<InputDropdown> {
               items: widget.list.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      color: widget.isEdit ? Colors.grey : Colors.black,
+                    ),
+                  ),
                 );
               }).toList(),
               value: _selectedItem,
@@ -67,6 +80,10 @@ class _InputDropdownState extends State<InputDropdown> {
                   widget.controller.text = _selectedItem!;
                   widget.checkNotifier.value = true;
                   mostrarErro = false;
+
+                  if (widget.checkEdit != null) {
+                    widget.checkEdit!();
+                  }
                 });
               },
               buttonStyleData: ButtonStyleData(

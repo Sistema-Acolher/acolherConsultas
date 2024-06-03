@@ -1,12 +1,14 @@
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
+import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask/mask/mask.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteObservacoes.dart';
@@ -66,7 +68,7 @@ class InfoPessoais extends StatefulWidget {
 }
 
 class _InfoPessoaisState extends State<InfoPessoais> {
-  bool _isEdited = false;
+  bool campoEditado = false;
 
   @override
   void initState() {
@@ -88,11 +90,11 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     }
   }
 
-  void _checkIfEdited() {
+  void checkCampoEditado() {
     if (widget.paciente == null) return;
 
     setState(() {
-      _isEdited = widget.state.nome.text != widget.paciente!.nome ||
+      campoEditado = widget.state.nome.text != widget.paciente!.nome ||
           widget.state.cpf.text != widget.paciente!.cpf ||
           widget.state.rg.text != widget.paciente!.rg ||
           widget.state.genero.text != widget.paciente!.genero ||
@@ -121,11 +123,26 @@ class _InfoPessoaisState extends State<InfoPessoais> {
           padding: const EdgeInsets.all(16.0),
           children: [
             _buildInputTextoEditar(
-                context, "Nome", widget.state.nome, widget.paciente!.nome),
+                context,
+                "Nome",
+                widget.state.nome,
+                widget.paciente!.nome,
+                (value) => Mask.validations
+                    .generic(value, error: "Nome inválido", min: 3)),
             _buildInputTextoEditar(
-                context, "CPF", widget.state.cpf, widget.paciente?.cpf ?? ''),
+              context,
+              "CPF",
+              widget.state.cpf,
+              widget.paciente?.cpf ?? '',
+              (value) => Mask.validations.cpf(value),
+            ),
             _buildInputTextoEditar(
-                context, "RG", widget.state.rg, widget.paciente?.rg ?? ''),
+                context,
+                "RG",
+                widget.state.rg,
+                widget.paciente?.rg ?? '',
+                (value) => Mask.validations
+                    .generic(value, error: "RG inválido", min: 8)),
             _buildDataEditar(
                 context,
                 "Data de Nascimento",
@@ -134,14 +151,16 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                     ? DateFormat('dd/MM/yyyy')
                         .format(widget.paciente?.dataNasc ?? DateTime.now())
                     : ''),
-            _buildInputTextoEditar(context, "Gênero", widget.state.genero,
+            _buildGeneroEditar(context, "Gênero", widget.state.genero,
                 widget.paciente!.genero),
             _buildInputTextoEditar(
                 context,
                 "Número do Cartão SUS",
                 widget.state.numeroCartaoSus,
-                widget.paciente?.numeroCartaoSus ?? ''),
-            _buildEditavelMotivoDoAcolhimento(
+                widget.paciente?.numeroCartaoSus ?? '',
+                (value) => Mask.validations.generic(value,
+                    error: "Número do Cartão do SUS inválido", min: 18)),
+            _buildMotivoDoAcolhimentoEditar(
                 context,
                 "Motivo do Acolhimento",
                 widget.state.motivoAcolhimento,
@@ -150,10 +169,11 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                 context,
                 "Acolhimento Anterior",
                 widget.state.acolhimentoAnterior,
-                widget.paciente?.acolhimentoAnterior ?? ''),
+                widget.paciente?.acolhimentoAnterior ?? '',
+                () => {}),
           ],
         ),
-        if (_isEdited)
+        if (campoEditado)
           Positioned(
             bottom: 16,
             right: 16,
@@ -167,7 +187,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                         widget.paciente!.id ?? "",
                         widget.paciente!.casaDeApoioId);
               },
-              icon: Icons.save,
+              icon: Symbols.book,
             ),
           ),
       ],
@@ -175,10 +195,10 @@ class _InfoPessoaisState extends State<InfoPessoais> {
   }
 
   Widget _buildInputTextoEditar(BuildContext context, String label,
-      TextEditingController state, String defaultValue) {
+      TextEditingController state, String defaultValue, Function validation) {
     bool isEditable = false;
 
-    if (_isEdited) {
+    if (campoEditado) {
       state.text = state.text;
     } else {
       state.text = defaultValue;
@@ -201,19 +221,24 @@ class _InfoPessoaisState extends State<InfoPessoais> {
               label: label,
               controller: state,
               icone: Icons.edit,
+              validation: validation,
               readOnly: !isEditable,
               emptyMessage: 'Informe o $label por favor.',
               checkEdit: () async {
-                _checkIfEdited();
+                checkCampoEditado();
               }),
         );
       },
     );
   }
 
-  Widget _buildEditavelMotivoDoAcolhimento(BuildContext context, String label,
+  Widget _buildMotivoDoAcolhimentoEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
-    state.text = defaultValue;
+    if (campoEditado) {
+      state.text = state.text;
+    } else {
+      state.text = defaultValue;
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -221,13 +246,49 @@ class _InfoPessoaisState extends State<InfoPessoais> {
         label: label,
         controller: state,
         editable: true,
+        checkEdit: () async {
+          checkCampoEditado();
+        },
+      ),
+    );
+  }
+
+  Widget _buildGeneroEditar(BuildContext context, String label,
+      TextEditingController state, String defaultValue) {
+    ValueNotifier<bool> dropdownNotifier = ValueNotifier<bool>(false);
+    if (!['Masculino', 'Feminino', 'Prefiro não responder']
+        .contains(state.text)) {
+      state.text = '';
+    }
+
+    if (campoEditado) {
+      state.text = state.text;
+    } else {
+      state.text = defaultValue;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InputDropdown(
+        label: 'Gênero',
+        list: const ['Masculino', 'Feminino', 'Prefiro não responder'],
+        controller: state,
+        checkNotifier: dropdownNotifier,
+        isEdit: true,
+        checkEdit: () async {
+          checkCampoEditado();
+        },
       ),
     );
   }
 
   Widget _buildDataEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
-    state.text = defaultValue;
+    if (campoEditado) {
+      state.text = state.text;
+    } else {
+      state.text = defaultValue;
+    }
 
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
@@ -246,6 +307,9 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                   inputFormatter: [Mask.date()],
                   readOnly: true,
                   emptyMessage: 'Informe o $label por favor.',
+                  checkEdit: () async {
+                    checkCampoEditado();
+                  },
                 ),
               ),
             ),

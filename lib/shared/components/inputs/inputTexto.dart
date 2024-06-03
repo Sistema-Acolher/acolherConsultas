@@ -239,6 +239,9 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
     if (data != null) {
       setState(() {
         widget.controller.text = DateFormat('dd/MM/yyyy').format(data);
+        if (widget.checkEdit != null) {
+          widget.checkEdit!();
+        }
       });
     }
   }

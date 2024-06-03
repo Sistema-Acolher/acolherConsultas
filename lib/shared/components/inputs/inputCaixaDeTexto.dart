@@ -19,6 +19,7 @@ class InputCaixaDeTexto extends StatefulWidget {
     this.botao,
     this.editable = false,
     this.isCadastro = false,
+    this.checkEdit,
   }) : super(key: key);
 
   final BotaoConfig? botao;
@@ -26,6 +27,7 @@ class InputCaixaDeTexto extends StatefulWidget {
   final TextEditingController controller;
   final bool editable;
   final bool isCadastro;
+  final Function? checkEdit;
 
   @override
   State<InputCaixaDeTexto> createState() => _InputCaixaDeTextoState();
@@ -35,14 +37,32 @@ class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
   Color corDaCaixa = Colors.black;
   final FocusNode _focusNode = FocusNode();
   bool isEditable = false;
+  late String initialText;
 
   void toggleEditable() {
     setState(() {
       isEditable = !isEditable;
       if (isEditable) {
+        initialText = widget.controller.text;
         _focusNode.requestFocus();
       } else {
         _focusNode.unfocus();
+      }
+    });
+  }
+
+  void cancelarEdicao() {
+    setState(() {
+      widget.controller.text = initialText;
+      isEditable = false;
+    });
+  }
+
+  void confirmarEdicao() {
+    setState(() {
+      isEditable = false;
+      if (widget.checkEdit != null) {
+        widget.checkEdit!();
       }
     });
   }
@@ -51,6 +71,7 @@ class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
   void initState() {
     super.initState();
     isEditable = widget.isCadastro || false;
+    initialText = widget.controller.text;
   }
 
   @override
@@ -110,19 +131,59 @@ class _InputCaixaDeTextoState extends State<InputCaixaDeTexto> {
                 ),
               ),
               if (!widget.isCadastro && widget.editable)
-                GestureDetector(
-                  onTap: toggleEditable,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      isEditable ? 'Salvar' : 'Editar',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                if (isEditable)
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Container(
+                          constraints: const BoxConstraints.tightFor(
+                              height: 30, width: 30),
+                          child: InkWell(
+                            splashColor: vermelho.withOpacity(.2),
+                            splashFactory: InkRipple.splashFactory,
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: cancelarEdicao,
+                            child: const Icon(
+                              Icons.dangerous_outlined,
+                              color: vermelho,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Container(
+                          constraints: const BoxConstraints.tightFor(
+                              height: 30, width: 30),
+                          child: InkWell(
+                            splashColor: verde.withOpacity(.2),
+                            splashFactory: InkRipple.splashFactory,
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: confirmarEdicao,
+                            child: const Icon(
+                              Icons.check_circle_outline_outlined,
+                              color: verde,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  GestureDetector(
+                    onTap: toggleEditable,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'Editar',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
             ],
           ),
           if (widget.botao != null && !isEditable && !widget.isCadastro)
