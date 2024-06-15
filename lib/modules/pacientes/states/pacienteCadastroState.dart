@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteHistoriaPregressaState.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +16,7 @@ class CadastroPacienteState extends ChangeNotifier {
   final acolhimentoAnterior = TextEditingController();
   final dataNascimento = TextEditingController();
   final idade = TextEditingController();
+  final historiaPregressa = HistoriaPregressaState();
 
   // Método que retorna um objeto CadastroPaciente com os dados preenchidos nos campos e com as datas de cadastro e atualização.
   CadastroPaciente cadastro() {
@@ -31,6 +33,7 @@ class CadastroPacienteState extends ChangeNotifier {
       orientacoes: '', 
       encaminhamentos: '', 
       casaDeApoioId: '',
+      historiaPregressa: historiaPregressa.cadastro(),
     );
 
     CadastroPaciente cadastroPaciente = CadastroPaciente(

@@ -2,6 +2,8 @@ import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioCont
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteHistoriaPregressaState.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
@@ -20,6 +22,7 @@ class ConsultaNovaScreen extends StatefulWidget {
 }
 
 class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
+  final CadastroPacienteState _cadastroPacienteState = CadastroPacienteState();
   // Usado para selecionar o paciente e trocar o menu que aparece
   late Paciente? pacienteSelecionado = null;
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
@@ -74,7 +77,7 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
               onPressed: () => Navigator.of(context,rootNavigator: true).push(
                 MaterialPageRoute(builder:(context) => Scaffold(
                   appBar: PacienteAppbar(paciente: widget.pacienteConsulta??pacienteSelecionado),
-                  body: HistPregressa(),
+                  body: HistPregressa(cadastroPacienteState: _cadastroPacienteState),
                 ))
               ),
             ):null,

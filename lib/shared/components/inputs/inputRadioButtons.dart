@@ -88,6 +88,7 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
           ),
         if (showTextBox && widget.optionalController != null)
           InputCaixaDeTexto(
+            isCadastro: true,
             label: widget.label,
             controller: widget.optionalController!,
           ),

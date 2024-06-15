@@ -52,7 +52,7 @@ class PacienteScreen extends StatelessWidget {
       ],
       views_: [
         InfoPessoais(paciente: paciente, state: _stateCadastroPaciente),
-        const HistPregressa(),
+        HistPregressa(paciente: paciente, cadastroPacienteState: _stateCadastroPaciente,),
       ],
     );
   }
@@ -335,15 +335,174 @@ class _InfoPessoaisState extends State<InfoPessoais> {
 }
 
 class HistPregressa extends StatefulWidget {
-  const HistPregressa({super.key});
+  final Paciente? paciente;
+  final CadastroPacienteState cadastroPacienteState;
+  
+  const HistPregressa({super.key, this.paciente, required this.cadastroPacienteState});
 
   @override
-  State<HistPregressa> createState() => _HistPregressaState();
+  State<HistPregressa> createState() => _HistoriaPregressaState();
 }
 
-class _HistPregressaState extends State<HistPregressa> {
+class _HistoriaPregressaState extends State<HistPregressa> {
+  bool campoEditado = false;
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("História Pregressa"));
+    return Stack(
+      children: [
+        ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            _buildInputTextoEditar(
+                context,
+                "Peso ao Nascer",
+                widget.cadastroPacienteState.historiaPregressa.pesoNasc,
+                widget.paciente?.historiaPregressa?.pesoNasc ?? '',
+                (value) => Mask.validations.generic(value, error: "Peso inválido", min: 1)),
+            _buildInputTextoEditar(
+              context,
+              "Estatura",
+              widget.cadastroPacienteState.historiaPregressa.estatura,
+              widget.paciente?.historiaPregressa?.estatura ?? '',
+              (value) => Mask.validations.generic(value, error: "Estatura inválido", min: 1)),
+            _buildInputTextoEditar(
+                context,
+                "PC",
+                widget.cadastroPacienteState.historiaPregressa.pc,
+                widget.paciente?.historiaPregressa?.pc ?? '',
+                (value) => Mask.validations.generic(value, error: "PC inválido", min: 1)),
+            _buildInputTextoEditar(
+                context,
+                "PT",
+                widget.cadastroPacienteState.historiaPregressa.pt,
+                widget.paciente?.historiaPregressa?.pt ?? '',
+                (value) => Mask.validations.generic(value, error: "PT inválido", min: 1)),
+            _buildInputTextoEditar(
+              context,
+              "Teste da Apgar",
+              widget.cadastroPacienteState.historiaPregressa.ictericia,
+              widget.paciente?.historiaPregressa?.ictericia ?? '',
+              (value) => Mask.validations.generic(value, error: "Teste da Apgar inválido", min: 1)),
+            _buildInputTextoEditar(
+              context,
+              "Icterícia",
+              widget.cadastroPacienteState.historiaPregressa.testeApgar,
+              widget.paciente?.historiaPregressa?.testeApgar ?? '',
+              (value) => Mask.validations.generic(value, error: "Icterícia inválido", min: 1)),
+            _buildInputTextoEditar(
+                context,
+                "Teste de Orelhinha",
+                widget.cadastroPacienteState.historiaPregressa.testeOrelhinha,
+                widget.paciente?.historiaPregressa?.testeOrelhinha ?? '',
+                (value) => Mask.validations.generic(value, error: "Teste de orelhinha inválido", min: 1)),
+            _buildInputTextoEditar(
+                context,
+                "Teste do Pezinho",
+                widget.cadastroPacienteState.historiaPregressa.testePezinho,
+                widget.paciente?.historiaPregressa?.testePezinho ?? '',
+                (value) => Mask.validations.generic(value, error: "Teste do Pezinho inválido", min: 1)),
+            _buildInputTextoEditar(
+                context,
+                "RN",
+                widget.cadastroPacienteState.historiaPregressa.rn,
+                widget.paciente?.historiaPregressa?.rn ?? '',
+                () => {}),
+            _buildInputTextoEditar(
+                context,
+                "Intercorrência",
+                widget.cadastroPacienteState.historiaPregressa.intercorrencia,
+                widget.paciente?.historiaPregressa?.intercorrencia ?? '',
+                () => {}),
+          ],
+        ),
+        if (campoEditado)
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: StandartRoundButton(
+              text: "Salvar",
+              onPressed: () async {
+                await context
+                    .read<PacientesCadastradosController>()
+                    .atualizaPaciente(
+                        widget.cadastroPacienteState.cadastro(),
+                        widget.paciente!.id ?? "",
+                        widget.paciente!.casaDeApoioId);
+              },
+              icon: Symbols.book,
+            ),
+          ),
+      ],
+    );
+  }
+
+  void checkCampoEditado() {
+    setState(() {
+      campoEditado = (widget.cadastroPacienteState.historiaPregressa.pesoNasc.text != widget.paciente?.historiaPregressa?.pesoNasc) ||
+                     (widget.cadastroPacienteState.historiaPregressa.estatura.text != widget.paciente?.historiaPregressa?.estatura) ||
+                     (widget.cadastroPacienteState.historiaPregressa.pc.text != widget.paciente?.historiaPregressa?.pc) ||
+                     (widget.cadastroPacienteState.historiaPregressa.pt.text != widget.paciente?.historiaPregressa?.pt) ||
+                     (widget.cadastroPacienteState.historiaPregressa.testeApgar.text != widget.paciente?.historiaPregressa?.testeApgar) ||
+                     (widget.cadastroPacienteState.historiaPregressa.testeOrelhinha.text != widget.paciente?.historiaPregressa?.testeOrelhinha) ||
+                     (widget.cadastroPacienteState.historiaPregressa.testePezinho.text != widget.paciente?.historiaPregressa?.testePezinho) ||
+                     (widget.cadastroPacienteState.historiaPregressa.rn.text != widget.paciente?.historiaPregressa?.rn) ||
+                     (widget.cadastroPacienteState.historiaPregressa.intercorrencia.text != widget.paciente?.historiaPregressa?.intercorrencia);
+    });
+  }
+
+  Widget _buildInputTextoEditar(BuildContext context, String label,
+      TextEditingController state, String defaultValue, Function validation) {
+    bool isEditable = false;
+
+    if (campoEditado) {
+      state.text = state.text;
+    } else {
+      state.text = defaultValue;
+    }
+
+    if (label == "Intercorrência") {
+      return InputRadioButtonsCadastroPaciente(
+        label: label,
+        controller: state,
+        options: const ["Sim", "Não"],
+        isChecked: ValueNotifier(false),
+      );
+    }
+
+    if (label == "Icterícia") {
+      return InputRadioButtonsCadastroPaciente(
+        label: label,
+        controller: state,
+        options: const ["Ausente", "Presente"],
+        isChecked: ValueNotifier(false),
+      );
+    }
+
+    if (label == "RN") {
+      return InputRadioButtonsCadastroPaciente(
+        label: label,
+        controller: state,
+        options: const ["Pré-termo", "Termo", "Pós-termo"],
+        isChecked: ValueNotifier(false),
+      );
+    }
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: InputTextoAcolher(
+              label: label,
+              controller: state,
+              icone: Icons.edit,
+              validation: validation,
+              readOnly: !isEditable,
+              emptyMessage: 'Informe o $label por favor.',
+              checkEdit: () async {
+                checkCampoEditado();
+              }),
+        );
+      },
+    );
   }
 }

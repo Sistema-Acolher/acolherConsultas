@@ -64,7 +64,7 @@ class _PacienteAppbar extends State<PacienteAppbar> {
                 value: widget.paciente?.ativo,
                 onChanged: (value) {
                   setState(() {
-                    widget.paciente?.ativo = value!;
+                    widget.paciente!.ativo = value!;
                   });
                 },
               ),

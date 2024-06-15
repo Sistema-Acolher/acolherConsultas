@@ -2,14 +2,14 @@
 import 'dart:convert';
 
 class HistoriaPregressa {
-  double pesoNasc;
-  double estatura;
+  String pesoNasc;
+  String estatura;
   String pc;
   String pt;
-  String apgar;
-  bool icteria;
-  String orelhinha;
-  String pezinho;
+  String testeApgar;
+  String ictericia;
+  String testeOrelhinha;
+  String testePezinho;
   String rn;
   String idadeGestacional;
   String intercorrencia;
@@ -18,24 +18,24 @@ class HistoriaPregressa {
     required this.estatura,
     required this.pc,
     required this.pt,
-    required this.apgar,
-    required this.icteria,
-    required this.orelhinha,
-    required this.pezinho,
+    required this.testeApgar,
+    required this.ictericia,
+    required this.testeOrelhinha,
+    required this.testePezinho,
     required this.rn,
     required this.idadeGestacional,
     required this.intercorrencia,
   });
 
   HistoriaPregressa copyWith({
-    double? pesoNasc,
-    double? estatura,
+    String? pesoNasc,
+    String? estatura,
     String? pc,
     String? pt,
-    String? apgar,
-    bool? icteria,
-    String? orelhinha,
-    String? pezinho,
+    String? testeApgar,
+    String? ictericia,
+    String? testeOrelhinha,
+    String? testePezinho,
     String? rn,
     String? idadeGestacional,
     String? intercorrencia,
@@ -45,10 +45,10 @@ class HistoriaPregressa {
       estatura: estatura ?? this.estatura,
       pc: pc ?? this.pc,
       pt: pt ?? this.pt,
-      apgar: apgar ?? this.apgar,
-      icteria: icteria ?? this.icteria,
-      orelhinha: orelhinha ?? this.orelhinha,
-      pezinho: pezinho ?? this.pezinho,
+      testeApgar: testeApgar ?? this.testeApgar,
+      ictericia: ictericia ?? this.ictericia,
+      testeOrelhinha: testeOrelhinha ?? this.testeOrelhinha,
+      testePezinho: testePezinho ?? this.testePezinho,
       rn: rn ?? this.rn,
       idadeGestacional: idadeGestacional ?? this.idadeGestacional,
       intercorrencia: intercorrencia ?? this.intercorrencia,
@@ -61,10 +61,10 @@ class HistoriaPregressa {
       'estatura': estatura,
       'pc': pc,
       'pt': pt,
-      'apgar': apgar,
-      'icteria': icteria,
-      'orelhinha': orelhinha,
-      'pezinho': pezinho,
+      'testeApgar': testeApgar,
+      'ictericia': ictericia,
+      'testeOrelhinha': testeOrelhinha,
+      'testePezinho': testePezinho,
       'rn': rn,
       'idadeGestacional': idadeGestacional,
       'intercorrencia': intercorrencia,
@@ -73,14 +73,14 @@ class HistoriaPregressa {
 
   factory HistoriaPregressa.fromMap(Map<String, dynamic> map) {
     return HistoriaPregressa(
-      pesoNasc: map['pesoNasc'] as double,
-      estatura: map['estatura'] as double,
+      pesoNasc: map['pesoNasc'] as String,
+      estatura: map['estatura'] as String,
       pc: map['pc'] as String,
       pt: map['pt'] as String,
-      apgar: map['apgar'] as String,
-      icteria: map['icteria'] as bool,
-      orelhinha: map['orelhinha'] as String,
-      pezinho: map['pezinho'] as String,
+      testeApgar: map['testeApgar'] as String,
+      ictericia: map['ictericia'] as String,
+      testeOrelhinha: map['testeOrelhinha'] as String,
+      testePezinho: map['testePezinho'] as String,
       rn: map['rn'] as String,
       idadeGestacional: map['idadeGestacional'] as String,
       intercorrencia: map['intercorrencia'] as String,
@@ -93,7 +93,7 @@ class HistoriaPregressa {
 
   @override
   String toString() {
-    return 'HistoriaPregressa(pesoNasc: $pesoNasc, estatura: $estatura, pc: $pc, pt: $pt, apgar: $apgar, icteria: $icteria, orelhinha: $orelhinha, pezinho: $pezinho, rn: $rn, idadeGestacional: $idadeGestacional, intercorrencia: $intercorrencia)';
+    return 'HistoriaPregressa(pesoNasc: $pesoNasc, estatura: $estatura, pc: $pc, pt: $pt, testeApgar: $testeApgar, ictericia: $ictericia, testeOrelhinha: $testeOrelhinha, testePezinho: $testePezinho, rn: $rn, idadeGestacional: $idadeGestacional, intercorrencia: $intercorrencia)';
   }
 
   @override
@@ -105,10 +105,10 @@ class HistoriaPregressa {
       other.estatura == estatura &&
       other.pc == pc &&
       other.pt == pt &&
-      other.apgar == apgar &&
-      other.icteria == icteria &&
-      other.orelhinha == orelhinha &&
-      other.pezinho == pezinho &&
+      other.testeApgar == testeApgar &&
+      other.ictericia == ictericia &&
+      other.testeOrelhinha == testeOrelhinha &&
+      other.testePezinho == testePezinho &&
       other.rn == rn &&
       other.idadeGestacional == idadeGestacional &&
       other.intercorrencia == intercorrencia;
@@ -120,10 +120,10 @@ class HistoriaPregressa {
       estatura.hashCode ^
       pc.hashCode ^
       pt.hashCode ^
-      apgar.hashCode ^
-      icteria.hashCode ^
-      orelhinha.hashCode ^
-      pezinho.hashCode ^
+      testeApgar.hashCode ^
+      ictericia.hashCode ^
+      testeOrelhinha.hashCode ^
+      testePezinho.hashCode ^
       rn.hashCode ^
       idadeGestacional.hashCode ^
       intercorrencia.hashCode;

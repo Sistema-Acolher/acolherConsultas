@@ -9,6 +9,9 @@ class DataSourceFirebasePacientes extends DataSourcePacientes {
 
   @override
   Future<void> atualizar(Map<String, dynamic> paciente, String id) async {
+    // print(paciente);
+    // print(id);
+    paciente.remove('dataCadastro');
     await _firestore.collection("pacientes").doc(id).update(paciente).then(
         (value) => print("paciente atualizado"),
         onError: (e) => print("Erro ao atualizar: $e"));

@@ -13,14 +13,14 @@ class BotaoConfig {
 
 class InputCaixaDeTexto extends StatefulWidget {
   const InputCaixaDeTexto({
-    Key? key,
+    super.key,
     this.label,
     required this.controller,
     this.botao,
     this.editable = false,
     this.isCadastro = false,
     this.checkEdit,
-  }) : super(key: key);
+  });
 
   final BotaoConfig? botao;
   final String? label;
