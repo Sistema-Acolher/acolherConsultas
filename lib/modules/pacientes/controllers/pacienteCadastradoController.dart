@@ -59,11 +59,11 @@ class PacientesCadastradosController extends ChangeNotifier {
       Paciente paciente = cadastroPaciente.paciente;
       paciente.casaDeApoioId = casaDeApoio.id!;
       if (await cpfCadastrado(paciente.cpf)) {
-        return "Erro ao cadastrar: CPF já cadastrado";
+        throw CadastroPacienteExpection("CPF já cadastrado");
       } else if (await rgCadastrado(paciente.rg)) {
-        return "Erro ao cadastrar: RG já cadastrado";
+        throw CadastroPacienteExpection("RG já cadastrado");
       } else if (await numeroCartaoSusCadastrado(paciente.numeroCartaoSus)) {
-        return "Erro ao cadastrar: Número do cartão do SUS já cadastrado";
+        throw CadastroPacienteExpection("Número do cartão do SUS já cadastrado");
       } else {
         // Caso o paciente não esteja cadastrado, o cadastro é requisitado para o repositório de pacientes.
         // No caso, cadastra diretamente para o Firebase.
@@ -73,10 +73,10 @@ class PacientesCadastradosController extends ChangeNotifier {
         _pacientes.add(cadastroPaciente);
         _pacienteCadastrado = cadastroPaciente;
         notifyListeners();
-        return "Paciente cadastrado com sucesso";
+        return "Paciente cadastrado!";
       }
-    } on Exception catch (e) {
-      return "Erro ao cadastrar: $e";
+    } on CadastroPacienteExpection catch (e) {
+      return Future.error("Erro ao cadastrar: $e");
     }
   }
 
@@ -99,5 +99,16 @@ class PacientesCadastradosController extends ChangeNotifier {
     } on Exception catch (e) {
       return "Erro ao cadastrar: $e";
     }
+  }
+}
+
+class CadastroPacienteExpection implements Exception {
+  final String message;
+
+  CadastroPacienteExpection(this.message);  // Pass your message in constructor. 
+
+  @override
+  String toString() {
+    return message;
   }
 }
