@@ -71,13 +71,13 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
           icon: Symbols.book,
           onPressed: () {
             // Se o formulário for válido, exibe um diálogo de confirmação.
-            if (_stateCadastroPaciente.genero.text.isEmpty) {
+            if (_stateCadastroPaciente.sexo.text.isEmpty) {
               setState(() {
                 dropdownNotifier.value = true;
               });
             }
             if (_formKey.currentState!.validate() &&
-                _stateCadastroPaciente.genero.text.isNotEmpty) {
+                _stateCadastroPaciente.sexo.text.isNotEmpty) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -123,7 +123,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                             Future.delayed(Duration.zero, () {
                               Navigator.pop(context);
                             });
-                            
+
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -141,11 +141,12 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           });
                           var isConnected =
                               await (Connectivity().checkConnectivity());
-                          if (!erro && isConnected.contains(ConnectivityResult.none)) {
+                          if (!erro &&
+                              isConnected.contains(ConnectivityResult.none)) {
                             Future.delayed(Duration.zero, () {
                               Navigator.pop(context);
                             });
-                            
+
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -268,13 +269,13 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: InputDropdown(
-                      label: 'Gênero',
+                      label: 'Sexo',
                       list: const [
                         'Masculino',
                         'Feminino',
-                        'Prefiro não responder'
+                        
                       ],
-                      controller: _stateCadastroPaciente.genero,
+                      controller: _stateCadastroPaciente.sexo,
                       checkNotifier: dropdownNotifier,
                     ),
                   ),

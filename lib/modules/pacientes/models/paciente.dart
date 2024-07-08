@@ -18,7 +18,7 @@ class Paciente {
   String? rg;
   String? numeroCartaoSus;
   DateTime? dataNasc;
-  String genero;
+  String sexo;
   String motivoAcolhimento;
   String? acolhimentoAnterior;
   HistoriaPregressa? historiaPregressa;
@@ -34,7 +34,7 @@ class Paciente {
     this.rg,
     this.numeroCartaoSus,
     this.dataNasc,
-    required this.genero,
+    required this.sexo,
     required this.motivoAcolhimento,
     this.acolhimentoAnterior,
     this.historiaPregressa,
@@ -77,10 +77,10 @@ class Paciente {
       }
     } else {
       anos = idade;
-      if(diaAtual >= diaNascimento){
+      if (diaAtual >= diaNascimento) {
         meses = mesAtual - mesNascimento;
         dias = diaAtual - diaNascimento;
-      }else{
+      } else {
         meses = mesAtual - mesNascimento - 1;
         dias = diaAtual - diaNascimento + 30;
       }
@@ -91,11 +91,11 @@ class Paciente {
     if (dias > 0) idadeString += "${dias}d";
 
     if (idadeString.isEmpty) idadeString = "Menos de 1 dia";
-    
+
     return idadeString;
   }
 
-  // Este método foi substituído pelo método acima pois é menos preciso 
+  // Este método foi substituído pelo método acima pois é menos preciso
   // static String calcularIdade(DateTime dataNascimento){
   //   final DateTime agora = DateTime.now();
   //   int dias = agora.difference(dataNascimento).inDays;
@@ -110,12 +110,11 @@ class Paciente {
 
   //   return idadeString;
   // }
-  
 
   factory Paciente.fromDocument(DocumentSnapshot doc) {
     return Paciente(
       nome: doc['nome'] as String,
-      genero: doc['genero'] as String,
+      sexo: doc['sexo'] as String,
       numeroCartaoSus: doc['numeroCartaoSus'] as String,
       rg: doc['rg'] as String,
       cpf: doc['cpf'] as String,
@@ -123,9 +122,9 @@ class Paciente {
       encaminhamentos: doc['encaminhamentos'] as String,
       motivoAcolhimento: doc['motivoAcolhimento'] as String,
       acolhimentoAnterior: doc['acolhimentoAnterior'] as String,
-      dataNasc: doc['dataNascimento'].toDate() as DateTime, 
-      ativo: doc['ativo'] as bool, 
-      historiaPregressa: doc['historiaPregressa'] as HistoriaPregressa, 
+      dataNasc: doc['dataNascimento'].toDate() as DateTime,
+      ativo: doc['ativo'] as bool,
+      historiaPregressa: doc['historiaPregressa'] as HistoriaPregressa,
       casaDeApoioId: doc['casaDeApoioId'] as String,
     );
   }
@@ -138,7 +137,7 @@ class Paciente {
     String? rg,
     String? numeroCartaoSus,
     DateTime? dataNasc,
-    String? genero,
+    String? sexo,
     String? motivoAcolhimento,
     String? acolhimentoAnterior,
     HistoriaPregressa? historiaPregressa,
@@ -154,7 +153,7 @@ class Paciente {
       rg: rg ?? this.rg,
       numeroCartaoSus: numeroCartaoSus ?? this.numeroCartaoSus,
       dataNasc: dataNasc ?? this.dataNasc,
-      genero: genero ?? this.genero,
+      sexo: sexo ?? this.sexo,
       motivoAcolhimento: motivoAcolhimento ?? this.motivoAcolhimento,
       acolhimentoAnterior: acolhimentoAnterior ?? this.acolhimentoAnterior,
       historiaPregressa: historiaPregressa ?? this.historiaPregressa,
@@ -173,7 +172,7 @@ class Paciente {
       'rg': rg,
       'numeroCartaoSus': numeroCartaoSus,
       'dataNasc': dataNasc,
-      'genero': genero,
+      'sexo': sexo,
       'motivoAcolhimento': motivoAcolhimento,
       'acolhimentoAnterior': acolhimentoAnterior,
       'historiaPregressa': historiaPregressa?.toMap(),
@@ -183,70 +182,81 @@ class Paciente {
     };
   }
 
-  factory Paciente.fromMap(Map<String, dynamic> map,{String? id}) {
+  factory Paciente.fromMap(Map<String, dynamic> map, {String? id}) {
     return Paciente(
-      id: id??"",
+      id: id ?? "",
       nome: map['nome'] as String,
       ativo: map['ativo'] as bool,
       cpf: map['cpf'] != null ? map['cpf'] as String : null,
-      rg: map['rg'] != null? map['rg']as String: null,
-      numeroCartaoSus: map['rg'] != null ? map['numeroCartaoSus'] as String: null,
-      dataNasc: map['dataNasc'] != null ? (map['dataNasc'] as Timestamp).toDate() : null,
-      genero: map['genero'] as String,
+      rg: map['rg'] != null ? map['rg'] as String : null,
+      numeroCartaoSus:
+          map['rg'] != null ? map['numeroCartaoSus'] as String : null,
+      dataNasc: map['dataNasc'] != null
+          ? (map['dataNasc'] as Timestamp).toDate()
+          : null,
+      sexo: map['sexo'] != null ? map['sexo'] as String : '',
       motivoAcolhimento: map['motivoAcolhimento'] as String,
-      acolhimentoAnterior: map['acolhimentoAnterior'] != null? map['acolhimentoAnterior'] as String: null,
-      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
-      orientacoes: map['orientacoes'] != null ? map['orientacoes'] as String : null,
-      encaminhamentos: map['encaminhamentos'] != null ? map['encaminhamentos'] as String : null,
+      acolhimentoAnterior: map['acolhimentoAnterior'] != null
+          ? map['acolhimentoAnterior'] as String
+          : null,
+      historiaPregressa: map['historiaPregressa'] != null
+          ? HistoriaPregressa.fromMap(
+              map['historiaPregressa'] as Map<String, dynamic>)
+          : null,
+      orientacoes:
+          map['orientacoes'] != null ? map['orientacoes'] as String : null,
+      encaminhamentos: map['encaminhamentos'] != null
+          ? map['encaminhamentos'] as String
+          : null,
       casaDeApoioId: map['casaDeApoioId'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Paciente.fromJson(String source) => Paciente.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Paciente.fromJson(String source) =>
+      Paciente.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, genero: $genero, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
+    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, sexo: $sexo, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
   }
 
   @override
   bool operator ==(covariant Paciente other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.nome == nome &&
-      other.ativo == ativo &&
-      other.cpf == cpf &&
-      other.rg == rg &&
-      other.numeroCartaoSus == numeroCartaoSus &&
-      other.dataNasc == dataNasc &&
-      other.genero == genero &&
-      other.motivoAcolhimento == motivoAcolhimento &&
-      other.acolhimentoAnterior == acolhimentoAnterior &&
-      other.historiaPregressa == historiaPregressa &&
-      other.orientacoes == orientacoes &&
-      other.encaminhamentos == encaminhamentos &&
-      other.casaDeApoioId == casaDeApoioId;
+
+    return other.id == id &&
+        other.nome == nome &&
+        other.ativo == ativo &&
+        other.cpf == cpf &&
+        other.rg == rg &&
+        other.numeroCartaoSus == numeroCartaoSus &&
+        other.dataNasc == dataNasc &&
+        other.sexo == sexo &&
+        other.motivoAcolhimento == motivoAcolhimento &&
+        other.acolhimentoAnterior == acolhimentoAnterior &&
+        other.historiaPregressa == historiaPregressa &&
+        other.orientacoes == orientacoes &&
+        other.encaminhamentos == encaminhamentos &&
+        other.casaDeApoioId == casaDeApoioId;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      nome.hashCode ^
-      ativo.hashCode ^
-      cpf.hashCode ^
-      rg.hashCode ^
-      numeroCartaoSus.hashCode ^
-      dataNasc.hashCode ^
-      genero.hashCode ^
-      motivoAcolhimento.hashCode ^
-      acolhimentoAnterior.hashCode ^
-      historiaPregressa.hashCode ^
-      orientacoes.hashCode ^
-      encaminhamentos.hashCode ^
-      casaDeApoioId.hashCode;
+        nome.hashCode ^
+        ativo.hashCode ^
+        cpf.hashCode ^
+        rg.hashCode ^
+        numeroCartaoSus.hashCode ^
+        dataNasc.hashCode ^
+        sexo.hashCode ^
+        motivoAcolhimento.hashCode ^
+        acolhimentoAnterior.hashCode ^
+        historiaPregressa.hashCode ^
+        orientacoes.hashCode ^
+        encaminhamentos.hashCode ^
+        casaDeApoioId.hashCode;
   }
 }

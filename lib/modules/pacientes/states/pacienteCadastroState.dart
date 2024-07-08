@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class CadastroPacienteState extends ChangeNotifier {
   // Campos do cadastro de pacientes.
   final nome = TextEditingController();
-  final genero = TextEditingController();
+  final sexo = TextEditingController();
   final rg = TextEditingController();
   final numeroCartaoSus = TextEditingController();
   final cpf = TextEditingController();
@@ -22,16 +22,22 @@ class CadastroPacienteState extends ChangeNotifier {
   CadastroPaciente cadastro() {
     Paciente paciente = Paciente(
       nome: nome.text.trim(),
-      genero: genero.text.trim(),
-      rg: rg.text.trim().isEmpty ? null: rg.text.trim(),
-      numeroCartaoSus: numeroCartaoSus.text.trim().isEmpty ? null : numeroCartaoSus.text.trim(),
+      sexo: sexo.text.trim(),
+      rg: rg.text.trim().isEmpty ? null : rg.text.trim(),
+      numeroCartaoSus: numeroCartaoSus.text.trim().isEmpty
+          ? null
+          : numeroCartaoSus.text.trim(),
       cpf: cpf.text.trim().isEmpty ? null : cpf.text.trim(),
       motivoAcolhimento: motivoAcolhimento.text.trim(),
-      acolhimentoAnterior: acolhimentoAnterior.text.trim().isEmpty ? null: acolhimentoAnterior.text.trim(),
-      dataNasc: dataNascimento.text.trim().isEmpty ? null: DateFormat('dd/MM/yyyy').parse(dataNascimento.text), 
-      ativo: true, 
-      orientacoes: '', 
-      encaminhamentos: '', 
+      acolhimentoAnterior: acolhimentoAnterior.text.trim().isEmpty
+          ? null
+          : acolhimentoAnterior.text.trim(),
+      dataNasc: dataNascimento.text.trim().isEmpty
+          ? null
+          : DateFormat('dd/MM/yyyy').parse(dataNascimento.text),
+      ativo: true,
+      orientacoes: '',
+      encaminhamentos: '',
       casaDeApoioId: '',
       historiaPregressa: historiaPregressa.cadastro(),
     );

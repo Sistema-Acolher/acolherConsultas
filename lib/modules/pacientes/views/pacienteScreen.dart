@@ -52,7 +52,10 @@ class PacienteScreen extends StatelessWidget {
       ],
       views_: [
         InfoPessoais(paciente: paciente, state: _stateCadastroPaciente),
-        HistPregressa(paciente: paciente, cadastroPacienteState: _stateCadastroPaciente,),
+        HistPregressa(
+          paciente: paciente,
+          cadastroPacienteState: _stateCadastroPaciente,
+        ),
       ],
     );
   }
@@ -97,7 +100,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
       campoEditado = widget.state.nome.text != widget.paciente!.nome ||
           widget.state.cpf.text != widget.paciente!.cpf ||
           widget.state.rg.text != widget.paciente!.rg ||
-          widget.state.genero.text != widget.paciente!.genero ||
+          widget.state.sexo.text != widget.paciente!.sexo ||
           widget.state.numeroCartaoSus.text !=
               widget.paciente!.numeroCartaoSus ||
           widget.state.dataNascimento.text !=
@@ -151,8 +154,8 @@ class _InfoPessoaisState extends State<InfoPessoais> {
                     ? DateFormat('dd/MM/yyyy')
                         .format(widget.paciente?.dataNasc ?? DateTime.now())
                     : ''),
-            _buildGeneroEditar(context, "Gênero", widget.state.genero,
-                widget.paciente!.genero),
+            _buildSexoEditar(
+                context, "Sexo", widget.state.sexo, widget.paciente!.sexo),
             _buildInputTextoEditar(
                 context,
                 "Número do Cartão SUS",
@@ -253,7 +256,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     );
   }
 
-  Widget _buildGeneroEditar(BuildContext context, String label,
+  Widget _buildSexoEditar(BuildContext context, String label,
       TextEditingController state, String defaultValue) {
     ValueNotifier<bool> dropdownNotifier = ValueNotifier<bool>(false);
     if (!['Masculino', 'Feminino', 'Prefiro não responder']
@@ -270,8 +273,8 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InputDropdown(
-        label: 'Gênero',
-        list: const ['Masculino', 'Feminino', 'Prefiro não responder'],
+        label: 'Sexo',
+        list: const ['Masculino', 'Feminino'],
         controller: state,
         checkNotifier: dropdownNotifier,
         isEdit: true,
@@ -337,8 +340,9 @@ class _InfoPessoaisState extends State<InfoPessoais> {
 class HistPregressa extends StatefulWidget {
   final Paciente? paciente;
   final CadastroPacienteState cadastroPacienteState;
-  
-  const HistPregressa({super.key, this.paciente, required this.cadastroPacienteState});
+
+  const HistPregressa(
+      {super.key, this.paciente, required this.cadastroPacienteState});
 
   @override
   State<HistPregressa> createState() => _HistoriaPregressaState();
@@ -358,49 +362,57 @@ class _HistoriaPregressaState extends State<HistPregressa> {
                 "Peso ao Nascer",
                 widget.cadastroPacienteState.historiaPregressa.pesoNasc,
                 widget.paciente?.historiaPregressa?.pesoNasc ?? '',
-                (value) => Mask.validations.generic(value, error: "Peso inválido", min: 1)),
+                (value) => Mask.validations
+                    .generic(value, error: "Peso inválido", min: 1)),
             _buildInputTextoEditar(
-              context,
-              "Estatura",
-              widget.cadastroPacienteState.historiaPregressa.estatura,
-              widget.paciente?.historiaPregressa?.estatura ?? '',
-              (value) => Mask.validations.generic(value, error: "Estatura inválido", min: 1)),
+                context,
+                "Estatura",
+                widget.cadastroPacienteState.historiaPregressa.estatura,
+                widget.paciente?.historiaPregressa?.estatura ?? '',
+                (value) => Mask.validations
+                    .generic(value, error: "Estatura inválido", min: 1)),
             _buildInputTextoEditar(
                 context,
                 "PC",
                 widget.cadastroPacienteState.historiaPregressa.pc,
                 widget.paciente?.historiaPregressa?.pc ?? '',
-                (value) => Mask.validations.generic(value, error: "PC inválido", min: 1)),
+                (value) => Mask.validations
+                    .generic(value, error: "PC inválido", min: 1)),
             _buildInputTextoEditar(
                 context,
                 "PT",
                 widget.cadastroPacienteState.historiaPregressa.pt,
                 widget.paciente?.historiaPregressa?.pt ?? '',
-                (value) => Mask.validations.generic(value, error: "PT inválido", min: 1)),
+                (value) => Mask.validations
+                    .generic(value, error: "PT inválido", min: 1)),
             _buildInputTextoEditar(
-              context,
-              "Teste da Apgar",
-              widget.cadastroPacienteState.historiaPregressa.ictericia,
-              widget.paciente?.historiaPregressa?.ictericia ?? '',
-              (value) => Mask.validations.generic(value, error: "Teste da Apgar inválido", min: 1)),
+                context,
+                "Teste da Apgar",
+                widget.cadastroPacienteState.historiaPregressa.ictericia,
+                widget.paciente?.historiaPregressa?.ictericia ?? '',
+                (value) => Mask.validations
+                    .generic(value, error: "Teste da Apgar inválido", min: 1)),
             _buildInputTextoEditar(
-              context,
-              "Icterícia",
-              widget.cadastroPacienteState.historiaPregressa.testeApgar,
-              widget.paciente?.historiaPregressa?.testeApgar ?? '',
-              (value) => Mask.validations.generic(value, error: "Icterícia inválido", min: 1)),
+                context,
+                "Icterícia",
+                widget.cadastroPacienteState.historiaPregressa.testeApgar,
+                widget.paciente?.historiaPregressa?.testeApgar ?? '',
+                (value) => Mask.validations
+                    .generic(value, error: "Icterícia inválido", min: 1)),
             _buildInputTextoEditar(
                 context,
                 "Teste de Orelhinha",
                 widget.cadastroPacienteState.historiaPregressa.testeOrelhinha,
                 widget.paciente?.historiaPregressa?.testeOrelhinha ?? '',
-                (value) => Mask.validations.generic(value, error: "Teste de orelhinha inválido", min: 1)),
+                (value) => Mask.validations.generic(value,
+                    error: "Teste de orelhinha inválido", min: 1)),
             _buildInputTextoEditar(
                 context,
                 "Teste do Pezinho",
                 widget.cadastroPacienteState.historiaPregressa.testePezinho,
                 widget.paciente?.historiaPregressa?.testePezinho ?? '',
-                (value) => Mask.validations.generic(value, error: "Teste do Pezinho inválido", min: 1)),
+                (value) => Mask.validations.generic(value,
+                    error: "Teste do Pezinho inválido", min: 1)),
             _buildInputTextoEditar(
                 context,
                 "RN",
@@ -438,15 +450,25 @@ class _HistoriaPregressaState extends State<HistPregressa> {
 
   void checkCampoEditado() {
     setState(() {
-      campoEditado = (widget.cadastroPacienteState.historiaPregressa.pesoNasc.text != widget.paciente?.historiaPregressa?.pesoNasc) ||
-                     (widget.cadastroPacienteState.historiaPregressa.estatura.text != widget.paciente?.historiaPregressa?.estatura) ||
-                     (widget.cadastroPacienteState.historiaPregressa.pc.text != widget.paciente?.historiaPregressa?.pc) ||
-                     (widget.cadastroPacienteState.historiaPregressa.pt.text != widget.paciente?.historiaPregressa?.pt) ||
-                     (widget.cadastroPacienteState.historiaPregressa.testeApgar.text != widget.paciente?.historiaPregressa?.testeApgar) ||
-                     (widget.cadastroPacienteState.historiaPregressa.testeOrelhinha.text != widget.paciente?.historiaPregressa?.testeOrelhinha) ||
-                     (widget.cadastroPacienteState.historiaPregressa.testePezinho.text != widget.paciente?.historiaPregressa?.testePezinho) ||
-                     (widget.cadastroPacienteState.historiaPregressa.rn.text != widget.paciente?.historiaPregressa?.rn) ||
-                     (widget.cadastroPacienteState.historiaPregressa.intercorrencia.text != widget.paciente?.historiaPregressa?.intercorrencia);
+      campoEditado = (widget
+                  .cadastroPacienteState.historiaPregressa.pesoNasc.text !=
+              widget.paciente?.historiaPregressa?.pesoNasc) ||
+          (widget.cadastroPacienteState.historiaPregressa.estatura.text !=
+              widget.paciente?.historiaPregressa?.estatura) ||
+          (widget.cadastroPacienteState.historiaPregressa.pc.text !=
+              widget.paciente?.historiaPregressa?.pc) ||
+          (widget.cadastroPacienteState.historiaPregressa.pt.text !=
+              widget.paciente?.historiaPregressa?.pt) ||
+          (widget.cadastroPacienteState.historiaPregressa.testeApgar.text !=
+              widget.paciente?.historiaPregressa?.testeApgar) ||
+          (widget.cadastroPacienteState.historiaPregressa.testeOrelhinha.text !=
+              widget.paciente?.historiaPregressa?.testeOrelhinha) ||
+          (widget.cadastroPacienteState.historiaPregressa.testePezinho.text !=
+              widget.paciente?.historiaPregressa?.testePezinho) ||
+          (widget.cadastroPacienteState.historiaPregressa.rn.text !=
+              widget.paciente?.historiaPregressa?.rn) ||
+          (widget.cadastroPacienteState.historiaPregressa.intercorrencia.text !=
+              widget.paciente?.historiaPregressa?.intercorrencia);
     });
   }
 

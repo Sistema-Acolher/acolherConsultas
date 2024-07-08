@@ -7,7 +7,7 @@ final Paciente pacienteTeste = Paciente(
   rg: '1234567',
   numeroCartaoSus: '123456789012345',
   dataNasc: DateTime(1980, 5, 15),
-  genero: 'Masculino',
+  sexo: 'Masculino',
   motivoAcolhimento: 'Dor de cabeça persistente',
   acolhimentoAnterior: 'Tratamento de resfriado',
   orientacoes: 'Repouso e hidratação',

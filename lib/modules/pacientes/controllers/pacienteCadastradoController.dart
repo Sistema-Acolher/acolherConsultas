@@ -63,7 +63,8 @@ class PacientesCadastradosController extends ChangeNotifier {
       } else if (await rgCadastrado(paciente.rg)) {
         throw CadastroPacienteExpection("RG já cadastrado");
       } else if (await numeroCartaoSusCadastrado(paciente.numeroCartaoSus)) {
-        throw CadastroPacienteExpection("Número do cartão do SUS já cadastrado");
+        throw CadastroPacienteExpection(
+            "Número do cartão do SUS já cadastrado");
       } else {
         // Caso o paciente não esteja cadastrado, o cadastro é requisitado para o repositório de pacientes.
         // No caso, cadastra diretamente para o Firebase.
@@ -105,7 +106,7 @@ class PacientesCadastradosController extends ChangeNotifier {
 class CadastroPacienteExpection implements Exception {
   final String message;
 
-  CadastroPacienteExpection(this.message);  // Pass your message in constructor. 
+  CadastroPacienteExpection(this.message); // Pass your message in constructor.
 
   @override
   String toString() {

@@ -51,23 +51,23 @@ class ListaDePacientes extends StatelessWidget {
                       //     children: [
                       //       Padding(
                       //         padding: const EdgeInsets.only(right: 2),
-                      //         child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: item.paciente.genero=="masculino"?Colors.black:Colors.grey,),
+                      //         child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: item.paciente.sexo=="masculino"?Colors.black:Colors.grey,),
                       //       ),
                       //       const VerticalDivider(
                       //         width: 10,
                       //         thickness: 2,
                       //         color: Colors.black,
                       //       ),
-                      //       SvgPicture.asset("src/icons/menina.svg",height: 35, color: item.paciente.genero=="feminino"?Colors.black:Colors.grey),
+                      //       SvgPicture.asset("src/icons/menina.svg",height: 35, color: item.paciente.sexo=="feminino"?Colors.black:Colors.grey),
                       //     ],
                       //   ),
                       // ),
-                      item.paciente.genero=="masculino"?
+                      item.paciente.sexo=="masculino"?
                         Padding(
                           padding: const EdgeInsets.only(right: 4),
                           child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: Colors.black),
                         ):
-                      item.paciente.genero=="feminino"?
+                      item.paciente.sexo=="feminino"?
                         SvgPicture.asset("src/icons/menina.svg",height: 35, color: Colors.black):
                         const SizedBox.shrink()
                     )
