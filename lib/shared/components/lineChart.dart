@@ -22,22 +22,24 @@ class ConsultasLineChart extends StatefulWidget {
 class _ConsultasLineChartState extends State<ConsultasLineChart> {
   // Data de hoje
   DateTime endDate = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  var startDate;
+
   // Intervalo da legenda do eixo x do gráfico de acordo com a quantidade de dias
   Map<int, double> intervalGraph = { 10: 1.5, 11: 1.7, 12: 1.9, 13: 2.0, 14: 2.2, 15: 2.4, 16: 2.5, 17: 2.7, 18: 2.9, 19: 3.0, 20: 3.2, 21: 3.4, 22: 3.5, 23: 3.7, 24: 3.9, 25: 4.1, 26: 4.3, 27: 4.5, 28: 4.7, 29: 4.7,};
   late ValueNotifier<List<FlSpot>> displayedData;
   late Future<void> _loadConsultasFuture;
   late Map<DateTime,double> consultasPdia;
-  String dropdownValue = '7 dias';
+  String dropdownValue = 'Mensal';
 
   @override
   void initState() {
     super.initState();
     displayedData = ValueNotifier([]);
-    _loadConsultasFuture = loadConsultas(7);
+    startDate = DateTime(endDate.year, endDate.month, 1);
+    _loadConsultasFuture = loadConsultas();
   }
 
-  Future<void> loadConsultas(int diasAtras) async{
-    DateTime startDate = endDate.subtract(Duration(days: diasAtras));
+  Future<void> loadConsultas() async{
     await context.read<ConsultaController>().getConsultas();
     // Mapeia as consultas do banco em quantidade por dia
     consultasPdia = Provider.of<ConsultaController>(context, listen: false).consultas
@@ -47,23 +49,24 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
         element.estado == "concluida" &&
         element.casaDeApoioId == widget.casaDeApoioSelecionada.id)
       .sorted((a, b) => a.dataHorario.compareTo(b.dataHorario))
-      .groupListsBy((element) => DateTime.utc(element.dataHorario.year,element.dataHorario.month,element.dataHorario.day))
+      .groupListsBy((element) => DateTime(element.dataHorario.year, element.dataHorario.month, element.dataHorario.day))
       .map((key, value) => MapEntry(key, value.length.toDouble()));
       
     Map<DateTime, double> consultas={};
     consultas=consultasPdia;
     consultas.removeWhere((key, value) => key.isBefore(startDate));
 
-    int numberOfDays = endDate.difference(startDate).inDays;
+    int numberOfDays = endDate.difference(startDate).inDays + 2;
     var displayedDias = List.generate(numberOfDays, (index) => startDate.add(Duration(days: index)));
 
     List<FlSpot> listaTemp = [];
-    double counter = 0;
+    int counter = 0;
     // Transforma map em lista de pontos, adicionando dias não presentes como 0
     for (var element in displayedDias) {
-      listaTemp.add(FlSpot(counter, consultas[element]??0));
+      listaTemp.add(FlSpot(counter.toDouble(), consultas[element]??0));
       counter++;
     }
+
     // Reseta os dados carregados
     displayedData.value.clear();
     displayedData.value=listaTemp;
@@ -71,20 +74,23 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
 
   void updateDisplayedData() {
     setState(() {
+      var mesAtual = endDate.month;
       switch (dropdownValue) {
-        case 'Mês Atual':
-          loadConsultas(DateTime.now().day-1);
+        case 'Mensal':
+          startDate = DateTime(endDate.year, endDate.month, 1);
           break;
-        case '30 dias':
-          loadConsultas(30);
+        case 'Semestral':
+          if(endDate.month > 6) {
+            startDate = DateTime(endDate.year, mesAtual - 6, endDate.day);
+          } else {
+            startDate = DateTime(endDate.year, 1, 1);
+          }
           break;
-        case '90 dias':
-          loadConsultas(90);
-          break;
-        case '7 dias':
-          loadConsultas(7);
+        case 'Anual':
+          startDate = DateTime(endDate.year, 1, 1);
           break;
       }
+      _loadConsultasFuture = loadConsultas();
     });
   }
 
@@ -95,14 +101,14 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8)
       ),
-      padding: const EdgeInsets.only(right: 20,top: 4,bottom: 4),
+      padding: const EdgeInsets.only(right: 20,top: 4,bottom: 12),
       child: Column(
         children: [
           // Titulo e dropdown
           Padding(
             padding: const EdgeInsets.only(bottom: 8,left: 32),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   "Período:",
@@ -110,10 +116,23 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                 ),
                 // Dropdown que controla o período
                 DropdownButton<String>(
-                  style: const TextStyle(fontFamily: "Montserrat",color: Colors.black,fontSize: 20),
-                  underline: const Divider(height: 5),
-                  padding: const EdgeInsets.only(left: 8,top: 2),
-                  isDense: true,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Color(widget.casaDeApoioSelecionada.cor??azul.value),
+                  ),
+                  style: const TextStyle(
+                    fontFamily: "Montserrat",
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                  alignment: AlignmentDirectional.center,
+                  dropdownColor: branco,
+                  underline: const SizedBox(),
+                  // underline: Divider(
+                  //   color: Color(widget.casaDeApoioSelecionada.cor??azul.value),
+                  //   height: 4,
+                  // ),
+                  padding: const EdgeInsets.only(left: 8),
                   elevation: 5,
                   value: dropdownValue,
                   // Atualiza o estado dropdownValue
@@ -123,12 +142,13 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                       updateDisplayedData();
                     });
                   },
-                  items: <String>['7 dias','30 dias','90 dias','Mês Atual'].map<DropdownMenuItem<String>>((String value) {
+                  items: <String>['Mensal','Semestral','Anual'].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Center(child: Text(value)),
                     );
                   }).toList(),
+                  borderRadius: BorderRadius.circular(8),
                 )
               ],
             ),
@@ -136,12 +156,12 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
           // Grafico
           ValueListenableBuilder<List<FlSpot>>(
             valueListenable: displayedData,
-            builder: (context,data,child) {
+            builder: (context, data, child) {
               return FutureBuilder(
                 future: _loadConsultasFuture,
                 builder: (context,snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator(color: Color(widget.casaDeApoioSelecionada.cor ?? azul.value),));
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Erro ao carregar consultas: ${snapshot.error}'));
                   } else {
@@ -171,7 +191,16 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
                             tooltipBorder: const BorderSide(color: Colors.black),
-                            getTooltipItems: (touchedSpots) => [LineTooltipItem(touchedSpots.first.y.toStringAsFixed(0), const TextStyle(color: Color(0xFF004AAD), fontSize: 14))],
+                            getTooltipItems: (touchedSpots) => 
+                                    [
+                                      LineTooltipItem(
+                                        "${DateFormat('dd/MM', "pt_BR").format(endDate.subtract(Duration(days: data.length - touchedSpots.first.x.toInt() - 1)))} - ${touchedSpots.first.y.toStringAsFixed(0)}", 
+                                        TextStyle(
+                                          color: Color(widget.casaDeApoioSelecionada.cor ?? azul.value).withOpacity(.7), 
+                                          fontSize: 14
+                                        )
+                                      ),
+                                    ],
                             getTooltipColor: (touchedSpot) => Colors.white,
                             tooltipPadding: const EdgeInsets.symmetric(vertical: 2,horizontal: 8)
                           )
@@ -200,16 +229,48 @@ class _ConsultasLineChartState extends State<ConsultasLineChart> {
                           // Legenda de baixo
                           bottomTitles: AxisTitles(
                             sideTitles:  SideTitles(
-                              interval: data.length>30?15:data.length>=10?intervalGraph[data.length]:1,
+                              interval: 1,
                               showTitles: true,
                               // Define a legenda de baixo baseado nos dias carregados
                               getTitlesWidget: (value,meta) {
+                                String label = "";
+                                if(data.length <= 5){
+                                  label = dropdownValue == "Mensal" ? 
+                                      DateFormat('dd/MM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1))):
+                                      dropdownValue == "Semestral" ?
+                                      // Cada um dos meses no intervalo dado
+                                      DateFormat('MMM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1))):
+                                      // Cada um dos meses no intervalo dado
+                                      DateFormat('MMM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1)));
+                                } else {
+                                  int porcentagem25 = ((data.length - 1)*0.25).toInt();
+                                  int porcentagem50 = ((data.length - 1)*0.5).toInt();
+                                  int porcentagem75 = ((data.length - 1)*0.75).toInt();
+                                  if(value == data[0].x || value == data[porcentagem25].x || value == data[porcentagem50].x || value == data[porcentagem75].x || value == data[data.length-1].x){
+                                    label = dropdownValue == "Mensal" ? 
+                                      DateFormat('dd/MM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1))):
+                                      dropdownValue == "Semestral" ?
+                                      // Cada um dos meses no intervalo dado
+                                      DateFormat('MMM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1))):
+                                      // Cada um dos meses no intervalo dado
+                                      DateFormat('MMM', "pt_BR").format(endDate.subtract(Duration(days: data.length - value.toInt() - 1)));
+                                  } else {
+                                    label = "";
+                                  }
+                                }
+
                                 return SideTitleWidget(
                                   axisSide: AxisSide.bottom,
-                                  child: 
-                                    Text(DateFormat('dd/MM').format(endDate.subtract(Duration(days: data.length - value.toInt()))),
+                                  fitInside: const SideTitleFitInsideData(
+                                    enabled: false, 
+                                    axisPosition: 2, 
+                                    parentAxisSize: 0, 
+                                    distanceFromEdge: 0
+                                  ),
+                                  child: Text(
+                                    label.isNotEmpty ? "${label[0].toUpperCase()}${label.substring(1)}" : label,
                                     style: const TextStyle(fontSize: 12),
-                                  )
+                                  ),
                                 );
                               },
                             )

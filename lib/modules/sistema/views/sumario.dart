@@ -48,14 +48,14 @@ class _SumarioState extends State<Sumario> {
             future: _loadConsultasFuture,
             builder: (context,snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator(color: Color(casaDeApoio.cor ?? azul.value),));
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Erro ao carregar consultas: ${snapshot.error}'));
                   } else {
                     return SingleChildScrollView(
-                      padding: const EdgeInsets.only(bottom: 50),
+                      padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         child: Column(
                           children: [
                             Container(
@@ -68,12 +68,15 @@ class _SumarioState extends State<Sumario> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Frequência de consultas",
-                                    style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 7),
+                                    child: Text(
+                                      "Frequência de consultas",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -92,12 +95,15 @@ class _SumarioState extends State<Sumario> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Consultas hoje",
-                                    style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 7),
+                                    child: Text(
+                                      "Consultas hoje",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18
+                                      ),
                                     ),
                                   ),
                                   Padding(
