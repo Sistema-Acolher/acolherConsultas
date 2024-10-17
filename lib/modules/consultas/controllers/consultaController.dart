@@ -34,7 +34,6 @@ class ConsultaController extends ChangeNotifier {
     // Busca a lista de consultas no repositório de consultas e adiciona na lista de consultas do provedor.
     for(var consulta in await _repository.selecionarTodos()){
       Consulta c = Consulta.fromMap(consulta);
-      c.id = consulta["id"];
       _consultas.add(c);
     }
 

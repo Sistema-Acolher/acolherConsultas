@@ -13,7 +13,7 @@ class CadastroPacienteState extends ChangeNotifier {
   final numeroCartaoSus = TextEditingController();
   final cpf = TextEditingController();
   final motivoAcolhimento = TextEditingController();
-  final acolhimentoAnterior = TextEditingController();
+  final localAcolhimentoAnterior = TextEditingController();
   final dataNascimento = TextEditingController();
   final idade = TextEditingController();
   final historiaPregressa = HistoriaPregressaState();
@@ -29,9 +29,9 @@ class CadastroPacienteState extends ChangeNotifier {
           : numeroCartaoSus.text.trim(),
       cpf: cpf.text.trim().isEmpty ? null : cpf.text.trim(),
       motivoAcolhimento: motivoAcolhimento.text.trim(),
-      acolhimentoAnterior: acolhimentoAnterior.text.trim().isEmpty
+      localAcolhimentoAnterior: localAcolhimentoAnterior.text.trim().isEmpty
           ? null
-          : acolhimentoAnterior.text.trim(),
+          : localAcolhimentoAnterior.text.trim(),
       dataNasc: dataNascimento.text.trim().isEmpty
           ? null
           : DateFormat('dd/MM/yyyy').parse(dataNascimento.text),

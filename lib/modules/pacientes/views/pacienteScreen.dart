@@ -171,8 +171,8 @@ class _InfoPessoaisState extends State<InfoPessoais> {
             _buildInputTextoEditar(
                 context,
                 "Acolhimento Anterior",
-                widget.state.acolhimentoAnterior,
-                widget.paciente?.acolhimentoAnterior ?? '',
+                widget.state.localAcolhimentoAnterior,
+                widget.paciente?.localAcolhimentoAnterior ?? '',
                 () => {}),
           ],
         ),

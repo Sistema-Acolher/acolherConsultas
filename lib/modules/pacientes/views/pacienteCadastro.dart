@@ -289,7 +289,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     label: "Acolhimento anterior",
                     controller: _controllerRadio,
                     optionalController:
-                        _stateCadastroPaciente.acolhimentoAnterior,
+                        _stateCadastroPaciente.localAcolhimentoAnterior,
                     isChecked: radiobuttonNotifier,
                   ),
                 ],

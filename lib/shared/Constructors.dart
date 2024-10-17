@@ -9,7 +9,7 @@ final Paciente pacienteTeste = Paciente(
   dataNasc: DateTime(1980, 5, 15),
   sexo: 'Masculino',
   motivoAcolhimento: 'Dor de cabeça persistente',
-  acolhimentoAnterior: 'Tratamento de resfriado',
+  localAcolhimentoAnterior: 'Maria Paola',
   orientacoes: 'Repouso e hidratação',
   encaminhamentos: 'Agendar consulta com neurologista',
   casaDeApoioId: 'abc123',

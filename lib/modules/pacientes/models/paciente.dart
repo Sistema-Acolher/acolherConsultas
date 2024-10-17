@@ -20,7 +20,7 @@ class Paciente {
   DateTime? dataNasc;
   String sexo;
   String motivoAcolhimento;
-  String? acolhimentoAnterior;
+  String? localAcolhimentoAnterior;
   HistoriaPregressa? historiaPregressa;
   String? orientacoes;
   String? encaminhamentos;
@@ -36,7 +36,7 @@ class Paciente {
     this.dataNasc,
     required this.sexo,
     required this.motivoAcolhimento,
-    this.acolhimentoAnterior,
+    this.localAcolhimentoAnterior,
     this.historiaPregressa,
     this.orientacoes,
     this.encaminhamentos,
@@ -121,7 +121,7 @@ class Paciente {
       orientacoes: doc['orientacoes'] as String,
       encaminhamentos: doc['encaminhamentos'] as String,
       motivoAcolhimento: doc['motivoAcolhimento'] as String,
-      acolhimentoAnterior: doc['acolhimentoAnterior'] as String,
+      localAcolhimentoAnterior: doc['localAcolhimentoAnterior'] as String,
       dataNasc: doc['dataNascimento'].toDate() as DateTime,
       ativo: doc['ativo'] as bool,
       historiaPregressa: doc['historiaPregressa'] as HistoriaPregressa,
@@ -139,7 +139,7 @@ class Paciente {
     DateTime? dataNasc,
     String? sexo,
     String? motivoAcolhimento,
-    String? acolhimentoAnterior,
+    String? localAcolhimentoAnterior,
     HistoriaPregressa? historiaPregressa,
     String? orientacoes,
     String? encaminhamentos,
@@ -155,7 +155,7 @@ class Paciente {
       dataNasc: dataNasc ?? this.dataNasc,
       sexo: sexo ?? this.sexo,
       motivoAcolhimento: motivoAcolhimento ?? this.motivoAcolhimento,
-      acolhimentoAnterior: acolhimentoAnterior ?? this.acolhimentoAnterior,
+      localAcolhimentoAnterior: localAcolhimentoAnterior ?? this.localAcolhimentoAnterior,
       historiaPregressa: historiaPregressa ?? this.historiaPregressa,
       orientacoes: orientacoes ?? this.orientacoes,
       encaminhamentos: encaminhamentos ?? this.encaminhamentos,
@@ -174,7 +174,7 @@ class Paciente {
       'dataNasc': dataNasc,
       'sexo': sexo,
       'motivoAcolhimento': motivoAcolhimento,
-      'acolhimentoAnterior': acolhimentoAnterior,
+      'localAcolhimentoAnterior': localAcolhimentoAnterior,
       'historiaPregressa': historiaPregressa?.toMap(),
       'orientacoes': orientacoes,
       'encaminhamentos': encaminhamentos,
@@ -196,8 +196,8 @@ class Paciente {
           : null,
       sexo: map['sexo'] != null ? map['sexo'] as String : '',
       motivoAcolhimento: map['motivoAcolhimento'] as String,
-      acolhimentoAnterior: map['acolhimentoAnterior'] != null
-          ? map['acolhimentoAnterior'] as String
+      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null
+          ? map['localAcolhimentoAnterior'] as String
           : null,
       historiaPregressa: map['historiaPregressa'] != null
           ? HistoriaPregressa.fromMap(
@@ -219,7 +219,7 @@ class Paciente {
 
   @override
   String toString() {
-    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, sexo: $sexo, motivoAcolhimento: $motivoAcolhimento, acolhimentoAnterior: $acolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
+    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, sexo: $sexo, motivoAcolhimento: $motivoAcolhimento, localAcolhimentoAnterior: $localAcolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
   }
 
   @override
@@ -235,7 +235,7 @@ class Paciente {
         other.dataNasc == dataNasc &&
         other.sexo == sexo &&
         other.motivoAcolhimento == motivoAcolhimento &&
-        other.acolhimentoAnterior == acolhimentoAnterior &&
+        other.localAcolhimentoAnterior == localAcolhimentoAnterior &&
         other.historiaPregressa == historiaPregressa &&
         other.orientacoes == orientacoes &&
         other.encaminhamentos == encaminhamentos &&
@@ -253,7 +253,7 @@ class Paciente {
         dataNasc.hashCode ^
         sexo.hashCode ^
         motivoAcolhimento.hashCode ^
-        acolhimentoAnterior.hashCode ^
+        localAcolhimentoAnterior.hashCode ^
         historiaPregressa.hashCode ^
         orientacoes.hashCode ^
         encaminhamentos.hashCode ^
