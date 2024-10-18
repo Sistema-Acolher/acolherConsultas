@@ -20,7 +20,7 @@ class ListaComIcone extends StatefulWidget {
   final String label;
   final List<CasaDeApoio>? listaCasaApoio;
   final List<Usuario>? listaUsuario;
-  final List<Consulta>? listaConsulta;
+  final List<ConsultaCadastro>? listaConsulta;
 
   @override
   _ListaComIconeState createState() => _ListaComIconeState();
@@ -79,7 +79,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
   }
 
   Widget _buildListItem(var item, {bool dialog=false}) {
-    if (item is Consulta) {
+    if (item is ConsultaCadastro) {
       final formattedDate = DateFormat.yMMMd("pt_BR").format(item.dataHorario); // Formatar a data
       final formattedDateDialog = DateFormat.yMd("pt_BR").format(item.dataHorario); // Formatar a data
       final formattedTime = DateFormat.Hm().format(item.dataHorario); // Formatar o horário
@@ -145,7 +145,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
   }
 
   // Dialog que abre a opcao de reagendar e de consultar.
-  Future<void> _optionsDialogBuilder(BuildContext context, Consulta consulta) {
+  Future<void> _optionsDialogBuilder(BuildContext context, ConsultaCadastro consulta) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -205,7 +205,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
   }
 
   // Dialog que confirma deletar a consulta.
-  Future<void> _consultaDeleteDialogBuilder(BuildContext context,Consulta consultaRemove) {
+  Future<void> _consultaDeleteDialogBuilder(BuildContext context,ConsultaCadastro consultaRemove) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {

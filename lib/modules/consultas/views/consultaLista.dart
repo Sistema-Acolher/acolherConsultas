@@ -20,7 +20,7 @@ class ConsultaLista extends StatefulWidget {
 class _ConsultaListaState extends State<ConsultaLista> {
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
   late Future<void> _loadConsultasFuture;
-  late List<Consulta> consultasPaciente;
+  late List<ConsultaCadastro> consultasPaciente;
 
   @override
   void initState() {

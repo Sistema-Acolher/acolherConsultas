@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/genograma.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/tipoDesenho.dart';

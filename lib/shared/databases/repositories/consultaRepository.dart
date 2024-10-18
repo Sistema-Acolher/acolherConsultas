@@ -12,12 +12,16 @@ class ConsultaRepository{
   
   // CRUD de pacientes cadastrados, no caso, está sendo utilizado apenas o firebase.
 
-  Future<String> criar(Consulta consulta) async {
+  Future<String> criar(ConsultaCadastro consulta) async {
     return _dbFirebase.criar(consulta.toMap());
   }
 
-  Future<void> atualizar(Consulta consulta,String consultaId) async {
+  Future<void> atualizar(ConsultaCadastro consulta,String consultaId) async {
     return _dbFirebase.atualizar(consulta.toMap(),consultaId);
+  }
+
+  Future<Map<String, dynamic>?> buscarConsulta(String consultaId) async {
+    return _dbFirebase.buscarConsulta(consultaId);
   }
 
   Future<void> remover(String consultaId) async {

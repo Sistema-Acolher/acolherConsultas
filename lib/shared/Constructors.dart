@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 
 final Paciente pacienteTeste = Paciente(
@@ -13,4 +14,54 @@ final Paciente pacienteTeste = Paciente(
   orientacoes: 'Repouso e hidratação',
   encaminhamentos: 'Agendar consulta com neurologista',
   casaDeApoioId: 'abc123',
+);
+
+final ConsultaCadastro consultaTeste = ConsultaCadastro(
+  casaDeApoioId: "casaDeApoio123",
+  pacienteId: "paciente456",
+  dataHorario: DateTime.now(),
+  estado: "em andamento",
+  dadosConsulta: Consulta(
+    idade: DateTime(2010, 5, 15),
+    dataConsulta: DateTime.now(),
+    cuidadorPrincipal: "Maria Silva",
+    queixaPrincipal: "Dor abdominal",
+    descricao: "Paciente relata dor há 3 dias.",
+    refeicoesComTecnologia: 2,
+    refeicoesDuranteODia: "Café da manhã, almoço, jantar",
+    consumiuFeijao: 1,
+    consumiuFrutas: 1,
+    consumiuVerdurasLegumes: 1,
+    consumiuEmbutidos: 0,
+    consumiuBebidasAdocicadas: 1,
+    consumiuMacarraoInstantaneoSalgado: 0,
+    consumiuBiscoitoRecheado: 0,
+    ingestaoHidrica: "2 litros",
+    suplementacao: "Nenhuma",
+    diurese: "Normal",
+    evacuacoes: "1 vez ao dia",
+    itensHigiene: "Escova de dente, sabonete",
+    higieneCorporal: "Normal",
+    sono: "8 horas por noite",
+    comprimento: 120,
+    peso: 30.5,
+    comprimentoPorIdade: 50,
+    imcPorIdade: 60,
+    fc: "80 bpm",
+    saturacao: "98%",
+    auscultaCardiaca: "Normal",
+    auscultaPulmonar: "Normal",
+    pa: "120/80 mmHg",
+    temperatura: 36.5,
+    otoscopia: "Normal",
+    orofaringe: "Normal",
+    avaliacaoMuscoesqueletica: "Normal",
+    avaliacaoPele: "Sem lesões",
+    marcosPresentes: "Caminhar, falar",
+    marcosAusentes: "Nenhum",
+    comoSeSenteHoje: "Bem",
+    analiseGeral: "Saudável",
+    avaliacoes: "Rotina",
+    intervencoes: "Nenhuma"
+  ),
 );

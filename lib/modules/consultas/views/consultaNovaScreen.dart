@@ -3,7 +3,6 @@ import 'package:acolherconsultas/modules/consultas/controllers/consultaControlle
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteHistoriaPregressaState.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
@@ -27,7 +26,7 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
   late Paciente? pacienteSelecionado = null;
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
   late Future<void> _loadConsultasFuture;
-  late List<Consulta> consultasDia;
+  late List<ConsultaCadastro> consultasDia;
 
   @override
   void initState() {
@@ -84,7 +83,7 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
           body: Padding(
             padding: const EdgeInsets.only(bottom: 60,left: 10,right: 10),
             child: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
-              // Consulta caso possua paciente setado
+              // ConsultaCadastro caso possua paciente setado
               const Center(
                 child: Text(
                   "Consultar",

@@ -10,10 +10,10 @@ import 'package:provider/provider.dart';
 
 class ListaHorario extends StatefulWidget {
   final DateTime? dia;
-  final List<Consulta> consultasDoDia;
+  final List<ConsultaCadastro> consultasDoDia;
   final Function(Paciente p)? onSelect;
   final Paciente? paciente;
-  final Consulta? consulta;
+  final ConsultaCadastro? consulta;
   final bool fundo;
 
   const ListaHorario({

@@ -129,7 +129,7 @@ class UsuarioController extends ChangeNotifier {
               timer.cancel();
             }
           }
-        } on Exception catch (e) {
+        } on Exception {
           timer.cancel();
         }
       }

@@ -1,5 +1,4 @@
 import 'package:acolherconsultas/modules/genogramaEcomapa/controllers/ecomapaController.dart';
-import 'package:acolherconsultas/modules/genogramaEcomapa/models/ecomapa.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/ecomapaScreen.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';

@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/buttons/loginButton.dart';
-import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

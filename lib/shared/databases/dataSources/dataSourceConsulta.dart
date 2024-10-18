@@ -7,6 +7,8 @@ abstract class DataSourceConsulta{
 
   Future<void> atualizar(Map<String, dynamic> consulta, String consultaId);
 
+  Future<Map<String, dynamic>?> buscarConsulta(String consultaId);
+
   Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario);
 
   Future<List<Map<String, dynamic>>> selecionarTodos();

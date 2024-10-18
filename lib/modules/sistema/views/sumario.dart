@@ -18,7 +18,7 @@ class Sumario extends StatefulWidget {
 class _SumarioState extends State<Sumario> {
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
   late Future<void> _loadConsultasFuture;
-  late List<Consulta> consultasDia;
+  late List<ConsultaCadastro> consultasDia;
 
   @override
   void initState() {

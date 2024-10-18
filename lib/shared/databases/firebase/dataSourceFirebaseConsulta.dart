@@ -20,6 +20,17 @@ class DataSourceFirebaseConsulta extends DataSourceConsulta {
   }
 
   @override
+  Future<Map<String, dynamic>?> buscarConsulta(String consultaId) async {
+    DocumentSnapshot docsSnapshot = await _firestore.collection("consultas").doc(consultaId).get();
+
+    if(!docsSnapshot.exists){
+      return null;
+    }
+    
+    return docsSnapshot.data() as Map<String, dynamic>;
+  }
+
+  @override
   Future<void> remover(String consultaId) async {
     await _firestore.collection("consultas").doc(consultaId).delete();
   }

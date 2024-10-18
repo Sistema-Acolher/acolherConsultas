@@ -19,7 +19,7 @@ double p50 = 0.5*11;
 double p20 = 0.2*11;
 
 // Hash de consultas por dia
-var kEvents = LinkedHashMap<DateTime, List<Consulta>>(
+var kEvents = LinkedHashMap<DateTime, List<ConsultaCadastro>>(
   equals: isSameDay,
   hashCode: getHashCode,
 );
@@ -31,7 +31,7 @@ int getHashCode(DateTime key) {
 
 class Calendario extends StatefulWidget {
   const Calendario({super.key, this.paciente, this.casaDeApoio, this.consulta});
-  final Consulta? consulta;
+  final ConsultaCadastro? consulta;
   final CasaDeApoio? casaDeApoio;
   final Paciente? paciente;
 
@@ -40,7 +40,7 @@ class Calendario extends StatefulWidget {
 }
 
 class _CalendarioState extends State<Calendario> {
-  List<Consulta> consultasDoDia = [];
+  List<ConsultaCadastro> consultasDoDia = [];
   final ValueNotifier<DateTime> _focusedDay = ValueNotifier(DateTime.now());
   DateTime _selectedDay = DateTime.now();
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
@@ -90,7 +90,7 @@ class _CalendarioState extends State<Calendario> {
   }
 
   // Seleciona todas as consultas do dia a partir da hash gerada
-  List<Consulta> _getEventsForDay(DateTime day) {
+  List<ConsultaCadastro> _getEventsForDay(DateTime day) {
     return kEvents[day] ?? [];
   }
 
@@ -160,7 +160,7 @@ class _CalendarioState extends State<Calendario> {
                               },
                             ),
                             // Calendário
-                            TableCalendar<Consulta>(
+                            TableCalendar<ConsultaCadastro>(
                               locale: "pt_BR",
                               firstDay: DateTime.utc(DateTime.now().year,1,1),
                               lastDay: DateTime.utc(DateTime.now().year,12,31),

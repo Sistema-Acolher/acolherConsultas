@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class ConsultaAgendar extends StatelessWidget {
   final Paciente? paciente;
-  final Consulta? consulta;
+  final ConsultaCadastro? consulta;
   const ConsultaAgendar({super.key, this.paciente, this.consulta});
 
   @override
