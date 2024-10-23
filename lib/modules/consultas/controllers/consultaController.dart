@@ -2,37 +2,83 @@ import 'dart:async';
 
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/shared/databases/repositories/consultaRepository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 // A classe ConsultaController é a classe que controla os consultas.
 class ConsultaController extends ChangeNotifier {
-  // Repositório de consultas, com métodos de CRUD.
-  final _repository = ConsultaRepository();
+  // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Lista de consultas.
   final List<ConsultaCadastro> _consultas = [];
   List<ConsultaCadastro> get consultas => _consultas;
 
-  final _consultasStreamController = StreamController<List<ConsultaCadastro>>.broadcast();
+  // CRUD -----------------------------------
+  Future<String> criarConsulta(ConsultaCadastro consulta) async {
+    DocumentReference<Map<String, dynamic>> consultaAdicionada = await _firestore.collection("consultas").add(consulta.toMap());
 
-  // Stream getter para mandar a consulta stream
-  Stream<List<ConsultaCadastro>> get streamConsultas => _consultasStreamController.stream;
+    return consultaAdicionada.id;
+  }
 
-  void _updateConsultas(List<ConsultaCadastro> consultas) {
+  Future<List<Map<String, dynamic>>> selecionarTodosConsulta() async {
+    QuerySnapshot querySnapshot = await _firestore.collection("consultas").get();
+    List<Map<String, dynamic>> consultas = [];
+
+    for (var element in querySnapshot.docs) {
+      var consulta = element.data() as Map<String, dynamic>;
+      consulta["id"] = element.id;
+      consultas.add(consulta);
+    }
+
+    return consultas;
+  }
+  
+  Future<void> atualizarConsulta(ConsultaCadastro consulta,String consultaId) async {
+    await _firestore.collection("consultas").doc(consultaId).update(consulta.toMap());
+  }
+
+  Future<void> remover(String consultaId) async {
+    await _firestore.collection("consultas").doc(consultaId).delete();
+  }
+
+  // Funções extras do banco -----------------------------------
+  Future<Map<String, dynamic>?> buscarConsulta(String consultaId) async {
+    DocumentSnapshot docsSnapshot = await _firestore.collection("consultas").doc(consultaId).get();
+
+    if(!docsSnapshot.exists){
+      return null;
+    }
+    
+    return docsSnapshot.data() as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("consultas")
+      .where("casaDeApoioId", isEqualTo: casaApoioId)
+      .where("dataHorario", isGreaterThanOrEqualTo: dataHorario)
+      .where("dataHorario", isLessThan: DateTime(dataHorario.year,dataHorario.month,dataHorario.day,dataHorario.hour+1))
+      .get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+    
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
+  }
+
+  // Funções da controller -----------------------------------
+  void _atualizarConsultas(List<ConsultaCadastro> consultas) {
     _consultas.clear();
     _consultas.addAll(consultas);
-    _consultasStreamController.add(_consultas);
     notifyListeners();
   }
 
   // Método que busca a lista de consultas e notifica os 'ouvintes'.
   Future<void> getConsultas() async {
-    // Limpa a lista de consultas.
     _consultas.clear();
 
-    // Busca a lista de consultas no repositório de consultas e adiciona na lista de consultas do provedor.
-    for(var consulta in await _repository.selecionarTodos()){
+    for(var consulta in await selecionarTodosConsulta()){
       ConsultaCadastro c = ConsultaCadastro.fromMap(consulta);
       _consultas.add(c);
     }
@@ -42,8 +88,7 @@ class ConsultaController extends ChangeNotifier {
 
   // Busca consulta a partir do id da mesma
   Future<ConsultaCadastro> getConsulta(String consultaId) async {
-    // Busca a lista de consultas no repositório de consultas e adiciona na lista de consultas do provedor.
-    var consulta = await _repository.buscarConsulta(consultaId);
+    var consulta = await buscarConsulta(consultaId);
     if (consulta!=null) {
       return ConsultaCadastro.fromMap(consulta);
     }
@@ -52,30 +97,18 @@ class ConsultaController extends ChangeNotifier {
     }
   }
 
-  // Método que remove uma consulta a partir do seu id
-  Future<void> remover(String consultaId) async {
-    await _repository.remover(consultaId);
-      notifyListeners();
-  }
-
-  // Método que verifica se o horário da consulta ja esta ocupado.
-  Future<bool> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
-    return await _repository.horarioOcupado(casaApoioId,dataHorario) != null;
-  }
-
-  // Método que reagenda uma consulta, removendo a anterior e criando uma nova
   Future<String> reagendar(DateTime dataHorario, ConsultaCadastro consulta) async {
     try {
       if(consulta.id==null) {
         throw Exception("Id da consulta não está presente");
       }
-      else if(await horarioOcupado(consulta.casaDeApoioId, dataHorario)) {
+      else if(await horarioOcupado(consulta.casaDeApoioId, dataHorario) != null) {
         throw Exception("Horário já está ocupado");
       }
       consulta.dataHorario=DateTime(dataHorario.year,dataHorario.month,dataHorario.day,dataHorario.hour);
       consulta.estado="agendada";
 
-      await _repository.atualizar(consulta, consulta.id!);
+      await atualizarConsulta(consulta, consulta.id!);
       notifyListeners();
       return "ConsultaCadastro alterada com sucesso";
     } on Exception catch (e) {
@@ -83,18 +116,17 @@ class ConsultaController extends ChangeNotifier {
     } 
   }
 
-  // Método que cria uma nova consulta e notifica os 'ouvintes'.
   Future<String> cadastrarConsulta(Paciente paciente,DateTime dataHorario) async {
     try {
       if(paciente.id==null) {
         throw Exception("Id do paciente não está presente");
       }
-      else if(await horarioOcupado(paciente.casaDeApoioId, dataHorario)) {
+      else if(await horarioOcupado(paciente.casaDeApoioId, dataHorario) != null) {
         throw Exception("Horário já está ocupado");
       }
       ConsultaCadastro novaConsulta = ConsultaCadastro(casaDeApoioId: paciente.casaDeApoioId, pacienteId: paciente.id!, dataHorario: dataHorario, estado: "agendada");
 
-      String id = await _repository.criar(novaConsulta);
+      String id = await criarConsulta(novaConsulta);
       novaConsulta.id = id;
 
       _consultas.add(novaConsulta);
@@ -242,7 +274,7 @@ class ConsultaController extends ChangeNotifier {
         aperteNariz: aperteNariz,
       );
 
-      await _repository.atualizar(consulta,consultaId);
+      await atualizarConsulta(consulta,consultaId);
       return "Consulta realizada com sucesso";
     } on Exception catch (e) {
       return "Erro ao cadastrar: $e";
@@ -398,7 +430,7 @@ class ConsultaController extends ChangeNotifier {
         quandoSemenarca: quandoSemenarca,
       );
       
-      await _repository.atualizar(consulta,consultaId);
+      await atualizarConsulta(consulta,consultaId);
       return "Consulta realizada com sucesso";
     } on Exception catch (e) {
       return "Erro ao cadastrar: $e";

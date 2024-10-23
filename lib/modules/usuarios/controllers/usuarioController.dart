@@ -2,25 +2,64 @@ import 'dart:async';
 
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/databases/repositories/usuarioRepository.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class UsuarioController extends ChangeNotifier {
+  // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UsuarioRepository _usuarioRepository = UsuarioRepository();
   NivelAcesso? _nivelAcesso;
   Usuario? _usuarioAtual;
-  ValueNotifier<bool> _emailVerificado = ValueNotifier(false);
+  final ValueNotifier<bool> _emailVerificado = ValueNotifier(false);
 
   NivelAcesso? get nivelAcesso => _nivelAcesso;
   Usuario? get usuarioAtual => _usuarioAtual;
   FirebaseAuth get auth => _auth;
   ValueNotifier<bool> get emailVerificado => _emailVerificado;
 
+  // CRUD -----------------------------------
+  Future<Map<String, dynamic>?> criarUsuario(Usuario usuario) async {
+    Map<String, dynamic> usuarioMap = usuario.toMap();
+    // Remove o id do map usuário, pois o id é gerado automaticamente pelo Firebase.
+    final id = usuarioMap["id"];
+    usuarioMap.remove("id");
+    // Adiciona o usuário no banco de dados com o nome do documento sendo o id do usuário.
+    await _firestore.collection("usuarios").doc(id).set(usuarioMap);
+
+    return usuarioMap;
+  }
+
+  Future<List<Map<String, dynamic>>> selecionarTodosUsuarios() async {
+    QuerySnapshot querySnapshot = await _firestore.collection("usuarios").get();
+    List<Map<String, dynamic>> usuarios = [];
+
+    for (var element in querySnapshot.docs) {
+      var usuario = element.data() as Map<String, dynamic>;
+      usuario["id"] = element.id;
+      usuarios.add(usuario);
+    }
+
+    return usuarios;
+  }
+
+  Future<void> atualizarUsuario(Map<String, dynamic> usuario) async {
+  }
+
+  Future<void> removerUsuario(Map<String, dynamic> usuario) async {
+  }
+
+  // Funções extras do banco -----------------------------------
+  Future<Map<String, dynamic>?> selecionar(String uid) async {
+    DocumentSnapshot docSnapshot = await _firestore.collection("usuarios").doc(uid).get();
+
+    return docSnapshot.data() as Map<String, dynamic>?;
+  }
+
+  // Funções da controller -----------------------------------
   // Função de login do controller
   Future<void> login(String email, String senha) async {
     try {
@@ -36,14 +75,15 @@ class UsuarioController extends ChangeNotifier {
       final user = _auth.currentUser;
 
       if (user != null) {
-        final usuario = await _usuarioRepository.selecionar(user.uid);
+        final usuarioMap = await selecionar(user.uid);
 
-        if (usuario != null) {
+        if (usuarioMap != null) {
+          final usuario=Usuario.fromMap(usuarioMap);
           _usuarioAtual = usuario;
           _nivelAcesso = usuario.nivelAcesso;
           notifyListeners();
+          return usuario.nivelAcesso;
         }
-        return usuario!.nivelAcesso;
       }
 
       return null;
@@ -75,7 +115,7 @@ class UsuarioController extends ChangeNotifier {
         );
       });
 
-      await _usuarioRepository.criar(usuario);
+      await criarUsuario(usuario);
       notifyListeners();
 
       return usuario;

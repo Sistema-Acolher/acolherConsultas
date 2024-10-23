@@ -1,14 +1,14 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/shared/databases/repositories/pacienteRepository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // A classe PacientesCadastradosController é a classe que controla os pacientes cadastrados.
 class PacientesCadastradosController extends ChangeNotifier {
-  // Repositório de pacientes cadastrados, com métodos de CRUD.
-  final _repository = PacientesCadastradosRepository();
+  // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Lista de pacientes cadastrados.
   final List<CadastroPaciente> _pacientes = [];
@@ -18,13 +18,89 @@ class PacientesCadastradosController extends ChangeNotifier {
   CadastroPaciente? _pacienteCadastrado;
   CadastroPaciente? get pacienteCadastrado => _pacienteCadastrado;
 
+  // CRUD -----------------------------------
+  Future<String> criarPaciente(CadastroPaciente paciente) async {
+    DocumentReference<Map<String, dynamic>> pacienteAdicionado = await _firestore.collection("pacientes").add(paciente.toMap());
+
+    return pacienteAdicionado.id;
+  }
+
+  Future<List<Map<String, dynamic>>> selecionarTodosPaciente() async {
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").get();
+    List<Map<String, dynamic>> pacientes = [];
+
+    for (var element in querySnapshot.docs) {
+      var paciente = element.data() as Map<String, dynamic>;
+      paciente["id"] = element.id;
+      pacientes.add(paciente);
+    }
+
+    return pacientes;
+  }
+  
+  Future<void> atualizarPaciente(CadastroPaciente paciente, String id) async {
+    Map<String, dynamic> pacienteMap = paciente.toMap();
+    pacienteMap.remove('dataCadastro');
+    await _firestore.collection("pacientes").doc(id).update(pacienteMap).then(
+        (value) => print("paciente atualizado"),
+        onError: (e) => print("Erro ao atualizar: $e"));
+  }
+  
+  Future<void> removerPaciente(Map<String, dynamic> paciente) async {
+  }
+
+  // Funções extras do banco -----------------------------------
+  // Quatro métodos que realizam uma query no banco de dados do Firebase Firestore para encontrar um paciente em específico, utilizando diferentes parâmetros.
+  Future<Map<String, dynamic>?> selecionar(String cpf, String rg, String numeroCartaoSus) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes")
+                                          .where("paciente.cpf", isEqualTo: cpf)
+                                          .where("paciente.rg", isEqualTo: rg)
+                                          .where("paciente.numeroCartaoSus", isEqualTo: numeroCartaoSus)
+                                          .get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+    
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>?> selecionarCpf(String cpf) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.cpf", isEqualTo: cpf).get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+    
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
+  }
+  
+  Future<Map<String, dynamic>?> selecionarNumeroCartaoSus(String numeroCartaoSus) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.numeroCartaoSus", isEqualTo: numeroCartaoSus).get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
+  }
+  
+  Future<Map<String, dynamic>?> selecionarRg(String rg) async {
+    QuerySnapshot querySnapshot = await _firestore.collection("pacientes").where("paciente.rg", isEqualTo: rg).get();
+
+    if(querySnapshot.docs.isEmpty){
+      return null;
+    }
+
+    return querySnapshot.docs.first.data() as Map<String, dynamic>;
+  }
+
+  // Funções da controller -----------------------------------
   // Método que busca a lista de pacientes cadastrados e notifica os 'ouvintes'.
   Future<void> getPacientes() async {
-    // Limpa a lista de pacientes.
     _pacientes.clear();
 
-    // Busca a lista de pacientes cadastrados no repositório de pacientes e adiciona na lista de pacientes do provedor.
-    for (var paciente in await _repository.selecionarTodos()) {
+    for (var paciente in await selecionarTodosPaciente()) {
       CadastroPaciente p = CadastroPaciente.fromMap(paciente);
       p.id = paciente["id"];
       _pacientes.add(p);
@@ -33,41 +109,23 @@ class PacientesCadastradosController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Método que verifica se o CPF já está cadastrado.
-  Future<bool> cpfCadastrado(String? cpf) async {
-    if (cpf == null) return false;
-    return await _repository.selecionarCpf(cpf) != null;
-  }
-
-  // Método que verifica se o RG já está cadastrado.
-  Future<bool> rgCadastrado(String? rg) async {
-    if (rg == null) return false;
-    return await _repository.selecionarRg(rg) != null;
-  }
-
-  // Método que verifica se o número do cartão do SUS já está cadastrado.
-  Future<bool> numeroCartaoSusCadastrado(String? numeroCartaoSus) async {
-    if (numeroCartaoSus == null) return false;
-    return await _repository.selecionarNumeroCartaoSus(numeroCartaoSus) != null;
-  }
-
   // Método que cadastra um paciente, atualiza a lista de pacientes e notifica os 'ouvintes'.
   Future<String> cadastrarPaciente(
       CadastroPaciente cadastroPaciente, CasaDeApoio casaDeApoio) async {
     try {
       Paciente paciente = cadastroPaciente.paciente;
       paciente.casaDeApoioId = casaDeApoio.id!;
-      if (await cpfCadastrado(paciente.cpf)) {
+      if (await selecionarCpf(paciente.cpf??"") != null) {
         throw CadastroPacienteExpection("CPF já cadastrado");
-      } else if (await rgCadastrado(paciente.rg)) {
+      } else if (await selecionarRg(paciente.rg??"") != null) {
         throw CadastroPacienteExpection("RG já cadastrado");
-      } else if (await numeroCartaoSusCadastrado(paciente.numeroCartaoSus)) {
+      } else if (await selecionarNumeroCartaoSus(paciente.numeroCartaoSus??"") != null) {
         throw CadastroPacienteExpection(
             "Número do cartão do SUS já cadastrado");
       } else {
         // Caso o paciente não esteja cadastrado, o cadastro é requisitado para o repositório de pacientes.
         // No caso, cadastra diretamente para o Firebase.
-        String id = await _repository.criar(cadastroPaciente);
+        String id = await criarPaciente(cadastroPaciente);
         cadastroPaciente.id = id;
 
         _pacientes.add(cadastroPaciente);
@@ -93,7 +151,7 @@ class PacientesCadastradosController extends ChangeNotifier {
         return "Erro ao cadastrar: Número do cartão do SUS já cadastrado";
       } else {*/
       atualizaPaciente.paciente.casaDeApoioId = casaDeApoioId;
-      await _repository.atualizar(atualizaPaciente, id);
+      await atualizarPaciente(atualizaPaciente, id);
 
       return "Paciente atualizado com sucesso";
     } on Exception catch (e) {
