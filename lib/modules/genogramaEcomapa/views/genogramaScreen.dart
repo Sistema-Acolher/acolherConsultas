@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:acolherconsultas/modules/genogramaEcomapa/controllers/genogramaController.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/genograma.dart';
@@ -7,10 +9,13 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoGenograma.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/animatedAppbar.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class GenogramaScreen extends HookWidget {
   final Genograma? genogramaVelho;
@@ -79,11 +84,17 @@ class GenogramaScreen extends HookWidget {
     ), Operacoes.adicao));
     final ValueNotifier<bool> desenhoAtivo = useState(false);
     final ValueNotifier<bool> borrachaAtiva = useState(false);
+    final ValueNotifier<bool> edicaoAtiva = useState(false);
+    final ValueNotifier<bool> edicaoTextoAtiva = useState(false);
     final ValueNotifier<TipoDesenho> tipoDesenho = useState(TipoDesenho.semDesenho);
+    final ValueNotifier<String> textoCirculo = useState("");
     final ValueNotifier<IconData> iconeDesenhoAtivo = useState(Icons.add_box_outlined);
     final ValueNotifier<List<Offset>> pontosDeConexao = useState([]);
     final ValueNotifier<Offset> ultimoPontoConexao = useState(Offset.zero);
     final ValueNotifier<bool> salvou = useState(false);
+    final ValueNotifier<bool> temDesenho = useState(false);
+    final ValueNotifier<Color> corDesenho = useState(Colors.black);
+    final ValueNotifier<bool> temIndice = useState(false);
 
     final undoRedoPilha = useState(
       UndoRedoPilha(
@@ -99,6 +110,8 @@ class GenogramaScreen extends HookWidget {
     final ValueNotifier<double> xTranslate;
     final ValueNotifier<double> yTranslate;
 
+    final estadoPessoa = useState<String?>("viva");
+
     viewTransformationController = useState(TransformationController());
     zoomFactor = useState(2);
     xTranslate = useState(4000.0 - (MediaQuery.of(context).size.height / 2.0));
@@ -111,11 +124,15 @@ class GenogramaScreen extends HookWidget {
       };
     }, const []);
 
-    opcaoSelecionada(IconData iconeAtivo, TipoDesenho tipo){
+    opcaoSelecionada(IconData iconeAtivo, TipoDesenho tipo, Color cor, [String texto = ""]){
+      corDesenho.value = cor;
       iconeDesenhoAtivo.value = iconeAtivo;
       tipoDesenho.value = tipo;
       desenhoAtivo.value = true;
-      //viewTransformationController.value.value = Matrix4.identity()..setEntry(3, 0, -1)..setEntry(3, 1, -1);
+      edicaoAtiva.value = false;
+      edicaoTextoAtiva.value = false;
+      temDesenho.value = false;
+      textoCirculo.value = texto;
     }
     Offset _lastFocalPoint = Offset.zero;
 
@@ -136,6 +153,193 @@ class GenogramaScreen extends HookWidget {
 
         // Update the transformation controller's value
         viewTransformationController.value.value = currentMatrix * translationMatrix;
+    }
+
+    elementoPadrao(String sexo){
+      TextEditingController? nomeController = TextEditingController();
+      TextEditingController? idadeController = TextEditingController();
+      TextEditingController? motivoFalecimentoController = TextEditingController();
+
+      showDialog(
+          context: context, 
+          builder: (context) {
+            var globalKey = GlobalKey<FormState>();
+            return ValueListenableBuilder(
+              valueListenable: estadoPessoa,
+              builder: ((context, value, child) {
+                return AlertDialog(
+                scrollable: true,
+                title: Text("Adicionar Pessoa do Sexo $sexo"),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))
+                ),
+                content: Builder(
+                  builder: (context) {
+                    var height = MediaQuery.of(context).size.height;
+                    var width = MediaQuery.of(context).size.width;
+                    return Form(
+                      key: globalKey,
+                      child: SizedBox(
+                        height: height * 0.4,
+                        width: width * 0.95,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: "Nome da Pessoa",
+                                    ),
+                                    controller: nomeController,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: "Idade da Pessoa",
+                                    ),
+                                    controller: idadeController,
+                                    keyboardType: TextInputType.number,
+                                    // only numbers are allowed
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    // max 100 and min 0
+                                    validator: (value) {
+                                      if (value!.isNotEmpty && (int.parse(value) > 100 || int.parse(value) < 0)) {
+                                        return 'Idade inválida';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 30),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Qual o Estado?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Radio(
+                                        value: "viva",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Viva"),
+                                      Radio(
+                                        value: "falecida",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Falecida"),
+                                      Radio(
+                                        value: "desconhecida",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Desconhecida"),
+                                    ],
+                                  ),
+                                  estadoPessoa.value == "falecida" ?
+                                    // motivo do falecimento
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Qual o Motivo do Falecimento?",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          decoration: const InputDecoration(
+                                            hintText: "Motivo do Falecimento",
+                                          ),
+                                          controller: motivoFalecimentoController,
+                                        )
+                                      ],
+                                    ) : const SizedBox()
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }, 
+                    child: const Text("Cancelar")
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if(globalKey.currentState!.validate()){
+                        Navigator.of(context).pop();
+                        TipoDesenho desenho = TipoDesenho.semDesenho;
+                        if(sexo == "Masculino") {
+                          desenho = estadoPessoa.value == "viva" ? TipoDesenho.quadrado : estadoPessoa.value == "falecida" ? TipoDesenho.quadradoFalecido : TipoDesenho.quadradoDesconhecido;
+                        }
+                        if(sexo == "Feminino") {
+                          desenho = estadoPessoa.value == "viva" ? TipoDesenho.circulo : estadoPessoa.value == "falecida" ? TipoDesenho.circuloFalecido : TipoDesenho.circuloDesconhecido;
+                        }
+                        String texto = "";
+                        if(nomeController.value.text.isNotEmpty){
+                          texto = "${nomeController.value.text.trim()[0]}, ";
+                        } else {
+                          texto = "?, ";
+                        }
+
+                        if(idadeController.value.text.isNotEmpty){
+                          texto += idadeController.value.text.trim();
+                        } else {
+                          texto += "?";
+                        }
+
+                        texto = texto == "?, ?" ? "?" : texto;
+
+                        if(motivoFalecimentoController.value.text.isNotEmpty){
+                          texto += "\n${motivoFalecimentoController.value.text.trim()}";
+                        }
+
+                        opcaoSelecionada(sexo == "Masculino" ? Icons.square_outlined : Icons.circle_outlined, desenho, preto, texto);
+                      }
+                    }, 
+                    child: const Text("Adicionar")
+                  ),
+                ],
+              );
+              })
+            );
+          }
+      );
     }
 
     return OrientationBuilder(
@@ -219,14 +423,20 @@ class GenogramaScreen extends HookWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: QuadroBrancoGenograma(
+                    corDesenho: corDesenho,
                     genograma: genograma, 
                     desenhoAtual: desenhoAtual,
                     canvasGlobalKey: canvasGlobalKey,
                     desenhoAtivo: desenhoAtivo,
                     tipoDesenho: tipoDesenho,
                     borrachaAtiva: borrachaAtiva,
+                    edicaoAtiva: edicaoAtiva,
+                    edicaoTextoAtiva: edicaoTextoAtiva,
+                    temDesenho: temDesenho,
                     pontosDeConexao: pontosDeConexao,
                     ultimoPontoConexao: ultimoPontoConexao,
+                    textoCirculo: textoCirculo,
+                    temIndice: temIndice,
                   ),
                 ),
               ),
@@ -249,91 +459,155 @@ class GenogramaScreen extends HookWidget {
               ),
               isEditable ? Align(
                 alignment: Alignment.bottomLeft,
-                child: Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FloatingActionButton(
-                        heroTag: null,
-                        backgroundColor: amarelo,
-                        onPressed: () {
-                          //Salvar genograma com todos os elementos desenhados
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Salvar Genograma"),
-                                content: const Text("Deseja salvar o Genograma?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }, 
-                                    child: const Text("Cancelar")
+                    // Mudar a cor do desenho se for caneta
+                    tipoDesenho.value == TipoDesenho.caneta ? 
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        //container que mostra a cor do desenho com uma borda amareloEscuro
+                        child: GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: corDesenho.value,
+                              border: Border.all(color: amareloEscuro, width: 1.5),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            height: 55,
+                            width: 55,
+                          ),
+                          onTap: () {
+                            // mostrar ColorPicker para escolher a cor do desenho
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Escolha a Cor do Desenho"),
+                                  content: SingleChildScrollView(
+                                    child: ColorPicker(
+                                      color: corDesenho.value,
+                                      onColorChanged: (Color color) {
+                                        opcaoSelecionada(Icons.draw_outlined, TipoDesenho.caneta, color);
+                                      },
+                                      pickersEnabled: const <ColorPickerType, bool>{
+                                        ColorPickerType.accent: false,
+                                        ColorPickerType.bw: false,
+                                        ColorPickerType.primary: false,
+                                        ColorPickerType.wheel: true,
+                                      },
+                                    )
                                   ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      genograma.value.dataCriacao = DateTime.now();
-                                      PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
-                                      salvou.value = true;
-                                    }, 
-                                    child: const Text("Salvar")
-                                  ),
-                                ],
-                              );
-                            }
-                          );
-                        },
-                        child: const Icon(
-                          Icons.save,
-                          color: branco
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }, 
+                                      child: const Text("Cancelar")
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }, 
+                                      child: const Text("Ok")
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
+                          },
                         ),
                       ),
-                    ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: undoRedoPilha.value.canUndo,
-                      builder: (_, canUndo, __) {
-                        print("Can Undo: $canUndo");
-                        return Visibility(
-                          visible: (canUndo),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FloatingActionButton(
-                              heroTag: null,
-                              backgroundColor: amarelo,
-                              onPressed: canUndo
-                                ? () => undoRedoPilha.value.undo()
-                                : null,
-                              child: const Icon(
-                                Icons.undo_outlined,
-                                color: branco
-                              ),
+                    ) : const SizedBox(),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FloatingActionButton(
+                            heroTag: null,
+                            backgroundColor: amarelo,
+                            onPressed: () {
+                              //Salvar genograma com todos os elementos desenhados
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Salvar Genograma"),
+                                    content: const Text("Deseja salvar o Genograma?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        }, 
+                                        child: const Text("Cancelar")
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          genograma.value.dataCriacao = DateTime.now();
+                                          PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
+                                          salvou.value = true;
+                                        }, 
+                                        child: const Text("Salvar")
+                                      ),
+                                    ],
+                                  );
+                                }
+                              );
+                            },
+                            child: const Icon(
+                              Icons.save,
+                              color: branco
                             ),
                           ),
-                        );
-                      }
-                    ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: undoRedoPilha.value.canRedo,
-                      builder: (_, canRedo, __) {
-                        print("Can Redo: $canRedo");
-                        return Visibility(
-                          visible: canRedo,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FloatingActionButton(
-                              heroTag: null,
-                              backgroundColor: amarelo,
-                              onPressed: canRedo ? () => undoRedoPilha.value.redo() : null,
-                              child: const Icon(
-                                Icons.redo_outlined,
-                                color: branco
+                        ),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: undoRedoPilha.value.canUndo,
+                          builder: (_, canUndo, __) {
+                            print("Can Undo: $canUndo");
+                            return Visibility(
+                              visible: (canUndo),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FloatingActionButton(
+                                  heroTag: null,
+                                  backgroundColor: amarelo,
+                                  onPressed: canUndo
+                                    ? () => undoRedoPilha.value.undo()
+                                    : null,
+                                  child: const Icon(
+                                    Icons.undo_outlined,
+                                    color: branco
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      }
+                            );
+                          }
+                        ),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: undoRedoPilha.value.canRedo,
+                          builder: (_, canRedo, __) {
+                            print("Can Redo: $canRedo");
+                            return Visibility(
+                              visible: canRedo,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FloatingActionButton(
+                                  heroTag: null,
+                                  backgroundColor: amarelo,
+                                  onPressed: canRedo ? () => undoRedoPilha.value.redo() : null,
+                                  child: const Icon(
+                                    Icons.redo_outlined,
+                                    color: branco
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -347,7 +621,7 @@ class GenogramaScreen extends HookWidget {
             icon: iconeDesenhoAtivo.value,
             activeIcon: Icons.expand_more,
             spacing: 0,
-            spaceBetweenChildren: 1,
+            spaceBetweenChildren: 5,
             openCloseDial: opcoesAbertas,
             foregroundColor: branco,
             activeBackgroundColor: verde,
@@ -361,7 +635,7 @@ class GenogramaScreen extends HookWidget {
                   labelBackgroundColor: verde,
                   child: const Icon(Icons.square_outlined),
                   onTap: () {
-                    opcaoSelecionada(Icons.square_outlined, TipoDesenho.quadrado);
+                    elementoPadrao("Masculino");
                   },
               ),
               SpeedDialChild(
@@ -371,18 +645,7 @@ class GenogramaScreen extends HookWidget {
                   labelBackgroundColor: verde,
                   child: const Icon(Icons.circle_outlined),
                   onTap: () {
-                    opcaoSelecionada(Icons.circle_outlined, TipoDesenho.circulo);
-                  },
-              ),
-              //Circulo falecido
-              SpeedDialChild(
-                  labelStyle: const TextStyle(color: branco),
-                  backgroundColor: verde,
-                  foregroundColor: branco,
-                  labelBackgroundColor: verde,
-                  child: const Icon(Icons.cancel_outlined),
-                  onTap: () {
-                    opcaoSelecionada(Icons.cancel_outlined, TipoDesenho.circuloFalecido);
+                   elementoPadrao("Feminino");
                   },
               ),
               SpeedDialChild(
@@ -392,7 +655,7 @@ class GenogramaScreen extends HookWidget {
                   labelBackgroundColor: verde,
                   child: const Icon(Icons.horizontal_rule_outlined),
                   onTap: () {
-                    opcaoSelecionada(Icons.horizontal_rule_outlined, TipoDesenho.linhaHorizontal);
+                    opcaoSelecionada(Icons.horizontal_rule_outlined, TipoDesenho.linha, preto);
                   },
               ),
               SpeedDialChild(
@@ -400,9 +663,17 @@ class GenogramaScreen extends HookWidget {
                   backgroundColor: verde,
                   foregroundColor: branco,
                   labelBackgroundColor: verde,
-                  child: const Icon(Icons.vertical_align_bottom_outlined),
+                  // child: const Text(
+                  //   "//",
+                  //   style: TextStyle(
+                  //     color: branco,
+                  //     fontSize: 20,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  child: const Icon(Symbols.pen_size_2),
                   onTap: () {
-                    opcaoSelecionada(Icons.vertical_align_bottom_outlined, TipoDesenho.linhaVertical);
+                    opcaoSelecionada(Symbols.pen_size_2, TipoDesenho.linhaSeparacao, preto);
                   },
               ),
               SpeedDialChild(
@@ -410,9 +681,9 @@ class GenogramaScreen extends HookWidget {
                   backgroundColor: verde,
                   foregroundColor: branco,
                   labelBackgroundColor: verde,
-                  child: const Icon(Icons.text_fields_outlined),
+                  child: const Icon(Icons.draw_outlined),
                   onTap: () {
-                    opcaoSelecionada(Icons.text_fields_outlined, TipoDesenho.texto);
+                    opcaoSelecionada(Icons.draw_outlined, TipoDesenho.caneta, preto);
                   },
               ),
               SpeedDialChild(
@@ -420,9 +691,68 @@ class GenogramaScreen extends HookWidget {
                   backgroundColor: verde,
                   foregroundColor: branco,
                   labelBackgroundColor: verde,
-                  child: const Icon(Icons.help),
+                  child: const Icon(Icons.text_fields),
                   onTap: () {
-                    opcaoSelecionada(Icons.help, TipoDesenho.circuloDesconhecido);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        TextEditingController textController = TextEditingController();
+                        return AlertDialog(
+                      title: const Text('Digite o Texto da sua Anotação'),
+                      content:TextFormField(
+                        controller: textController,
+                        maxLines: 5,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                        cursorColor: preto,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Anotação',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancelar'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Adicionar'),
+                          onPressed: () {
+                            opcaoSelecionada(Icons.text_fields, TipoDesenho.texto, preto, textController.text);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                        );
+                      },
+                    );
+                  },
+              ),
+              SpeedDialChild(
+                  labelStyle: const TextStyle(color: branco),
+                  backgroundColor: verde,
+                  foregroundColor: branco,
+                  labelBackgroundColor: verde,
+                  child: const Icon(Icons.pan_tool_alt_outlined),
+                  onTap: () {
+                    iconeDesenhoAtivo.value = Icons.pan_tool_alt_outlined;
+                    edicaoAtiva.value = true;
+                    edicaoTextoAtiva.value = false;
+                    desenhoAtivo.value = true;
+                    temDesenho.value = false;
                   },
               ),
               SpeedDialChild(
@@ -433,7 +763,11 @@ class GenogramaScreen extends HookWidget {
                   child: const Icon(Icons.backspace_outlined),
                   onTap: () {
                     iconeDesenhoAtivo.value = Icons.backspace_outlined;
+                    tipoDesenho.value = TipoDesenho.semDesenho;
                     borrachaAtiva.value = true;
+                    edicaoAtiva.value = false;
+                    edicaoTextoAtiva.value = false;
+                    desenhoAtivo.value = false;
                   },
               ),
             ],

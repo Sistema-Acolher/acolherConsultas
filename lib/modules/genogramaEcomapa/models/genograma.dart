@@ -60,12 +60,75 @@ class Genograma {
             desenhoMaisProximo = desenho;
           }
         }
+      } else {
+        // considerar todos os pontos do elemento desenhado pela caneta
+        for (int i = 0; i < desenho.pontos.length - 1; i++) {
+          final ponto1 = desenho.pontos[i];
+          final ponto2 = desenho.pontos[i + 1];
+          final distancia = (ponto1 - ponto2).distance;
+          final angulo = atan2(ponto2.dy - ponto1.dy, ponto2.dx - ponto1.dx);
+          for (double i = 0; i <= distancia; i++) {
+            final ponto = Offset(ponto1.dx + i * cos(angulo), ponto1.dy + i * sin(angulo));
+            double distancia = (ponto - offset).distance;
+            if (distancia <= desenho.tamanho && (distancia < menorDistancia || menorDistancia == 0)) {
+              menorDistancia = distancia;
+              desenhoMaisProximo = desenho;
+            }
+          }
+        }
       }
     }
     if (desenhoMaisProximo != null) {
       newElementos.remove(desenhoMaisProximo);
     }
     return List.from(newElementos);
+  }
+
+  ElementosDesenho? editDesenho(Offset offset) {
+    double menorDistancia = 0;
+    ElementosDesenho? desenhoMaisProximo;
+    for (ElementosDesenho desenho in elementos) {
+      if(desenho.pontos.length == 1){
+        for (Offset ponto in desenho.pontos) {
+          double distancia = (ponto - offset).distance;
+          if (distancia <= 80 && (distancia < menorDistancia || menorDistancia == 0)) {
+            menorDistancia = distancia;
+            desenhoMaisProximo = desenho;
+          }
+        }
+      } else if(desenho.pontos.length == 2){
+        //considerar todos os pontos entre os dois pontos
+        final ponto1 = desenho.pontos[0];
+        final ponto2 = desenho.pontos[1];
+        final distancia = (ponto1 - ponto2).distance;
+        final angulo = atan2(ponto2.dy - ponto1.dy, ponto2.dx - ponto1.dx);
+        for (double i = 0; i <= distancia; i++) {
+          final ponto = Offset(ponto1.dx + i * cos(angulo), ponto1.dy + i * sin(angulo));
+          double distancia = (ponto - offset).distance;
+          if (distancia <= desenho.tamanho && (distancia < menorDistancia || menorDistancia == 0)) {
+            menorDistancia = distancia;
+            desenhoMaisProximo = desenho;
+          }
+        }
+      } else {
+        // considerar todos os pontos do elemento desenhado pela caneta
+        for (int i = 0; i < desenho.pontos.length - 1; i++) {
+          final ponto1 = desenho.pontos[i];
+          final ponto2 = desenho.pontos[i + 1];
+          final distancia = (ponto1 - ponto2).distance;
+          final angulo = atan2(ponto2.dy - ponto1.dy, ponto2.dx - ponto1.dx);
+          for (double i = 0; i <= distancia; i++) {
+            final ponto = Offset(ponto1.dx + i * cos(angulo), ponto1.dy + i * sin(angulo));
+            double distancia = (ponto - offset).distance;
+            if (distancia <= desenho.tamanho && (distancia < menorDistancia || menorDistancia == 0)) {
+              menorDistancia = distancia;
+              desenhoMaisProximo = desenho;
+            }
+          }
+        }
+      }
+    }
+    return desenhoMaisProximo;
   }
 
   Genograma copyWith({

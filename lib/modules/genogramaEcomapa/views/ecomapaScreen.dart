@@ -382,7 +382,7 @@ class EcomapaScreen extends HookWidget {
             icon: iconeDesenhoAtivo.value,
             activeIcon: Icons.expand_more,
             spacing: 0,
-            spaceBetweenChildren: 1,
+            spaceBetweenChildren: 5,
             openCloseDial: opcoesAbertas,
             foregroundColor: branco,
             activeBackgroundColor: verde,

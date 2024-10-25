@@ -53,6 +53,7 @@ dependencies:
   connectivity_plus: ^6.0.3
   flutter_hooks: ^0.18.5+1
   flutter_speed_dial: ^7.0.0
+  flex_color_picker: ^3.4.1
 
 dev_dependencies:
   flutter_test:

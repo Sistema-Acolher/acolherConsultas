@@ -42,8 +42,9 @@ class QuadroBrancoEcomapaPainter extends CustomPainter {
             text: span,
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
+            maxLines: 4
           );
-          tp.layout();
+          tp.layout(maxWidth: elemento.tamanho * 1.6);
           //centralizar o texto
           tp.paint(canvas, Offset(elemento.pontos[0].dx - tp.width/2, elemento.pontos[0].dy - tp.height/2));
 

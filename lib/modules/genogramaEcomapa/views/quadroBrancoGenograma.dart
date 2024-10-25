@@ -2,6 +2,7 @@ import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenh
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/genograma.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/tipoDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoGenogramaPainter.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -10,12 +11,19 @@ class QuadroBrancoGenograma extends HookWidget {
   final ValueNotifier<ElementosDesenho> desenhoAtual;
   final ValueNotifier<bool> desenhoAtivo;
   final ValueNotifier<bool> borrachaAtiva;
+  final ValueNotifier<bool> edicaoAtiva;
+  final ValueNotifier<bool> edicaoTextoAtiva;
   final ValueNotifier<TipoDesenho> tipoDesenho;
   final ValueNotifier<List<Offset>> pontosDeConexao;
   final ValueNotifier<Offset> ultimoPontoConexao;
+  final ValueNotifier<String> textoCirculo;
+  final ValueNotifier<Color> corDesenho;
+  final ValueNotifier<bool> temDesenho;
+  final ValueNotifier<bool> temIndice;
   final GlobalKey canvasGlobalKey;
+  int id = 0;
 
-  const QuadroBrancoGenograma({
+  QuadroBrancoGenograma({
     super.key,
     required this.genograma,
     required this.desenhoAtual,
@@ -23,8 +31,14 @@ class QuadroBrancoGenograma extends HookWidget {
     required this.desenhoAtivo,
     required this.tipoDesenho,
     required this.borrachaAtiva,
+    required this.edicaoAtiva,
+    required this.edicaoTextoAtiva,
     required this.pontosDeConexao,
     required this.ultimoPontoConexao,
+    required this.textoCirculo,
+    required this.corDesenho,
+    required this.temDesenho,
+    required this.temIndice,
   });
 
   @override
@@ -44,35 +58,48 @@ class QuadroBrancoGenograma extends HookWidget {
     if(desenhoAtivo.value){
       borrachaAtiva.value = false;
 
-      if(tipoDesenho.value == TipoDesenho.linhaHorizontal || tipoDesenho.value == TipoDesenho.linhaVertical || tipoDesenho.value == TipoDesenho.linhaSeparacao){
-        //linhas só serão desenhadas a partir de um ponto de conexao ja existente
-        //selecionar o ponto de conexao mais proximo
-        double distanciaPontoDeConexao = double.infinity;
-        Offset pontoDeConexaoMaisProximo = Offset.zero;
-        for (Offset pontoDeConexao in pontosDeConexao.value) {
-          double distancia = (pontoDeConexao - offset).distance;
-          if (distancia <= 4*desenhoAtual.value.tamanho && distancia < distanciaPontoDeConexao) {
-            distanciaPontoDeConexao = distancia;
-            pontoDeConexaoMaisProximo = pontoDeConexao;
-          }
-        }
-        if(pontoDeConexaoMaisProximo != Offset.zero){
+      if(edicaoAtiva.value){
+        ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
+        if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta){
+          temDesenho.value = true;
+          desenhoAtual.value = elementoEncontrado;
+          tipoDesenho.value = elementoEncontrado.tipo;
+          textoCirculo.value = elementoEncontrado.texto ?? "";
+          id = elementoEncontrado.id;
+          // print(elementoEncontrado.pontos);
+          // print(pontosIniciais);
+          // print("asda");
+          // pontosIniciais.add(Offset(elementoEncontrado.pontos[0].dx, elementoEncontrado.pontos[0].dy));
+          // print(pontosIniciais);
+
+          final newEcomapa = genograma.value.copyWith(
+            elementos: genograma.value.removeDesenho(elementoEncontrado.pontos[0])
+          ); 
+          genograma.value = newEcomapa;
           desenhoAtual.value = ElementosDesenho(
-            id: genograma.value.elementos.length + 1,
-            pontos: [pontoDeConexaoMaisProximo],
+            id: id,
+            pontos: [offset],
             tipo: tipoDesenho.value,
-            tamanho: 5,
+            cor: corDesenho.value,
+            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+            texto: textoCirculo.value,
+            isPaciente: elementoEncontrado.isPaciente,
           );
+        } else {
+          temDesenho.value = false;
+          desenhoAtivo.value = false;
         }
       } else {
+        temDesenho.value = true;
         desenhoAtual.value = ElementosDesenho(
-          id: genograma.value.elementos.length + 1,
+          id: id != 0 ? id : genograma.value.elementos.length + 1,
           pontos: [offset],
           tipo: tipoDesenho.value,
           tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
-          texto: tipoDesenho.value == TipoDesenho.texto ? 'Texto' : null,
+          texto: textoCirculo.value,
+          cor: corDesenho.value,
         );
-        desenhoAtivo.value = true;
+        id = id != 0 ? id : genograma.value.elementos.length + 1;
       }
     }
   }
@@ -80,99 +107,129 @@ class QuadroBrancoGenograma extends HookWidget {
   void onPointerMove(PointerMoveEvent details, BuildContext context) {
     final box = context.findRenderObject() as RenderBox;
     final offset = box.globalToLocal(details.position);
-    //calcular distancia para o ponto de conexao mais proximo
-    double distanciaPontoDeConexao = double.infinity;
-    Offset pontoDeConexaoMaisProximo = Offset.zero;
-    Offset pontoDeConexaoMaisProximoDesenho = Offset.zero;
-    final List listaPontos = List.from(genograma.value.elementos.map((e) => e.pontos)).expand((e) => e).toList();
-    if(ultimoPontoConexao.value == Offset.zero){
-      for (Offset pontoDeConexao in pontosDeConexao.value) {
-        int i = 0;
-        for (Offset ponto in desenhoAtual.value.pontosConexao) {
-          double distancia = (ponto - pontoDeConexao).distance;
-          double distanciaOffset = (offset - pontoDeConexao).distance;
-          if (!listaPontos.contains(offset) && distanciaOffset < 4*desenhoAtual.value.tamanho && distancia <= 2*desenhoAtual.value.tamanho && distancia > 0 && (distancia < distanciaPontoDeConexao || distanciaPontoDeConexao == double.infinity)) {
-            distanciaPontoDeConexao = distancia;
-            pontoDeConexaoMaisProximo = ponto;
-            pontoDeConexaoMaisProximoDesenho = 
-                i == 0 ? 
-                  pontoDeConexao - Offset(0, desenhoAtual.value.tamanho) :
-                i == 1 ?
-                  pontoDeConexao - Offset(desenhoAtual.value.tamanho, 0) :
-                i == 2 ?
-                  pontoDeConexao + Offset(0, desenhoAtual.value.tamanho) :
-                i == 3 ?
-                  pontoDeConexao + Offset(desenhoAtual.value.tamanho, 0) :
-                offset;
-          }
-          i++;
-        }
-      }
+    var pontos = [offset];
+    if(tipoDesenho.value == TipoDesenho.caneta){
+      pontos = List<Offset>.from(desenhoAtual.value.pontos)
+       ..add(offset);
     }
 
-    if(desenhoAtivo.value){
+    if(desenhoAtivo.value && temDesenho.value && !edicaoTextoAtiva.value){
       borrachaAtiva.value = false;
-      if((tipoDesenho.value == TipoDesenho.linhaHorizontal || tipoDesenho.value == TipoDesenho.linhaVertical || tipoDesenho.value == TipoDesenho.linhaSeparacao) && desenhoAtual.value.pontos.isNotEmpty){
-        if(tipoDesenho.value == TipoDesenho.linhaHorizontal){
-          desenhoAtual.value = ElementosDesenho(
-            id: genograma.value.elementos.length + 1,
-            pontos: [desenhoAtual.value.pontos[0], Offset(offset.dx, desenhoAtual.value.pontos[0].dy)],
-            tipo: tipoDesenho.value,
-            tamanho: 5,
-          );
-        } else if(tipoDesenho.value == TipoDesenho.linhaVertical){
-          desenhoAtual.value = ElementosDesenho(
-            id: genograma.value.elementos.length + 1,
-            pontos: [desenhoAtual.value.pontos[0], Offset(desenhoAtual.value.pontos[0].dx, offset.dy)],
-            tipo: tipoDesenho.value,
-            tamanho: 5,
-          );
-        }
-      } else if(!listaPontos.contains(pontoDeConexaoMaisProximoDesenho) && !listaPontos.contains(pontoDeConexaoMaisProximoDesenho)) {
-        if(desenhoAtual.value.pontos != [pontoDeConexaoMaisProximoDesenho] && distanciaPontoDeConexao < 4* desenhoAtual.value.tamanho && pontoDeConexaoMaisProximo != Offset.zero){
-          ultimoPontoConexao.value = pontoDeConexaoMaisProximo;
-          desenhoAtual.value = ElementosDesenho(
-            id: genograma.value.elementos.length + 1,
-            pontos: [pontoDeConexaoMaisProximoDesenho],
-            tipo: tipoDesenho.value,
-            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
-            texto: tipoDesenho.value == TipoDesenho.texto ? 'Texto' : null,
-          );
-        } else if((offset - ultimoPontoConexao.value).distance > 2* desenhoAtual.value.tamanho){
-          ultimoPontoConexao.value = Offset.zero;
-          desenhoAtual.value = ElementosDesenho(
-            id: genograma.value.elementos.length + 1,
-            pontos: [offset],
-            tipo: tipoDesenho.value,
-            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
-            texto: tipoDesenho.value == TipoDesenho.texto ? 'Texto' : null,
-          );
-        }
+      if(tipoDesenho.value == TipoDesenho.linha){
+        desenhoAtual.value = ElementosDesenho(
+          id: id != 0 ? id : genograma.value.elementos.length + 1,
+          pontos: [desenhoAtual.value.pontos[0], Offset(offset.dx, offset.dy)],
+          tipo: tipoDesenho.value,
+          tamanho: 5,
+          cor: corDesenho.value,
+        );
+      } else {
+        desenhoAtual.value = ElementosDesenho(
+          id: id != 0 ? id : genograma.value.elementos.length + 1,
+          pontos: pontos,
+          tipo: tipoDesenho.value,
+          tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+          texto: textoCirculo.value,
+          cor: corDesenho.value,
+          isPaciente: temIndice.value && edicaoAtiva.value,
+        );
       }
     }
+    id = id != 0 ? id : genograma.value.elementos.length + 1;
   }
+  
 
   void onPointerUp(PointerUpEvent details, BuildContext context) {
     final box = context.findRenderObject() as RenderBox;
     final offset = box.globalToLocal(details.position);
 
-    if(desenhoAtivo.value){
-      borrachaAtiva.value = false;
+    if(desenhoAtivo.value && temDesenho.value){
       genograma.value = genograma.value.addDesenho(desenhoAtual.value);
-      pontosDeConexao.value = List.from(pontosDeConexao.value)..addAll(desenhoAtual.value.pontosConexao);
       desenhoAtual.value = 
       ElementosDesenho(
         id: 0,
         pontos: [],
         tipo: tipoDesenho.value,
         tamanho: 5,
+        cor: preto,
       );
-      desenhoAtivo.value = false;
+      if(!edicaoAtiva.value) {
+        desenhoAtivo.value = false;
+      }
+      id = genograma.value.elementos.length + 1;
     } else if(borrachaAtiva.value){
-      final newGenograma = genograma.value.copyWith(
-        elementos: genograma.value.removeDesenho(offset)
-      ); 
-      genograma.value = newGenograma;
+      ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
+      if(elementoEncontrado != null){
+        if(elementoEncontrado.isPaciente) {
+          temIndice.value = false;
+        }
+        final newGenograma = genograma.value.copyWith(
+          elementos: genograma.value.removeDesenho(elementoEncontrado.pontos[0])
+        );
+        genograma.value = newGenograma;
+      }
+    } else {
+      ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
+      if(
+        elementoEncontrado != null && 
+        elementoEncontrado.tipo != TipoDesenho.caneta && 
+        elementoEncontrado.tipo != TipoDesenho.linha &&
+        elementoEncontrado.tipo != TipoDesenho.texto &&
+        elementoEncontrado.tipo != TipoDesenho.circuloFalecido &&
+        elementoEncontrado.tipo != TipoDesenho.circuloDesconhecido &&
+        elementoEncontrado.tipo != TipoDesenho.quadradoDesconhecido &&
+        elementoEncontrado.tipo != TipoDesenho.quadradoFalecido &&
+        temIndice.value == false
+        ){
+        temDesenho.value = true;
+        desenhoAtual.value = elementoEncontrado;
+        tipoDesenho.value = elementoEncontrado.tipo;
+        textoCirculo.value = elementoEncontrado.texto ?? "";
+
+        // ler o texto alterado que o usuario digitar e alterar o original
+        showDialog(
+          context: context, 
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Confirmação'),
+              content: const Text("Deseja marcar este elemento como índice?"),
+              actions: [
+                TextButton(
+                  onPressed: () => {
+                    Navigator.of(context).pop()
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final newEcomapa = genograma.value.copyWith(
+                      elementos: genograma.value.removeDesenho(elementoEncontrado.pontos[0])
+                    );
+                    var idade =  !genograma.value.pacienteRaiz['idade'].contains("dia") ? 
+                    genograma.value.pacienteRaiz['idade'][0] + genograma.value.pacienteRaiz['idade'][1] : 
+                    genograma.value.pacienteRaiz['idade'];
+                    
+                    genograma.value = newEcomapa;
+                    desenhoAtual.value = ElementosDesenho(
+                      id: elementoEncontrado.id,
+                      pontos: elementoEncontrado.pontos,
+                      cor: elementoEncontrado.cor,
+                      tipo: elementoEncontrado.tipo,
+                      tamanho: elementoEncontrado.tamanho,
+                      texto: "${genograma.value.pacienteRaiz['nome'][0]}, ${idade}",
+                      isPaciente: true,
+                    );
+                    genograma.value = genograma.value.addDesenho(desenhoAtual.value);
+                    temIndice.value = true;
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Confirmar'),
+                ),
+              ],
+            );
+          }
+        );
+      }
     }
   }
 

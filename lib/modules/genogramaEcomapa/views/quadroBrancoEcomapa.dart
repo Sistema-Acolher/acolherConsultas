@@ -151,7 +151,7 @@ class QuadroBrancoEcomapa extends HookWidget {
         energiaGastaParte: energiaGastaParte?.value,
       );
     }
-      id = id != 0 ? id : ecomapa.value.elementos.length + 1;
+    id = id != 0 ? id : ecomapa.value.elementos.length + 1;
   }
 
   void onPointerUp(PointerUpEvent details, BuildContext context) {
@@ -299,7 +299,7 @@ class QuadroBrancoEcomapa extends HookWidget {
         elementos: ecomapa.value.removeDesenho(offset)
       ); 
       ecomapa.value = newEcomapa;
-      id = ecomapa.value.elementos.length + 1;
+      // id = ecomapa.value.elementos.length + 1;
       print(desenhoEditado.value.key.id);
     }
     print(pontosIniciais); 
