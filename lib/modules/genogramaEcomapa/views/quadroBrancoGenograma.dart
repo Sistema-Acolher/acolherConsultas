@@ -14,8 +14,8 @@ class QuadroBrancoGenograma extends HookWidget {
   final ValueNotifier<bool> edicaoAtiva;
   final ValueNotifier<bool> edicaoTextoAtiva;
   final ValueNotifier<TipoDesenho> tipoDesenho;
-  final ValueNotifier<List<Offset>> pontosDeConexao;
-  final ValueNotifier<Offset> ultimoPontoConexao;
+  final ValueNotifier<Map<Offset, TipoDesenho>> pontosDeConexao;
+  final ValueNotifier<MapEntry<Offset, TipoDesenho>> ultimoPontoConexao;
   final ValueNotifier<String> textoCirculo;
   final ValueNotifier<Color> corDesenho;
   final ValueNotifier<bool> temDesenho;
@@ -89,6 +89,28 @@ class QuadroBrancoGenograma extends HookWidget {
           temDesenho.value = false;
           desenhoAtivo.value = false;
         }
+      } else if(tipoDesenho.value == TipoDesenho.linha){
+        temDesenho.value = true;
+        double distanciaPontoDeConexao = double.infinity;
+        Offset pontoDeConexaoMaisProximo = Offset.zero;
+        for (MapEntry<Offset, TipoDesenho> pontoDeConexao in pontosDeConexao.value.entries) {
+          double distancia = (pontoDeConexao.key - offset).distance;
+          if (distancia <= 6*desenhoAtual.value.tamanho && distancia < distanciaPontoDeConexao) {
+            distanciaPontoDeConexao = distancia;
+            pontoDeConexaoMaisProximo = pontoDeConexao.key;
+          }
+        }
+        if(pontoDeConexaoMaisProximo != Offset.zero){
+          desenhoAtual.value = ElementosDesenho(
+            id: id != 0 ? id : genograma.value.elementos.length + 1,
+            pontos: [pontoDeConexaoMaisProximo],
+            tipo: tipoDesenho.value,
+            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+            texto: textoCirculo.value,
+            cor: corDesenho.value,
+          );
+        }
+        id = id != 0 ? id : genograma.value.elementos.length + 1;
       } else {
         temDesenho.value = true;
         desenhoAtual.value = ElementosDesenho(
@@ -112,28 +134,91 @@ class QuadroBrancoGenograma extends HookWidget {
       pontos = List<Offset>.from(desenhoAtual.value.pontos)
        ..add(offset);
     }
+    double distanciaPontoDeConexao = double.infinity;
+    MapEntry<Offset, TipoDesenho> pontoDeConexaoMaisProximo = const MapEntry(Offset.zero, TipoDesenho.semDesenho);
+    MapEntry<Offset, TipoDesenho> pontoDeConexaoMaisProximoDesenho = const MapEntry(Offset.zero, TipoDesenho.semDesenho);
+    final List listaPontos = List.from(genograma.value.elementos.map((e) => e.pontos)).expand((e) => e).toList();
+    if(ultimoPontoConexao.value.key == Offset.zero){
+      for (MapEntry<Offset, TipoDesenho> pontoDeConexao in pontosDeConexao.value.entries) {
+        int i = 0;
+        for (Offset ponto in desenhoAtual.value.pontosConexao) {
+          double distancia = (ponto - pontoDeConexao.key).distance;
+          double distanciaOffset = (offset - pontoDeConexao.key).distance;
+          if (!listaPontos.contains(offset) && distanciaOffset < 4*desenhoAtual.value.tamanho && distancia <= 2*desenhoAtual.value.tamanho && distancia > 0 && (distancia < distanciaPontoDeConexao || distanciaPontoDeConexao == double.infinity)) {
+            distanciaPontoDeConexao = distancia;
+            pontoDeConexaoMaisProximo = MapEntry(ponto, desenhoAtual.value.tipo);
+            pontoDeConexaoMaisProximoDesenho = 
+                i == 0 ? 
+                  MapEntry(pontoDeConexao.key - Offset(0, desenhoAtual.value.tamanho), pontoDeConexao.value) :
+                i == 1 ?
+                  MapEntry(pontoDeConexao.key - Offset(desenhoAtual.value.tamanho, 0), pontoDeConexao.value) :
+                i == 2 ?
+                  MapEntry(pontoDeConexao.key + Offset(0, desenhoAtual.value.tamanho), pontoDeConexao.value) :
+                i == 3 ?
+                  MapEntry(pontoDeConexao.key + Offset(desenhoAtual.value.tamanho, 0), pontoDeConexao.value) :
+                MapEntry(offset, TipoDesenho.semDesenho);
+          }
+          i++;
+        }
+      }
+    }
 
     if(desenhoAtivo.value && temDesenho.value && !edicaoTextoAtiva.value){
       borrachaAtiva.value = false;
       if(tipoDesenho.value == TipoDesenho.linha){
-        desenhoAtual.value = ElementosDesenho(
-          id: id != 0 ? id : genograma.value.elementos.length + 1,
-          pontos: [desenhoAtual.value.pontos[0], Offset(offset.dx, offset.dy)],
-          tipo: tipoDesenho.value,
-          tamanho: 5,
-          cor: corDesenho.value,
-        );
-      } else {
-        desenhoAtual.value = ElementosDesenho(
-          id: id != 0 ? id : genograma.value.elementos.length + 1,
-          pontos: pontos,
-          tipo: tipoDesenho.value,
-          tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
-          texto: textoCirculo.value,
-          cor: corDesenho.value,
-          isPaciente: temIndice.value && edicaoAtiva.value,
-        );
-      }
+        if(desenhoAtual.value.pontos.isNotEmpty){
+          desenhoAtual.value = ElementosDesenho(
+            id: id != 0 ? id : genograma.value.elementos.length + 1,
+            pontos: [desenhoAtual.value.pontos[0], Offset(offset.dx, offset.dy)],
+            tipo: tipoDesenho.value,
+            tamanho: 5,
+            cor: corDesenho.value,
+          );
+        } else {
+          desenhoAtual.value = ElementosDesenho(
+            id: id != 0 ? id : genograma.value.elementos.length + 1,
+            pontos: [offset],
+            tipo: tipoDesenho.value,
+            tamanho: 5,
+            cor: corDesenho.value,
+          );
+        }
+      } else if(!listaPontos.contains(pontoDeConexaoMaisProximoDesenho) && !listaPontos.contains(pontoDeConexaoMaisProximoDesenho)) {
+        if(pontoDeConexaoMaisProximoDesenho.value != TipoDesenho.circulo && pontoDeConexaoMaisProximoDesenho.value != TipoDesenho.quadrado && desenhoAtual.value.pontos != [pontoDeConexaoMaisProximoDesenho.key] && distanciaPontoDeConexao < 4* desenhoAtual.value.tamanho && pontoDeConexaoMaisProximo != Offset.zero){
+          ultimoPontoConexao.value = pontoDeConexaoMaisProximo;
+          desenhoAtual.value = ElementosDesenho(
+            id: genograma.value.elementos.length + 1,
+            pontos: [pontoDeConexaoMaisProximoDesenho.key],
+            tipo: tipoDesenho.value,
+            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+            texto: textoCirculo.value,
+            cor: corDesenho.value,
+            isPaciente: temIndice.value && edicaoAtiva.value,
+          );
+        } else if((offset - ultimoPontoConexao.value.key).distance > 2* desenhoAtual.value.tamanho){
+          ultimoPontoConexao.value = const MapEntry(Offset.zero, TipoDesenho.semDesenho);
+          desenhoAtual.value = ElementosDesenho(
+            id: genograma.value.elementos.length + 1,
+            pontos: [offset],
+            tipo: tipoDesenho.value,
+            tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+            texto: textoCirculo.value,
+            cor: corDesenho.value,
+            isPaciente: temIndice.value && edicaoAtiva.value,
+          );
+        }
+      } 
+      // else {
+      //   desenhoAtual.value = ElementosDesenho(
+      //     id: id != 0 ? id : genograma.value.elementos.length + 1,
+      //     pontos: pontos,
+      //     tipo: tipoDesenho.value,
+      //     tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+      //     texto: textoCirculo.value,
+      //     cor: corDesenho.value,
+      //     isPaciente: temIndice.value && edicaoAtiva.value,
+      //   );
+      // }
     }
     id = id != 0 ? id : genograma.value.elementos.length + 1;
   }
@@ -145,6 +230,9 @@ class QuadroBrancoGenograma extends HookWidget {
 
     if(desenhoAtivo.value && temDesenho.value){
       genograma.value = genograma.value.addDesenho(desenhoAtual.value);
+      for (var element in desenhoAtual.value.pontosConexao) { 
+        pontosDeConexao.value[Offset(element.dx, element.dy)] = desenhoAtual.value.tipo;
+      }
       desenhoAtual.value = 
       ElementosDesenho(
         id: 0,
@@ -172,13 +260,8 @@ class QuadroBrancoGenograma extends HookWidget {
       ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
       if(
         elementoEncontrado != null && 
-        elementoEncontrado.tipo != TipoDesenho.caneta && 
-        elementoEncontrado.tipo != TipoDesenho.linha &&
-        elementoEncontrado.tipo != TipoDesenho.texto &&
-        elementoEncontrado.tipo != TipoDesenho.circuloFalecido &&
-        elementoEncontrado.tipo != TipoDesenho.circuloDesconhecido &&
-        elementoEncontrado.tipo != TipoDesenho.quadradoDesconhecido &&
-        elementoEncontrado.tipo != TipoDesenho.quadradoFalecido &&
+        (elementoEncontrado.tipo == TipoDesenho.circulo || 
+        elementoEncontrado.tipo == TipoDesenho.quadrado) &&
         temIndice.value == false
         ){
         temDesenho.value = true;

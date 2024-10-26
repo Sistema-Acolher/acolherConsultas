@@ -30,7 +30,7 @@ class ElementosDesenho {
     this.energiaGastaParte,
     this.isPaciente = false,
   }){
-    if(tipo == TipoDesenho.linhaHorizontal || tipo == TipoDesenho.linhaVertical || tipo == TipoDesenho.linhaSeparacao){
+    if(tipo == TipoDesenho.linha){
       if(pontos.length == 2) {
         pontosConexao = [pontos[0], pontos[1]];
       }

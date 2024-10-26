@@ -89,12 +89,12 @@ class GenogramaScreen extends HookWidget {
     final ValueNotifier<TipoDesenho> tipoDesenho = useState(TipoDesenho.semDesenho);
     final ValueNotifier<String> textoCirculo = useState("");
     final ValueNotifier<IconData> iconeDesenhoAtivo = useState(Icons.add_box_outlined);
-    final ValueNotifier<List<Offset>> pontosDeConexao = useState([]);
-    final ValueNotifier<Offset> ultimoPontoConexao = useState(Offset.zero);
+    final ValueNotifier<Map<Offset, TipoDesenho>> pontosDeConexao = useState({});
+    final ValueNotifier<MapEntry<Offset, TipoDesenho>> ultimoPontoConexao = useState(const MapEntry(Offset.zero, TipoDesenho.semDesenho));
     final ValueNotifier<bool> salvou = useState(false);
     final ValueNotifier<bool> temDesenho = useState(false);
     final ValueNotifier<Color> corDesenho = useState(Colors.black);
-    final ValueNotifier<bool> temIndice = useState(false);
+    final ValueNotifier<bool> temIndice = useState(!isEditable);
 
     final undoRedoPilha = useState(
       UndoRedoPilha(
