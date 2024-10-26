@@ -10,10 +10,6 @@ class ConsultaController extends ChangeNotifier {
   // Instância do Firestore, que é a classe responsável por realizar a comunicação com o banco de dados Firebase Firestore.
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Lista de consultas.
-  final List<ConsultaCadastro> _consultas = [];
-  List<ConsultaCadastro> get consultas => _consultas;
-
   // CRUD -----------------------------------
   Future<String> criarConsulta(ConsultaCadastro consulta) async {
     DocumentReference<Map<String, dynamic>> consultaAdicionada = await _firestore.collection("consultas").add(consulta.toMap());
@@ -43,6 +39,21 @@ class ConsultaController extends ChangeNotifier {
   }
 
   // Funções extras do banco -----------------------------------
+  // Busca uma stream de listas de consulta, esse método substitui getConsultas e atualizarConsultas
+  // Ele busca a lista como primeiro evento do aplicativo, e ao atualizar, automaticamente atualiza o app 
+  Stream<List<ConsultaCadastro>> get consultasStream {
+    return _firestore.collection('consultas').snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          var temp = doc.data();
+          temp.addAll({'id':doc.id});
+          return ConsultaCadastro.fromMap(temp);
+        }).toList();
+      },
+    );
+  }
+
+  // Busca uma consulta a partir do Id da mesma
   Future<Map<String, dynamic>?> buscarConsulta(String consultaId) async {
     DocumentSnapshot docsSnapshot = await _firestore.collection("consultas").doc(consultaId).get();
 
@@ -53,6 +64,7 @@ class ConsultaController extends ChangeNotifier {
     return docsSnapshot.data() as Map<String, dynamic>;
   }
 
+  // Vê se um horário naquela casa de apoio está ocupado, retorna null ou o horário
   Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
     QuerySnapshot querySnapshot = await _firestore.collection("consultas")
       .where("casaDeApoioId", isEqualTo: casaApoioId)
@@ -68,23 +80,6 @@ class ConsultaController extends ChangeNotifier {
   }
 
   // Funções da controller -----------------------------------
-  void _atualizarConsultas(List<ConsultaCadastro> consultas) {
-    _consultas.clear();
-    _consultas.addAll(consultas);
-    notifyListeners();
-  }
-
-  // Método que busca a lista de consultas e notifica os 'ouvintes'.
-  Future<void> getConsultas() async {
-    _consultas.clear();
-
-    for(var consulta in await selecionarTodosConsulta()){
-      ConsultaCadastro c = ConsultaCadastro.fromMap(consulta);
-      _consultas.add(c);
-    }
-
-    notifyListeners();
-  }
 
   // Busca consulta a partir do id da mesma
   Future<ConsultaCadastro> getConsulta(String consultaId) async {
@@ -109,7 +104,6 @@ class ConsultaController extends ChangeNotifier {
       consulta.estado="agendada";
 
       await atualizarConsulta(consulta, consulta.id!);
-      notifyListeners();
       return "ConsultaCadastro alterada com sucesso";
     } on Exception catch (e) {
       return "Erro ao cadastrar: $e";
@@ -126,11 +120,7 @@ class ConsultaController extends ChangeNotifier {
       }
       ConsultaCadastro novaConsulta = ConsultaCadastro(casaDeApoioId: paciente.casaDeApoioId, pacienteId: paciente.id!, dataHorario: dataHorario, estado: "agendada");
 
-      String id = await criarConsulta(novaConsulta);
-      novaConsulta.id = id;
-
-      _consultas.add(novaConsulta);
-      notifyListeners();
+      await criarConsulta(novaConsulta);
       return "ConsultaCadastro cadastrada com sucesso";
     } on Exception catch (e) {
       return "Erro ao cadastrar: $e";

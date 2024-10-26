@@ -1,5 +1,4 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
-import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
@@ -23,114 +22,76 @@ class ConsultaNovaScreen extends StatefulWidget {
 class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
   final CadastroPacienteState _cadastroPacienteState = CadastroPacienteState();
   // Usado para selecionar o paciente e trocar o menu que aparece
-  late Paciente? pacienteSelecionado = null;
-  // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
-  late Future<void> _loadConsultasFuture;
+  Paciente? pacienteSelecionado;
   late List<ConsultaCadastro> consultasDia;
 
-  @override
-  void initState() {
-    _loadConsultasFuture = loadConsultas();
-    super.initState();
-  }
-
-  Future<void> loadConsultas() async{
-    await context.read<ConsultaController>().getConsultas();
-    consultasDia = Provider.of<ConsultaController>(context,listen: false).consultas.where((element) => 
+  void loadConsultas() {
+    consultasDia = Provider.of<List<ConsultaCadastro>>(context).where((element) => 
       element.dataHorario.day == DateTime.now().day &&
-      element.casaDeApoioId == Provider.of<CasaDeApoioController>(context,listen: false).casaDeApoioSelecionada.value.id
+      element.casaDeApoioId == Provider.of<CasaDeApoio>(context).id
     ).toList();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Listen to changes in casaDeApoio and update state accordingly
-    context.read<CasaDeApoioController>().casaDeApoioSelecionada.addListener(_onCasaDeApoioChanged);
-  }
-
-  void _onCasaDeApoioChanged(){
-    setState(() {
-      pacienteSelecionado=null;
-      _loadConsultasFuture=loadConsultas();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: context.read<CasaDeApoioController>().casaDeApoioSelecionada,
-      builder: (context, casaDeApoio, child) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            // Caso venha a partir da pagina do paciente, troca a appbar
-            child: widget.pacienteConsulta==null? PageAppBar(titulo: "Consultar", casaDeApoioSelecionada: casaDeApoio): PacienteAppbar(paciente: widget.pacienteConsulta)
+    loadConsultas();
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        // Caso venha a partir da pagina do paciente, troca a appbar
+        child: widget.pacienteConsulta==null? PageAppBar(titulo: "Consultar", casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context)): PacienteAppbar(paciente: widget.pacienteConsulta)
+      ),
+      floatingActionButtonLocation: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
+        FloatingActionButtonLocation.endFloat:null,
+      floatingActionButton:         widget.pacienteConsulta!=null||pacienteSelecionado!=null?
+        BigRoundButton(
+          text: "Historia Pregressa", 
+          icon: Icons.history_edu,
+          onPressed: () => Navigator.of(context,rootNavigator: true).push(
+            MaterialPageRoute(builder:(context) => Scaffold(
+              appBar: PacienteAppbar(paciente: widget.pacienteConsulta??pacienteSelecionado),
+              body: HistPregressa(cadastroPacienteState: _cadastroPacienteState),
+            ))
           ),
-          floatingActionButtonLocation: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
-            FloatingActionButtonLocation.endFloat:null,
-          floatingActionButton:         widget.pacienteConsulta!=null||pacienteSelecionado!=null?
-            BigRoundButton(
-              text: "Historia Pregressa", 
-              icon: Icons.history_edu,
-              onPressed: () => Navigator.of(context,rootNavigator: true).push(
-                MaterialPageRoute(builder:(context) => Scaffold(
-                  appBar: PacienteAppbar(paciente: widget.pacienteConsulta??pacienteSelecionado),
-                  body: HistPregressa(cadastroPacienteState: _cadastroPacienteState),
-                ))
-              ),
-            ):null,
-          body: Padding(
-            padding: const EdgeInsets.only(bottom: 60,left: 10,right: 10),
-            child: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
-              // ConsultaCadastro caso possua paciente setado
-              const Center(
-                child: Text(
-                  "Consultar",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              )
-              :
-              // Lista de horarios caso não possua paciente
-              FutureBuilder(
-                future: _loadConsultasFuture,
-                builder: (context,snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Erro ao carregar consultas: ${snapshot.error}'));
-                  } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Selecione uma consulta:",
-                          style: TextStyle(
-                            fontSize: 20,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        Center(
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.amber[100],
-                              borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: ListaHorario(consultasDoDia: consultasDia, onSelect: (p) => setState(() {
-                              pacienteSelecionado=p;
-                            }),),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                }
-              ),
+        ):null,
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 60,left: 10,right: 10),
+        child: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
+          // ConsultaCadastro caso possua paciente setado
+          const Center(
+            child: Text(
+              "Consultar",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
           )
-        );
-      }
+          :
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Selecione uma consulta:",
+                style: TextStyle(
+                  fontSize: 20,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.amber[100],
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: ListaHorario(consultasDoDia: consultasDia, onSelect: (p) => setState(() {
+                    pacienteSelecionado=p;
+                  }),),
+                ),
+              ),
+            ],
+          )
+      )
     );
   }
 }

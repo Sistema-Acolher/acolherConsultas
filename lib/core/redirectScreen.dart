@@ -31,7 +31,7 @@ class RedirectScreen extends StatelessWidget {
           // Widget que verifica o nível de acesso do usuário
           // E redireciona para a tela correta
           return FutureBuilder(
-            future: Future.wait([context.read<UsuarioController>().checkUser(), context.read<CasaDeApoioController>().getCasasDeApoio()]),
+            future: Future.wait([context.read<UsuarioController>().checkUser()]),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot){
               // Podemos tirar esse if, mas isso faz com que seja redirecionado para uma nova tela de login enquanto carrega
               if(snapshot.connectionState == ConnectionState.waiting){
@@ -46,13 +46,19 @@ class RedirectScreen extends StatelessWidget {
                           return const HomeAdmin();
                         case NivelAcesso.acolher:
                           // Seleciona a casa de apoio Servos como padrão
-                          context.read<CasaDeApoioController>().selecionarCasaDeApoio(
-                            context.read<CasaDeApoioController>().casasDeApoio.sorted((CasaDeApoio a, CasaDeApoio b) => a.nome?.compareTo(b.nome ?? "")??0).first
-                          );
-                          return const HomeAcolher();
+                          final listaCasas = Provider.of<List<CasaDeApoio>>(context);
+                          if (listaCasas.isNotEmpty) {
+                            Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
+                              listaCasas.sorted((CasaDeApoio a, CasaDeApoio b) => a.nome?.compareTo(b.nome ?? "") ?? 0).first
+                            );
+                            return const HomeAcolher();
+                          } else {
+                            // Exibir um indicador de carregamento enquanto os dados estão vazios.
+                            return const LoadingLogo();
+                          }
                         case NivelAcesso.casaDeApoio:
                           // Seleciona a casa de apoio do usuário da instituição
-                          context.read<CasaDeApoioController>().selecionarCasaDeApoio(
+                          Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
                             snapshot.data![1].firstWhere((element) => element.id == context.read<UsuarioController>().usuarioAtual!.casaDeApoioId)
                           );
                           return const HomeInstituicao();

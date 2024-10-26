@@ -1,7 +1,9 @@
 import 'package:acolherconsultas/core/redirectScreen.dart';
 import 'package:acolherconsultas/core/splashScreen.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
+import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
@@ -23,9 +25,22 @@ class MyApp extends StatelessWidget {
       providers: [
         // O ChangeNotifierProvider é um provedor de estado que notifica os 'ouvintes' quando o objeto fornecido muda.
         ChangeNotifierProvider(create: (_) => PacientesCadastradosController()),
-        ChangeNotifierProvider(create: (_) => ConsultaController()),
+        StreamProvider<List<ConsultaCadastro>>(
+          create: (context) => ConsultaController().consultasStream,
+          initialData: const [],
+        ),
         ChangeNotifierProvider(create: (_) => UsuarioController()),
-        ChangeNotifierProvider(create: (_) => CasaDeApoioController())
+        ChangeNotifierProvider <CasaDeApoioController>(
+          create: (_) => CasaDeApoioController()
+        ),
+        StreamProvider<List<CasaDeApoio>>(
+          create: (context) => Provider.of<CasaDeApoioController>(context, listen: false).casasDeApoioStream,
+          initialData: const [],
+        ),
+        StreamProvider<CasaDeApoio>(
+          create: (context) => Provider.of<CasaDeApoioController>(context, listen: false).casaDeApoioSelecionadaStream.stream,
+          initialData: CasaDeApoio.vazio(),
+        ),
       ],
       // O MaterialApp é um widget que define a interface do aplicativo (apenas um por aplicativo).
       child: MaterialApp(

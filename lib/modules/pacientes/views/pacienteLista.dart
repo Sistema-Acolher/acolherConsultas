@@ -1,4 +1,3 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
@@ -33,14 +32,13 @@ class _PacienteListaState extends State<PacienteLista> {
     super.initState();
     _busca = TextEditingController(text: "");
     _pacientesFiltrados = ValueNotifier<List<CadastroPaciente>>([]);
-    _loadPacientesFuture = _filtrarPacientes();
   }
 
   // Carrega os pacientes do banco, busca todos os pacientes e os filtra de acordo com o campo _busca
   Future<void> _filtrarPacientes() async {
     List<CadastroPaciente> todosPacientes = Provider.of<PacientesCadastradosController>(context, listen: false).pacientes
       .where((element) => 
-        element.paciente.casaDeApoioId==Provider.of<CasaDeApoioController>(context, listen: false).casaDeApoioSelecionada.value.id
+        element.paciente.casaDeApoioId==Provider.of<CasaDeApoio>(context).id
       ).toList();
     String query = _busca.text.toLowerCase();
 
@@ -55,14 +53,12 @@ class _PacienteListaState extends State<PacienteLista> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: context.read<CasaDeApoioController>().casaDeApoioSelecionada,
-      builder: (context, casaDeApoio, child) {
         // Reinicializa o future quando casaDeApoio muda
         _loadPacientesFuture = _filtrarPacientes();
+        final casaDeApoioListener=Provider.of<CasaDeApoio>(context);
 
         return Scaffold(
-          appBar: PageAppBar(titulo: "Pacientes", casaDeApoioSelecionada: casaDeApoio),
+          appBar: PageAppBar(titulo: "Pacientes", casaDeApoioSelecionada: casaDeApoioListener),
           body: FutureBuilder<void>(
             future: _loadPacientesFuture,
             builder: (context, snapshot) {
@@ -79,7 +75,7 @@ class _PacienteListaState extends State<PacienteLista> {
                         margin: const EdgeInsets.only(bottom: 16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Color(casaDeApoio.cor??azul.value))
+                          border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -103,13 +99,13 @@ class _PacienteListaState extends State<PacienteLista> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
-                                color: Color(casaDeApoio.cor??azul.value),
+                                color: Color(casaDeApoioListener.cor??azul.value),
                                 borderRadius: BorderRadius.circular(7),
-                                border: Border.all(color: Color(casaDeApoio.cor??azul.value))
+                                border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
                               ),
                               child: Center(
                                 child: SearchButton(
-                                  backgroundColor: Color(casaDeApoio.cor??azul.value),
+                                  backgroundColor: Color(casaDeApoioListener.cor??azul.value),
                                   icon: Icons.search,
                                   onPressed: _filtrarPacientes,
                                 ),
@@ -155,7 +151,5 @@ class _PacienteListaState extends State<PacienteLista> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
-      }
-    );
   }
 }

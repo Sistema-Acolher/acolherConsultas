@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:provider/provider.dart';
 
 class ListaComIcone extends StatefulWidget {
   const ListaComIcone({super.key, this.listaConsulta, this.listaCasaApoio, this.listaUsuario, this.paciente, required this.label});
@@ -27,6 +26,9 @@ class ListaComIcone extends StatefulWidget {
 }
 
 class _ListaComIconeState extends State<ListaComIcone> {
+  // Cria instancia de controller para chamar funções
+  final consultaController = ConsultaController();
+
   @override
   Widget build(BuildContext context) {
     if(widget.listaConsulta!=null){
@@ -215,7 +217,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
           content: Confirmacao(
             body: false, 
             nome:"", dataHorario: DateTime.now(), confimacao: () async {
-            await context.read<ConsultaController>().remover(consultaRemove.id??"").then((value){
+            await consultaController.remover(consultaRemove.id??"").then((value){
                 Navigator.pop(context);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();

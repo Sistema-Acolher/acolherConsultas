@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
@@ -15,7 +15,7 @@ class ConsultaAgendar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PacienteAppbar(paciente: paciente),
-      body: Calendario(paciente: paciente, consulta: consulta, casaDeApoio: context.read<CasaDeApoioController>().casaDeApoioSelecionada.value,)
+      body: Calendario(paciente: paciente, consulta: consulta, casaDeApoio: Provider.of<CasaDeApoio>(context),)
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
@@ -97,10 +97,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                               .read<PacientesCadastradosController>()
                               .cadastrarPaciente(
                                   _stateCadastroPaciente.cadastro(),
-                                  context
-                                      .read<CasaDeApoioController>()
-                                      .casaDeApoioSelecionada
-                                      .value)
+                                  Provider.of<CasaDeApoio>(context))
                               .then((value) {
                             Navigator.pop(context);
                             final snackBar = SnackBar(

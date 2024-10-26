@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +15,7 @@ class CasaDeApoioController extends ChangeNotifier {
   List<CasaDeApoio> get casasDeApoio => _casasDeApoio;
 
   // Casa de apoio selecionada.
+  final StreamController<CasaDeApoio> casaDeApoioSelecionadaStream = StreamController<CasaDeApoio>();
   final ValueNotifier<CasaDeApoio> _casaDeApoioSelecionada = ValueNotifier<CasaDeApoio>(CasaDeApoio.vazio());
   ValueNotifier<CasaDeApoio> get casaDeApoioSelecionada => _casaDeApoioSelecionada;
 
@@ -41,24 +44,21 @@ class CasaDeApoioController extends ChangeNotifier {
   }
 
   // Funções extras do banco -----------------------------------
-
-  // Funções da controller -----------------------------------
-  // Método que busca a lista de casasDeApoio e notifica os 'ouvintes'.
-  Future<List<CasaDeApoio>?> getCasasDeApoio() async {
-    _casasDeApoio.clear();
-
-    for(var casaDeApoio in await selecionarTodosCasaDeApoio()){
-      CasaDeApoio c = CasaDeApoio.fromMap(casaDeApoio);
-      c.id = casaDeApoio["id"];
-      _casasDeApoio.add(c);
-    }
-    notifyListeners();
-    return _casasDeApoio;
+  Stream<List<CasaDeApoio>> get casasDeApoioStream {
+    return _firestore.collection('casasDeApoio').snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          var temp = doc.data();
+          temp.addAll({'id':doc.id});
+          return CasaDeApoio.fromMap(temp);
+        }).toList();
+      },
+    );
   }
 
+  // Funções da controller -----------------------------------
   // Método que seleciona uma casaDeApoio.
   void selecionarCasaDeApoio(CasaDeApoio casaDeApoio){
-    _casaDeApoioSelecionada.value = casaDeApoio;
-    //notifyListeners();
+    casaDeApoioSelecionadaStream.sink.add(casaDeApoio);
   }
 }

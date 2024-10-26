@@ -1,69 +1,71 @@
 import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
+import 'package:acolherconsultas/modules/sistema/views/loadingLogo.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:provider/provider.dart';
 
 class CasasDropdown extends StatefulWidget {
-  final List<Map<String, dynamic>> casas;
+  final List<CasaDeApoio> casas;
 
-  const CasasDropdown({Key? key, required this.casas}) : super(key: key);
+  const CasasDropdown({super.key, required this.casas});
 
   @override
   _CasasDropdownState createState() => _CasasDropdownState();
 }
 
 class _CasasDropdownState extends State<CasasDropdown> {
-  String _selectedItem = "Servos";
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedItem = context.read<CasaDeApoioController>().casaDeApoioSelecionada.value.nome ?? "Servos";
-  }
+  String _selectedItem = "";
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: amareloNavbar,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-          value: _selectedItem,
-          iconStyleData: const IconStyleData(iconSize: 0),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedItem = newValue!;
-              context.read<CasaDeApoioController>().selecionarCasaDeApoio(
-                context.read<CasaDeApoioController>().casasDeApoio.firstWhere((element) => element.nome == newValue)
+    _selectedItem = Provider.of<CasaDeApoio>(context).nome ?? "";
+    if(_selectedItem!=""){
+      return Container(
+        decoration: BoxDecoration(
+          color: amareloNavbar,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton2<String>(
+            value: _selectedItem,
+            iconStyleData: const IconStyleData(iconSize: 0),
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedItem = newValue!;
+                Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
+                  widget.casas.firstWhere((element) => element.nome == newValue)
+                );
+              });
+            },
+            items: widget.casas.map((casa) {
+              return DropdownMenuItem<String>(
+                value: casa.nome,
+                child: CasaItem(text: casa.nome ?? "", color: casa.cor ?? 0xFFFFFF),
               );
-            });
-          },
-          items: widget.casas.map((casa) {
-            return DropdownMenuItem<String>(
-              value: casa['name'],
-              child: CasaItem(text: casa['name'], color: casa['color']),
-            );
-          }).toList(),
-          buttonStyleData: const ButtonStyleData(
-            height: 20,
-            width: 180,
-          ),
-          dropdownStyleData: DropdownStyleData(
-            maxHeight: 200, // se precisar mudar o tamanho do scroll
-            width: 220,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            scrollbarTheme: ScrollbarThemeData(
-              thumbVisibility: MaterialStateProperty.all(true),
-              thickness: MaterialStateProperty.all(5),
-              radius: const Radius.circular(8),
+            }).toList(),
+            buttonStyleData: const ButtonStyleData(
+              height: 20,
+              width: 180,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 200, // se precisar mudar o tamanho do scroll
+              width: 220,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              scrollbarTheme: ScrollbarThemeData(
+                thumbVisibility: MaterialStateProperty.all(true),
+                thickness: MaterialStateProperty.all(5),
+                radius: const Radius.circular(8),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    else {
+      return const LoadingLogo();
+    }
   }
 }
 

@@ -25,6 +25,8 @@ class ListaHorario extends StatefulWidget {
 }
 
 class _ListaHorarioState extends State<ListaHorario> {
+  // Cria instancia de controller para chamar funções
+  final consultaController = ConsultaController();
 
   @override
   void initState() {
@@ -124,7 +126,7 @@ class _ListaHorarioState extends State<ListaHorario> {
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
           content: Confirmacao(nome: pacienteNome, dataHorario: horario, confimacao: () async {
             if (widget.consulta!=null) {
-              context.read<ConsultaController>().reagendar(horario,widget.consulta!).then((value){
+              consultaController.reagendar(horario,widget.consulta!).then((value){
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
@@ -134,14 +136,14 @@ class _ListaHorarioState extends State<ListaHorario> {
                 }
               });
             }else{
-              context.read<ConsultaController>().cadastrarConsulta(widget.paciente!,horario).then((value){
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              consultaController.cadastrarConsulta(widget.paciente!,horario).then((value){
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
                 if (!value.toLowerCase().contains("erro")) {
                   Navigator.pop(context);
                 }
               });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             }
           })
         );

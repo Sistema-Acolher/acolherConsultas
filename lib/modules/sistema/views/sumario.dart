@@ -1,5 +1,4 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
-import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/homeAppbar.dart';
@@ -17,110 +16,86 @@ class Sumario extends StatefulWidget {
 
 class _SumarioState extends State<Sumario> {
   // Responsavel por tornar o loadConsultas como assincrono, trazendo os dados corretamente
-  late Future<void> _loadConsultasFuture;
-  late List<ConsultaCadastro> consultasDia;
+  late List<ConsultaCadastro> consultasDia = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _loadConsultasFuture = loadConsultas();
-  }
-
-  Future<void> loadConsultas() async{
-    await context.read<ConsultaController>().getConsultas();
-    consultasDia = Provider.of<ConsultaController>(context,listen: false).consultas.where((element) => 
+  void loadConsultas(){
+    consultasDia = Provider.of<List<ConsultaCadastro>>(context).where((element) =>
       element.dataHorario.day == DateTime.now().day &&
-      element.casaDeApoioId == Provider.of<CasaDeApoioController>(context,listen: false).casaDeApoioSelecionada.value.id
+      element.casaDeApoioId == Provider.of<CasaDeApoio>(context).id
     ).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    loadConsultas();
+        final casaDeApoioListener=Provider.of<CasaDeApoio>(context);
+
     return Scaffold(
       appBar: const HomeAppbar(),
-      body: ValueListenableBuilder(
-          valueListenable: context.read<CasaDeApoioController>().casaDeApoioSelecionada,
-          builder: (context, casaDeApoio, child) {
-            // Reinicializa o future quando casaDeApoio muda
-          _loadConsultasFuture = loadConsultas();
-
-          return FutureBuilder(
-            future: _loadConsultasFuture,
-            builder: (context,snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator(color: Color(casaDeApoio.cor ?? azul.value),));
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Erro ao carregar consultas: ${snapshot.error}'));
-                  } else {
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 20),
-                              decoration: BoxDecoration(
-                                color: Color(casaDeApoio.cor??azul.value).withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(16)
-                              ),
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 7),
-                                    child: Text(
-                                      "Frequência de consultas",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 7, right: 7,bottom: 5,top: 3),
-                                    child: ConsultasLineChart(casaDeApoioSelecionada: casaDeApoio,),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Color(casaDeApoio.cor??azul.value).withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(16)
-                              ),
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 7),
-                                    child: Text(
-                                      "Consultas hoje",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5, right: 5,bottom: 5,top: 3),
-                                    child: ListaHorario(consultasDoDia: consultasDia, fundo: true,),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ]
-                        )
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Color(casaDeApoioListener.cor??azul.value).withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(16)
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 7),
+                      child: Text(
+                        "Frequência de consultas",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        ),
                       ),
-                    );
-                  }
-            }
-          );
-        }
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 7, right: 7,bottom: 5,top: 3),
+                      child: ConsultasLineChart(casaDeApoioSelecionada: casaDeApoioListener,),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(casaDeApoioListener.cor??azul.value).withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(16)
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 7),
+                      child: Text(
+                        "Consultas hoje",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, right: 5,bottom: 5,top: 3),
+                      child: ListaHorario(consultasDoDia: consultasDia, fundo: true,),
+                    ),
+                  ],
+                ),
+              )
+            ]
+          )
+        ),
       )
     );
   }

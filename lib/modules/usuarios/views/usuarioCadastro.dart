@@ -1,4 +1,3 @@
-import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/states/usuarioCadastroState.dart';
@@ -9,10 +8,8 @@ import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +38,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     _usuarioCadastroState.nivelAcesso.addListener(() {
       nivelSelecionadoNotifier.value = _usuarioCadastroState.nivelAcesso.text;
     });
-    casasDeApoioCadastradas = context.read<CasaDeApoioController>().casasDeApoio;
+    casasDeApoioCadastradas = Provider.of<List<CasaDeApoio>>(context);
   }
 
   @override
