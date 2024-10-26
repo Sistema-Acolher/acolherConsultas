@@ -2,7 +2,7 @@ import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultaAgendar.dart';
-import 'package:acolherconsultas/modules/consultas/views/consultaNovaScreen.dart';
+import 'package:acolherconsultas/modules/consultas/views/consultarScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
@@ -165,7 +165,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
                 padding: const EdgeInsets.only(top: 40),
                 child: CircleButton(title: "Consultar", icon: Icons.content_paste, onPressed: (){
                   Navigator.pop(context);
-                  Navigator.of(context).push(MaterialPageRoute(builder:(context) => ConsultaNovaScreen(pacienteConsulta: widget.paciente,)));
+                  Navigator.of(context).push(MaterialPageRoute(builder:(context) => ConsultarScreen(pacienteConsulta: widget.paciente, dadosConsulta: consulta,)));
                 }),
               ),
               Padding(

@@ -10,16 +10,17 @@ import 'package:acolherconsultas/shared/components/list/listaHorarios.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ConsultaNovaScreen extends StatefulWidget {
-  const ConsultaNovaScreen({super.key, this.pacienteConsulta});
+class ConsultarScreen extends StatefulWidget {
+  const ConsultarScreen({super.key, this.pacienteConsulta, this.dadosConsulta});
   
   final Paciente? pacienteConsulta;
+  final ConsultaCadastro? dadosConsulta;
 
   @override
-  State<ConsultaNovaScreen> createState() => _ConsultaNovaScreenState();
+  State<ConsultarScreen> createState() => _ConsultarScreenState();
 }
 
-class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
+class _ConsultarScreenState extends State<ConsultarScreen> {
   final CadastroPacienteState _cadastroPacienteState = CadastroPacienteState();
   // Usado para selecionar o paciente e trocar o menu que aparece
   Paciente? pacienteSelecionado;
@@ -60,6 +61,7 @@ class _ConsultaNovaScreenState extends State<ConsultaNovaScreen> {
         child: widget.pacienteConsulta!=null||pacienteSelecionado!=null?
           // ConsultaCadastro caso possua paciente setado
           const Center(
+            //IconButton(onPressed: () => ConsultaController().atualizarConsulta(widget.state, widget.dadosConsulta?.casaDeApoioId), icon: Icon())
             child: Text(
               "Consultar",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),

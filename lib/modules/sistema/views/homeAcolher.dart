@@ -1,5 +1,5 @@
 import 'package:acolherconsultas/modules/sistema/views/agenda.dart';
-import 'package:acolherconsultas/modules/consultas/views/consultaNovaScreen.dart';
+import 'package:acolherconsultas/modules/consultas/views/consultarScreen.dart';
 import 'package:acolherconsultas/modules/sistema/views/sumario.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteLista.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultaRelatorioScreen.dart';
@@ -18,7 +18,7 @@ class HomeAcolher extends StatelessWidget {
     return const CustomNavbar(
         icons:              [ Symbols.stethoscope,  Icons.date_range, Icons.home,         Icons.menu_book,          Icons.description], 
         titles:             [ "Consultar",          "Agenda",         " ",                "Cadastro",               "Relatório"], 
-        screens:            [ ConsultaNovaScreen(), Agenda(),         Sumario(),          PacienteLista(),          RelatorioCasasScreen()], 
+        screens:            [ ConsultarScreen(), Agenda(),         Sumario(),          PacienteLista(),          RelatorioCasasScreen()], 
         activeIconColors:   [ verdeEscuro,          vermelhoEscuro,   amarelo,            azulEscuro,               cinza], 
         inactiveIconColors: [ verdeIcon,            vermelhoIcon,     amareloEscuro,      azulIcon,                 cinzaIcon]
       );
