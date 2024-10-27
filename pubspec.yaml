@@ -102,6 +102,10 @@ flutter:
         - asset: src/fonts/Montserrat/Montserrat-Italic.ttf
         - asset: src/fonts/Montserrat/Montserrat-BoldItalic.ttf
         - asset: src/fonts/Montserrat/Montserrat-Thin.ttf
+
+    - family: LinhaSeparacao
+      fonts:
+        - asset: src/fonts/linha-separacao.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

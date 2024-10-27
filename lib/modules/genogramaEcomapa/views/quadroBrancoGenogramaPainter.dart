@@ -295,7 +295,7 @@ class QuadroBrancoGenogramaPainter extends CustomPainter {
           break;
         case TipoDesenho.texto:
           TextSpan span = TextSpan(
-            style: TextStyle(color: elemento.cor, fontSize: elemento.tamanho),
+            style: TextStyle(color: elemento.cor, fontSize: elemento.tamanho * 2),
             text: elemento.texto,
           );
           TextPainter tp = TextPainter(

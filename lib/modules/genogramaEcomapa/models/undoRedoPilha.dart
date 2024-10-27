@@ -30,26 +30,26 @@ class UndoRedoPilha {
   late int _operacaoAtual = -1;
 
   void _desenhosCountListener() {
-      print("asdkasdjas");
+      // print("asdkasdjas");
     if(_desenhoCount != desenhosNotifier.value.elementos.length && desenhoEditadoNotifier.value.key.id != 0) {
       // print(desenhoEditadoNotifier.value.key.id);
       _desenhoCount = desenhosNotifier.value.elementos.length;
       // remove operações que não foram feitas de _operacaoAtual em diante
-      print("opAtual: $_operacaoAtual");
-      print("Tamanho: ${_undoRedoPilha.length}");
+      // print("opAtual: $_operacaoAtual");
+      // print("Tamanho: ${_undoRedoPilha.length}");
       while(_undoRedoPilha.length > _operacaoAtual + 1) {
-        print("Removeurr");
+        // print("Removeurr");
         _undoRedoPilha.removeLast();
       }
-      print("Operação: ${desenhoEditadoNotifier.value.value}");
+      // print("Operação: ${desenhoEditadoNotifier.value.value}");
       _undoRedoPilha.addLast(MapEntry(desenhoEditadoNotifier.value.key, desenhoEditadoNotifier.value.value));
       _operacaoAtual++;
       _canUndo.value = true;
       _canRedo.value = false;
-      print("canRedo: ${_canRedo.value}");
-      print("canUndo: ${_canUndo.value}");
-      print("opAtual: $_operacaoAtual");
-      print("Tamanho: ${_undoRedoPilha.length}");
+      // print("canRedo: ${_canRedo.value}");
+      // print("canUndo: ${_canUndo.value}");
+      // print("opAtual: $_operacaoAtual");
+      // print("Tamanho: ${_undoRedoPilha.length}");
       desenhoEditadoNotifier.value = MapEntry(ElementosDesenho(
           id: 0,
           pontos: [],
@@ -66,34 +66,34 @@ class UndoRedoPilha {
           tipo: TipoDesenho.semDesenho,
           tamanho: 5,
         ), Operacoes.adicao);
-    print(_operacaoAtual);
-    print("Tamanho: ${_undoRedoPilha.length}");
-    _undoRedoPilha.toList().forEach((element) {
-      print(element.key.id);
-      print(element.value);
-    });
+    // print(_operacaoAtual);
+    // print("Tamanho: ${_undoRedoPilha.length}");
+    // _undoRedoPilha.toList().forEach((element) {
+    //   print(element.key.id);
+    //   print(element.value);
+    // });
     var op = _undoRedoPilha.elementAt(_operacaoAtual);
     var estrutura = desenhosNotifier.value;
-    print(op.key.id);
-    print(op.value);
+    // print(op.key.id);
+    // print(op.value);
     switch(op.value) {
       case Operacoes.adicao:
-        print(desenhosNotifier.value.elementos.length);
+        // print(desenhosNotifier.value.elementos.length);
         estrutura = estrutura.copyWith(
           elementos: estrutura.elementos..removeWhere((element) => element.id == op.key.id)
         );
         desenhosNotifier.value = estrutura;
-        print(desenhosNotifier.value.elementos.length);
-        print("Removeu");
+        // print(desenhosNotifier.value.elementos.length);
+        // print("Removeu");
         break;
       case Operacoes.edicao:
         var opEdited = desenhosNotifier.value.elementos.where((element) => element.id == op.key.id);
 
-        print(opEdited.first.pontos);
-        print(op.key.pontos);
-        print("Editou");
+        // print(opEdited.first.pontos);
+        // print(op.key.pontos);
+        // print("Editou");
 
-        print(desenhosNotifier.value.elementos);
+        // print(desenhosNotifier.value.elementos);
         estrutura = estrutura.copyWith(
           elementos: estrutura.elementos..removeWhere((element) => element.id == op.key.id)
         );
@@ -103,11 +103,11 @@ class UndoRedoPilha {
         );
         desenhosNotifier.value = estrutura;
         
-        print(desenhosNotifier.value.elementos);
+        // print(desenhosNotifier.value.elementos);
         
-        print(_undoRedoPilha.toList());
+        // print(_undoRedoPilha.toList());
         _undoRedoPilha.toList()[_operacaoAtual] = MapEntry(opEdited.first, Operacoes.edicao);
-        print(_undoRedoPilha.toList());
+        // print(_undoRedoPilha.toList());
         break;
       case Operacoes.remocao:
         estrutura = estrutura.copyWith(

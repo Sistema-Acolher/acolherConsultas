@@ -50,7 +50,7 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => widget.isGenograma ? 
-                      GenogramaScreen(genogramaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: true) : 
+                      GenogramaScreen(genogramaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: false) : 
                       EcomapaScreen(ecomapaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: false)
                     )
                   );

@@ -34,6 +34,10 @@ class ElementosDesenho {
       if(pontos.length == 2) {
         pontosConexao = [pontos[0], pontos[1]];
       }
+    } else if(tipo == TipoDesenho.linhaSeparacao){
+      pontosConexao = pontos;
+    } else if(tipo == TipoDesenho.caneta){
+      pontosConexao = [];
     } else if(pontos.length == 1) {
       final pontoSuperior = Offset(pontos[0].dx, pontos[0].dy + tamanho);
       final pontoInferior = Offset(pontos[0].dx, pontos[0].dy - tamanho);

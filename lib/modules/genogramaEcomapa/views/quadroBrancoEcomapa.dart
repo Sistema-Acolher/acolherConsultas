@@ -61,14 +61,14 @@ class QuadroBrancoEcomapa extends HookWidget {
     id = ecomapa.value.elementos.length + 1;
     final box = context.findRenderObject() as RenderBox;
     final offset = box.globalToLocal(details.position);
-    print(id);
+    // print(id);
     
     if(desenhoAtivo.value && !edicaoTextoAtiva.value){
       borrachaAtiva.value = false;
 
       if(edicaoAtiva.value){
         ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
-        print(elementoEncontrado?.texto);
+        // print(elementoEncontrado?.texto);
 
         if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta && elementoEncontrado.id != 1){
           temDesenho.value = true;
@@ -79,11 +79,11 @@ class QuadroBrancoEcomapa extends HookWidget {
           energiaGastaPaciente?.value = elementoEncontrado.energiaGastaPaciente;
           energiaGastaParte?.value = elementoEncontrado.energiaGastaParte;
           id = elementoEncontrado.id;
-          print(elementoEncontrado.pontos);
-          print(pontosIniciais);
-          print("asda");
+          // print(elementoEncontrado.pontos);
+          // print(pontosIniciais);
+          // print("asda");
           pontosIniciais.add(Offset(elementoEncontrado.pontos[0].dx, elementoEncontrado.pontos[0].dy));
-          print(pontosIniciais);
+          // print(pontosIniciais);
 
           final newEcomapa = ecomapa.value.copyWith(
             elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0])
@@ -121,8 +121,8 @@ class QuadroBrancoEcomapa extends HookWidget {
       }
       
     }
-    print("AAAAAAAAAAAAAAAAAAAAdadada");
-    print(pontosIniciais);
+    // print("AAAAAAAAAAAAAAAAAAAAdadada");
+    // print(pontosIniciais);
   }
 
   void onPointerMove(PointerMoveEvent details, BuildContext context) {
@@ -135,7 +135,7 @@ class QuadroBrancoEcomapa extends HookWidget {
     }
     // print(pontosIniciais);
     // print("asda222");
-    print(temDesenho.value);
+    // print(temDesenho.value);
 
     if(desenhoAtivo.value && temDesenho.value && !edicaoTextoAtiva.value){
       borrachaAtiva.value = false;
@@ -163,7 +163,7 @@ class QuadroBrancoEcomapa extends HookWidget {
 
       if(edicaoTextoAtiva.value){
         ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
-        print(elementoEncontrado?.texto);
+        // print(elementoEncontrado?.texto);
 
         if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta && elementoEncontrado.id != 1){
           temDesenho.value = true;
@@ -236,7 +236,7 @@ class QuadroBrancoEcomapa extends HookWidget {
                       desenhoEditado.value = MapEntry(elementoEncontrado, Operacoes.edicao);
                       ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
                       desenhoAtivo.value = false;
-                      print("EDITOU");
+                      // print("EDITOU");
                       Navigator.of(context).pop();
                     },
                     child: const Text('Confirmar'),
@@ -252,8 +252,8 @@ class QuadroBrancoEcomapa extends HookWidget {
         }
       } else {
         if(edicaoAtiva.value){
-          print("aadçç");
-          print(pontosIniciais);
+          // print("aadçç");
+          // print(pontosIniciais);
           desenhoEditado.value = MapEntry(desenhoAtual.value.copyWith(pontos: pontosIniciais), Operacoes.edicao);
         } else {
           desenhoEditado.value = MapEntry(desenhoAtual.value, Operacoes.adicao);
@@ -279,12 +279,11 @@ class QuadroBrancoEcomapa extends HookWidget {
         tamanho: 5,
       );
 
-      ecomapa.value.elementos.forEach((el) {
-        print("[${el.id}] ");
-      }
-      );
+      // ecomapa.value.elementos.forEach((el) {
+      //   print("[${el.id}] ");
+      // });
 
-      print(ecomapa.value.editDesenho(offset)?.id);
+      // print(ecomapa.value.editDesenho(offset)?.id);
 
       desenhoEditado.value = MapEntry(ecomapa.value.editDesenho(offset) ?? ElementosDesenho(
         id: 0,
@@ -293,18 +292,18 @@ class QuadroBrancoEcomapa extends HookWidget {
         tamanho: 5,
       ), Operacoes.remocao);
 
-      print(desenhoEditado.value.key.id);
+      // print(desenhoEditado.value.key.id);
 
       final newEcomapa = ecomapa.value.copyWith(
         elementos: ecomapa.value.removeDesenho(offset)
       ); 
       ecomapa.value = newEcomapa;
       // id = ecomapa.value.elementos.length + 1;
-      print(desenhoEditado.value.key.id);
+      // print(desenhoEditado.value.key.id);
     }
-    print(pontosIniciais); 
+    // print(pontosIniciais); 
     // pontosIniciais = [];
-    print(ecomapa.value.elementos);
+    // print(ecomapa.value.elementos);
   }
 
   Widget buildAllSketches(BuildContext context) {

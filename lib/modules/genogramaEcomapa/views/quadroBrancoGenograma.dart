@@ -60,21 +60,27 @@ class QuadroBrancoGenograma extends HookWidget {
 
       if(edicaoAtiva.value){
         ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
-        if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta){
+        if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta && elementoEncontrado.tipo != TipoDesenho.linha){
           temDesenho.value = true;
           desenhoAtual.value = elementoEncontrado;
           tipoDesenho.value = elementoEncontrado.tipo;
           textoCirculo.value = elementoEncontrado.texto ?? "";
           id = elementoEncontrado.id;
-          // print(elementoEncontrado.pontos);
-          // print(pontosIniciais);
-          // print("asda");
-          // pontosIniciais.add(Offset(elementoEncontrado.pontos[0].dx, elementoEncontrado.pontos[0].dy));
-          // print(pontosIniciais);
-
+          
           final newEcomapa = genograma.value.copyWith(
             elementos: genograma.value.removeDesenho(elementoEncontrado.pontos[0])
-          ); 
+          );
+
+          for (var element in elementoEncontrado.pontosConexao) {
+            pontosDeConexao.value.remove(Offset(element.dx, element.dy));
+          }
+
+          for(var elemento in genograma.value.elementos){
+            for (var element in elemento.pontosConexao) {
+              pontosDeConexao.value.putIfAbsent(element, () => elemento.tipo);
+            }
+          }
+
           genograma.value = newEcomapa;
           desenhoAtual.value = ElementosDesenho(
             id: id,
@@ -147,7 +153,10 @@ class QuadroBrancoGenograma extends HookWidget {
           if (!listaPontos.contains(offset) && distanciaOffset < 4*desenhoAtual.value.tamanho && distancia <= 2*desenhoAtual.value.tamanho && distancia > 0 && (distancia < distanciaPontoDeConexao || distanciaPontoDeConexao == double.infinity)) {
             distanciaPontoDeConexao = distancia;
             pontoDeConexaoMaisProximo = MapEntry(ponto, desenhoAtual.value.tipo);
-            pontoDeConexaoMaisProximoDesenho = 
+            if(desenhoAtual.value.pontosConexao.length == 1){
+              pontoDeConexaoMaisProximoDesenho = pontoDeConexao;
+            } else{
+              pontoDeConexaoMaisProximoDesenho = 
                 i == 0 ? 
                   MapEntry(pontoDeConexao.key - Offset(0, desenhoAtual.value.tamanho), pontoDeConexao.value) :
                 i == 1 ?
@@ -157,6 +166,7 @@ class QuadroBrancoGenograma extends HookWidget {
                 i == 3 ?
                   MapEntry(pontoDeConexao.key + Offset(desenhoAtual.value.tamanho, 0), pontoDeConexao.value) :
                 MapEntry(offset, TipoDesenho.semDesenho);
+            }
           }
           i++;
         }
@@ -183,8 +193,23 @@ class QuadroBrancoGenograma extends HookWidget {
             cor: corDesenho.value,
           );
         }
+      } else if(tipoDesenho.value == TipoDesenho.caneta){
+        desenhoAtual.value = ElementosDesenho(
+          id: id != 0 ? id : genograma.value.elementos.length + 1,
+          pontos: pontos,
+          tipo: tipoDesenho.value,
+          tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
+          texto: textoCirculo.value,
+          cor: corDesenho.value,
+          isPaciente: false
+        );
       } else if(!listaPontos.contains(pontoDeConexaoMaisProximoDesenho) && !listaPontos.contains(pontoDeConexaoMaisProximoDesenho)) {
-        if(pontoDeConexaoMaisProximoDesenho.value != TipoDesenho.circulo && pontoDeConexaoMaisProximoDesenho.value != TipoDesenho.quadrado && desenhoAtual.value.pontos != [pontoDeConexaoMaisProximoDesenho.key] && distanciaPontoDeConexao < 4* desenhoAtual.value.tamanho && pontoDeConexaoMaisProximo != Offset.zero){
+        if(
+          pontoDeConexaoMaisProximoDesenho.value == TipoDesenho.linha &&
+          desenhoAtual.value.pontos != [pontoDeConexaoMaisProximoDesenho.key] && 
+          distanciaPontoDeConexao < 4* desenhoAtual.value.tamanho && 
+          pontoDeConexaoMaisProximo.key != Offset.zero
+        ){
           ultimoPontoConexao.value = pontoDeConexaoMaisProximo;
           desenhoAtual.value = ElementosDesenho(
             id: genograma.value.elementos.length + 1,
@@ -193,7 +218,7 @@ class QuadroBrancoGenograma extends HookWidget {
             tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
             texto: textoCirculo.value,
             cor: corDesenho.value,
-            isPaciente: temIndice.value && edicaoAtiva.value,
+            isPaciente: desenhoAtual.value.isPaciente,
           );
         } else if((offset - ultimoPontoConexao.value.key).distance > 2* desenhoAtual.value.tamanho){
           ultimoPontoConexao.value = const MapEntry(Offset.zero, TipoDesenho.semDesenho);
@@ -204,21 +229,10 @@ class QuadroBrancoGenograma extends HookWidget {
             tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
             texto: textoCirculo.value,
             cor: corDesenho.value,
-            isPaciente: temIndice.value && edicaoAtiva.value,
+            isPaciente: desenhoAtual.value.isPaciente,
           );
         }
       } 
-      // else {
-      //   desenhoAtual.value = ElementosDesenho(
-      //     id: id != 0 ? id : genograma.value.elementos.length + 1,
-      //     pontos: pontos,
-      //     tipo: tipoDesenho.value,
-      //     tamanho: tipoDesenho.value == TipoDesenho.texto ? 5 : 20,
-      //     texto: textoCirculo.value,
-      //     cor: corDesenho.value,
-      //     isPaciente: temIndice.value && edicaoAtiva.value,
-      //   );
-      // }
     }
     id = id != 0 ? id : genograma.value.elementos.length + 1;
   }
@@ -230,6 +244,13 @@ class QuadroBrancoGenograma extends HookWidget {
 
     if(desenhoAtivo.value && temDesenho.value){
       genograma.value = genograma.value.addDesenho(desenhoAtual.value);
+      if(desenhoAtual.value.tipo == TipoDesenho.linha){
+        // adicionar o meio da linha como ponto de conexao
+        desenhoAtual.value.pontosConexao.add(Offset(
+          (desenhoAtual.value.pontos[0].dx + desenhoAtual.value.pontos[1].dx) / 2,
+          (desenhoAtual.value.pontos[0].dy + desenhoAtual.value.pontos[1].dy) / 2,
+        ));
+      }
       for (var element in desenhoAtual.value.pontosConexao) { 
         pontosDeConexao.value[Offset(element.dx, element.dy)] = desenhoAtual.value.tipo;
       }
@@ -248,6 +269,9 @@ class QuadroBrancoGenograma extends HookWidget {
     } else if(borrachaAtiva.value){
       ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);
       if(elementoEncontrado != null){
+        for (var element in elementoEncontrado.pontosConexao) {
+          pontosDeConexao.value.remove(Offset(element.dx, element.dy));
+        }
         if(elementoEncontrado.isPaciente) {
           temIndice.value = false;
         }
@@ -255,6 +279,11 @@ class QuadroBrancoGenograma extends HookWidget {
           elementos: genograma.value.removeDesenho(elementoEncontrado.pontos[0])
         );
         genograma.value = newGenograma;
+        for(var elemento in genograma.value.elementos){
+          for (var element in elemento.pontosConexao) {
+            pontosDeConexao.value.putIfAbsent(element, () => elemento.tipo);
+          }
+        }
       }
     } else {
       ElementosDesenho? elementoEncontrado = genograma.value.editDesenho(offset);

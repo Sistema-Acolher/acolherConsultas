@@ -7,6 +7,7 @@ import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoEcomapa.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/animatedAppbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/services.dart';
@@ -286,50 +287,53 @@ class EcomapaScreen extends HookWidget {
                 alignment: Alignment.bottomLeft,
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FloatingActionButton(
-                        heroTag: null,
-                        backgroundColor: amarelo,
-                        onPressed: () {
-                          //Salvar ecomapa com todos os elementos desenhados
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Salvar Ecomapa"),
-                                content: const Text("Deseja salvar o Ecomapa?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    }, 
-                                    child: const Text("Cancelar")
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      ecomapa.value.dataCriacao = DateTime.now();
-                                      PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
-                                      salvou.value = true;
-                                    }, 
-                                    child: const Text("Salvar")
-                                  ),
-                                ],
-                              );
-                            }
-                          );
-                        },
-                        child: const Icon(
-                          Icons.save,
-                          color: branco
+                    Visibility(
+                      visible: ecomapa.value.elementos.length > 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FloatingActionButton(
+                          heroTag: null,
+                          backgroundColor: amarelo,
+                          onPressed: () {
+                            //Salvar ecomapa com todos os elementos desenhados
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Salvar Ecomapa"),
+                                  content: const Text("Deseja salvar o Ecomapa?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      }, 
+                                      child: const Text("Cancelar")
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        ecomapa.value.dataCriacao = DateTime.now();
+                                        PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
+                                        salvou.value = true;
+                                      }, 
+                                      child: const Text("Salvar")
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
+                          },
+                          child: const Icon(
+                            Icons.save,
+                            color: branco
+                          ),
                         ),
                       ),
                     ),
                     ValueListenableBuilder<bool>(
                       valueListenable: undoRedoPilha.value.canUndo,
                       builder: (_, canUndo, __) {
-                        print("Can Undo: $canUndo");
+                        // print("Can Undo: $canUndo");
                         return Visibility(
                           visible: (canUndo),
                           child: Padding(
@@ -352,7 +356,7 @@ class EcomapaScreen extends HookWidget {
                     ValueListenableBuilder<bool>(
                       valueListenable: undoRedoPilha.value.canRedo,
                       builder: (_, canRedo, __) {
-                        print("Can Redo: $canRedo");
+                        // print("Can Redo: $canRedo");
                         return Visibility(
                           visible: canRedo,
                           child: Padding(

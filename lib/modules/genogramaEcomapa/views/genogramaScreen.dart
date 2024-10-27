@@ -10,6 +10,7 @@ import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoGeno
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/animatedAppbar.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -48,8 +49,8 @@ class GenogramaScreen extends HookWidget {
   Widget build(BuildContext context) {
     final canvasGlobalKey = GlobalKey();
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
 
     final ValueNotifier<bool> showAppBar = useState(true);
@@ -89,12 +90,24 @@ class GenogramaScreen extends HookWidget {
     final ValueNotifier<TipoDesenho> tipoDesenho = useState(TipoDesenho.semDesenho);
     final ValueNotifier<String> textoCirculo = useState("");
     final ValueNotifier<IconData> iconeDesenhoAtivo = useState(Icons.add_box_outlined);
-    final ValueNotifier<Map<Offset, TipoDesenho>> pontosDeConexao = useState({});
+    Map<Offset, TipoDesenho> pontosDeConexaoIniciais = {};
+    bool temIndiceInicial = false;
+    if(genogramaVelho != null){
+      for (var element in genograma.value.elementos) {
+        for(var e in element.pontosConexao){
+          pontosDeConexaoIniciais[e] = element.tipo;
+        }
+        if(element.isPaciente){
+          temIndiceInicial = true;
+        }
+      }
+    }
+    final ValueNotifier<Map<Offset, TipoDesenho>> pontosDeConexao = useState(pontosDeConexaoIniciais);
     final ValueNotifier<MapEntry<Offset, TipoDesenho>> ultimoPontoConexao = useState(const MapEntry(Offset.zero, TipoDesenho.semDesenho));
     final ValueNotifier<bool> salvou = useState(false);
     final ValueNotifier<bool> temDesenho = useState(false);
     final ValueNotifier<Color> corDesenho = useState(Colors.black);
-    final ValueNotifier<bool> temIndice = useState(!isEditable);
+    final ValueNotifier<bool> temIndice = useState(temIndiceInicial);
 
     final undoRedoPilha = useState(
       UndoRedoPilha(
@@ -348,7 +361,7 @@ class GenogramaScreen extends HookWidget {
           appBar: AppBarAnimada(
             title: "Genograma",
             showAppBar: showAppBar,
-            sair: (genograma.value.elementos.length == 1 || salvou.value) || !isEditable,
+            sair: genogramaVelho == genograma.value || genograma.value.elementos.isEmpty || salvou.value || !isEditable,
           ),
           body: Stack(
             children: [
@@ -523,50 +536,54 @@ class GenogramaScreen extends HookWidget {
                     ) : const SizedBox(),
                     Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FloatingActionButton(
-                            heroTag: null,
-                            backgroundColor: amarelo,
-                            onPressed: () {
-                              //Salvar genograma com todos os elementos desenhados
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Salvar Genograma"),
-                                    content: const Text("Deseja salvar o Genograma?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        }, 
-                                        child: const Text("Cancelar")
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          genograma.value.dataCriacao = DateTime.now();
-                                          PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
-                                          salvou.value = true;
-                                        }, 
-                                        child: const Text("Salvar")
-                                      ),
-                                    ],
-                                  );
-                                }
-                              );
-                            },
-                            child: const Icon(
-                              Icons.save,
-                              color: branco
+                        Visibility(
+                          visible: (genogramaVelho != genograma.value && genograma.value.elementos.isNotEmpty),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FloatingActionButton(
+                              heroTag: null,
+                              backgroundColor: amarelo,
+                              onPressed: () {
+                                //Salvar genograma com todos os elementos desenhados
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text("Salvar Genograma"),
+                                      content: const Text("Deseja salvar o Genograma?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          }, 
+                                          child: const Text("Cancelar")
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            genograma.value.dataCriacao = DateTime.now();
+                                            PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
+                                            salvou.value = true;
+                                            Navigator.of(context).pop();
+                                          }, 
+                                          child: const Text("Salvar")
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                );
+                              },
+                              child: const Icon(
+                                Icons.save,
+                                color: branco
+                              ),
                             ),
                           ),
                         ),
                         ValueListenableBuilder<bool>(
                           valueListenable: undoRedoPilha.value.canUndo,
                           builder: (_, canUndo, __) {
-                            print("Can Undo: $canUndo");
+                            // print("Can Undo: $canUndo");
                             return Visibility(
                               visible: (canUndo),
                               child: Padding(
@@ -589,7 +606,7 @@ class GenogramaScreen extends HookWidget {
                         ValueListenableBuilder<bool>(
                           valueListenable: undoRedoPilha.value.canRedo,
                           builder: (_, canRedo, __) {
-                            print("Can Redo: $canRedo");
+                            // print("Can Redo: $canRedo");
                             return Visibility(
                               visible: canRedo,
                               child: Padding(
@@ -671,9 +688,9 @@ class GenogramaScreen extends HookWidget {
                   //     fontWeight: FontWeight.bold,
                   //   ),
                   // ),
-                  child: const Icon(Symbols.pen_size_2),
+                  child: const Icon(LinhaSeparacao.linhaSeparacao),
                   onTap: () {
-                    opcaoSelecionada(Symbols.pen_size_2, TipoDesenho.linhaSeparacao, preto);
+                    opcaoSelecionada(LinhaSeparacao.linhaSeparacao, TipoDesenho.linhaSeparacao, preto);
                   },
               ),
               SpeedDialChild(
@@ -776,4 +793,11 @@ class GenogramaScreen extends HookWidget {
       }
     );
   }
+}
+
+class LinhaSeparacao {
+  static const IconData linhaSeparacao = IconData(
+    0xe000,
+    fontFamily: 'LinhaSeparacao',
+  );
 }
