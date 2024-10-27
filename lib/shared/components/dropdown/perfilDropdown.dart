@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class UserDropdown extends StatefulWidget {
   final String userName;
 
-  const UserDropdown({Key? key, required this.userName}) : super(key: key);
+  const UserDropdown({super.key, required this.userName});
 
   @override
   _UserDropdownState createState() => _UserDropdownState();

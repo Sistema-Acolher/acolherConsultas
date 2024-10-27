@@ -15,6 +15,7 @@ class AppBarAnimada extends StatefulWidget implements PreferredSizeWidget {
   @override
   State<AppBarAnimada> createState() => _AppBarAnimadaState();
 
+  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 

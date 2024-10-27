@@ -118,7 +118,14 @@ class ConsultaController extends ChangeNotifier {
       else if(await horarioOcupado(paciente.casaDeApoioId, dataHorario) != null) {
         throw Exception("Horário já está ocupado");
       }
-      ConsultaCadastro novaConsulta = ConsultaCadastro(casaDeApoioId: paciente.casaDeApoioId, pacienteId: paciente.id!, dataHorario: dataHorario, estado: "agendada");
+      ConsultaCadastro novaConsulta = ConsultaCadastro(
+        casaDeApoioId: paciente.casaDeApoioId,
+        pacienteId: paciente.id!,
+        pacienteNome: paciente.nome,
+        dataHorario: dataHorario, 
+        estado: "agendada",
+        dadosConsulta: null
+      );
 
       await criarConsulta(novaConsulta);
       return "ConsultaCadastro cadastrada com sucesso";

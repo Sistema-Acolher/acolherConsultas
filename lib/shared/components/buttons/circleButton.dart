@@ -6,11 +6,11 @@ class CircleButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const CircleButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CircleButton extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(55.0),
         onTap: onPressed,
-        child: Container(
+        child: SizedBox(
           width: 110.0,
           height: 110.0,
           child: Column(

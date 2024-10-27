@@ -41,9 +41,7 @@ class PacientesCadastradosController extends ChangeNotifier {
   Future<void> atualizarPaciente(CadastroPaciente paciente, String id) async {
     Map<String, dynamic> pacienteMap = paciente.toMap();
     pacienteMap.remove('dataCadastro');
-    await _firestore.collection("pacientes").doc(id).update(pacienteMap).then(
-        (value) => print("paciente atualizado"),
-        onError: (e) => print("Erro ao atualizar: $e"));
+    await _firestore.collection("pacientes").doc(id).update(pacienteMap);
   }
   
   Future<void> removerPaciente(Map<String, dynamic> paciente) async {

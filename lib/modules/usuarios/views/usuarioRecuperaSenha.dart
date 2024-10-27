@@ -6,9 +6,7 @@ import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:provider/provider.dart';
 

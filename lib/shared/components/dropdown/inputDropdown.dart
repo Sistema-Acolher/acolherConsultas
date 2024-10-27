@@ -10,14 +10,14 @@ class InputDropdown extends StatefulWidget {
   final Function? checkEdit;
 
   const InputDropdown({
-    Key? key,
+    super.key,
     required this.list,
     required this.label,
     required this.checkNotifier,
     required this.controller,
     this.isEdit = false,
     this.checkEdit,
-  }) : super(key: key);
+  });
 
   @override
   _InputDropdownState createState() => _InputDropdownState();
@@ -28,7 +28,7 @@ class _InputDropdownState extends State<InputDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    String? _selectedItem = widget.list.contains(widget.controller.text)
+    String? selectedItem = widget.list.contains(widget.controller.text)
         ? widget.controller.text
         : null;
 
@@ -73,11 +73,11 @@ class _InputDropdownState extends State<InputDropdown> {
                   ),
                 );
               }).toList(),
-              value: _selectedItem,
+              value: selectedItem,
               onChanged: (String? newValue) {
                 setState(() {
-                  _selectedItem = newValue ?? '';
-                  widget.controller.text = _selectedItem!;
+                  selectedItem = newValue ?? '';
+                  widget.controller.text = selectedItem!;
                   widget.checkNotifier.value = true;
                   mostrarErro = false;
 

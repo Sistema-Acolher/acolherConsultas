@@ -54,6 +54,8 @@ dependencies:
   flutter_hooks: ^0.18.5+1
   flutter_speed_dial: ^7.0.0
   flex_color_picker: ^3.4.1
+  collection: ^1.18.0
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:

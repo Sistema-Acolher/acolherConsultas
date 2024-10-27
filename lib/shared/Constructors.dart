@@ -23,7 +23,6 @@ final ConsultaCadastro consultaTeste = ConsultaCadastro(
   estado: "em andamento",
   dadosConsulta: Consulta(
     idade: DateTime(2010, 5, 15),
-    dataConsulta: DateTime.now(),
     cuidadorPrincipal: "Maria Silva",
     queixaPrincipal: "Dor abdominal",
     descricao: "Paciente relata dor há 3 dias.",

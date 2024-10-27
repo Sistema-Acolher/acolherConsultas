@@ -223,7 +223,6 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
           mostrarErroFirebase = true;
         });
       } else {
-        print(e.code);
         setState(() {
           erroFirebase = "Erro: ${e.code}";
           mostrarErroFirebase = true;

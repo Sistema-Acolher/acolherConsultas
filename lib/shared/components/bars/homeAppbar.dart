@@ -26,7 +26,6 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 50,
       leading: Padding(
         padding: const EdgeInsets.only(left: 20),
-        // TODO: fazer função que retorna o widget correto, seja admin, a casa do usuario instituicao ou a lista de casas pro usuario acolher
         child: usuario?.nivelAcesso==NivelAcesso.admin
             ? const CasaItem(text: "Admin", color: 0xFF7A7A7A)
             : usuario?.nivelAcesso==NivelAcesso.acolher

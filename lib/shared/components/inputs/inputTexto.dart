@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 class InputTextoAcolher extends StatefulWidget {
   const InputTextoAcolher({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.placeHolder,
@@ -19,7 +19,7 @@ class InputTextoAcolher extends StatefulWidget {
     this.emptyMessage,
     this.checkEdit,
     this.defaultValue,
-  }) : super(key: key);
+  });
 
   final String label;
   final String? placeHolder;

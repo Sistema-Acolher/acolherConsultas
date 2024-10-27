@@ -100,7 +100,7 @@ class _ListaHorarioState extends State<ListaHorario> {
         color: widget.fundo?Colors.white:null,
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: data(pacientes)
@@ -137,13 +137,13 @@ class _ListaHorarioState extends State<ListaHorario> {
               });
             }else{
               consultaController.cadastrarConsulta(widget.paciente!,horario).then((value){
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
                 if (!value.toLowerCase().contains("erro")) {
                   Navigator.pop(context);
                 }
               });
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             }
           })
         );

@@ -8,7 +8,6 @@ import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
 import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 

@@ -65,9 +65,12 @@ class ListaDePacientes extends StatelessWidget {
                       item.paciente.sexo=="masculino"?
                         Padding(
                           padding: const EdgeInsets.only(right: 4),
+                          // O desenvolvedor da biblioteca tirou o suporte pq "quer q os usuarios pensem em uma maneira melhor", o issue: https://github.com/dnfield/flutter_svg/issues/856
+                          // ignore: deprecated_member_use
                           child: SvgPicture.asset("src/icons/menino.svg",height: 35, color: Colors.black),
                         ):
                       item.paciente.sexo=="feminino"?
+                        // ignore: deprecated_member_use
                         SvgPicture.asset("src/icons/menina.svg",height: 35, color: Colors.black):
                         const SizedBox.shrink()
                     )

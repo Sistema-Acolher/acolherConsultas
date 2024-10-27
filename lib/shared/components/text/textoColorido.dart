@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextoColorido extends StatefulWidget {
-  const TextoColorido({Key? key, required this.palavra});
+  const TextoColorido({super.key, required this.palavra});
 
   final String palavra;
 
