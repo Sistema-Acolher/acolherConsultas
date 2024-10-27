@@ -20,7 +20,7 @@ class ConsultasLineChart extends StatefulWidget {
 class _ConsultasLineChartState extends State<ConsultasLineChart> {
   // Data de hoje
   DateTime endDate = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  var startDate;
+  late DateTime startDate;
 
   // Intervalo da legenda do eixo x do gráfico de acordo com a quantidade de dias
   Map<int, double> intervalGraph = { 10: 1.5, 11: 1.7, 12: 1.9, 13: 2.0, 14: 2.2, 15: 2.4, 16: 2.5, 17: 2.7, 18: 2.9, 19: 3.0, 20: 3.2, 21: 3.4, 22: 3.5, 23: 3.7, 24: 3.9, 25: 4.1, 26: 4.3, 27: 4.5, 28: 4.7, 29: 4.7,};

@@ -5,9 +5,7 @@ import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/buttons/loginButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:provider/provider.dart';
 

@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Consulta {
   // Dados comuns entre crianças e adolescentes
   DateTime idade;
-  DateTime dataConsulta;
   String cuidadorPrincipal;
   String queixaPrincipal;
   String descricao;
@@ -99,7 +98,6 @@ class Consulta {
 
   Consulta({
     required this.idade,
-    required this.dataConsulta,
     required this.cuidadorPrincipal,
     required this.queixaPrincipal,
     required this.descricao,
@@ -194,13 +192,10 @@ class Consulta {
   Consulta copyWith({
     String? id,
     String? casaDeApoioId,
-    //String? pacienteNome,
     String? pacienteId,
-    //DateTime? dataHorario,
     String? estado,
     String? nome,
     DateTime? idade,
-    DateTime? dataConsulta,
     String? cuidadorPrincipal,
     String? queixaPrincipal,
     String? descricao,
@@ -293,7 +288,6 @@ class Consulta {
   }) {
     return Consulta(
       idade: idade ?? this.idade,
-      dataConsulta: dataConsulta ?? this.dataConsulta,
       cuidadorPrincipal: cuidadorPrincipal ?? this.cuidadorPrincipal,
       queixaPrincipal: queixaPrincipal ?? this.queixaPrincipal,
       descricao: descricao ?? this.descricao,
@@ -422,7 +416,6 @@ class Consulta {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'idade': idade,
-      'dataConsulta': Timestamp.fromDate(dataConsulta),
       'cuidadorPrincipal': cuidadorPrincipal,
       'queixaPrincipal': queixaPrincipal,
       'descricao': descricao,
@@ -527,7 +520,6 @@ class Consulta {
   factory Consulta.fromMap(Map<String, dynamic> map) {
     return Consulta(
       idade: (map['idade'] as Timestamp).toDate(),
-      dataConsulta: (map['dataConsulta'] as Timestamp).toDate(),
       cuidadorPrincipal: map['cuidadorPrincipal'] as String,
       queixaPrincipal: map['queixaPrincipal'] as String,
       descricao: map['descricao'] as String,
@@ -676,6 +668,7 @@ class ConsultaCadastro {
     return <String, dynamic>{
       'casaDeApoioId': casaDeApoioId,
       'pacienteId': pacienteId,
+      'pacienteNome': pacienteNome,
       'dataHorario': dataHorario,
       'estado': estado,
       'dadosConsulta': dadosConsulta?.toMap(),
@@ -690,7 +683,7 @@ class ConsultaCadastro {
       pacienteId: map['pacienteId'] as String,
       dataHorario: (map['dataHorario'] as Timestamp).toDate(),
       estado: map['estado'] as String,
-      dadosConsulta: map['pacienteNome'] != null ? Consulta.fromMap(map['dadosConsulta'] as Map<String,dynamic>) : null,
+      dadosConsulta: map['dadosConsulta'] != null ? Consulta.fromMap(map['dadosConsulta'] as Map<String,dynamic>) : null,
     );
   }
 
