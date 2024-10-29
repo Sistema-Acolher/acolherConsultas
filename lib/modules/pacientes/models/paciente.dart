@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart';
@@ -12,251 +9,292 @@ import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart
 // Além disso, possui um método copyWith para copiar um objeto Paciente e alterar seus atributos, e o método toString, alteração da função == e definição do hashCode.
 class Paciente {
   String? id;
-  String nome;
-  bool ativo;
-  String? cpf;
-  String? rg;
-  String? numeroCartaoSus;
-  DateTime? dataNasc;
-  String sexo;
-  String motivoAcolhimento;
-  String? localAcolhimentoAnterior;
-  HistoriaPregressa? historiaPregressa;
-  String? orientacoes;
-  String? encaminhamentos;
   String casaDeApoioId;
-
+  String nome;
+  String cpf;
+  String rg;
+  bool ativo;
+  String numeroCartaoSus;
+  String sexo;
+  DateTime dataNasc;
+  String nomeMae;
+  String cidadeOrigem;
+  String motivoAcolhimento;
+  bool acolhimentoAnterior;
+  String? localAcolhimentoAnterior;
+  String? dataAcolhimentoAnterior;
+  String nomeEscola;
+  String? serieTurnoEscola;
+  String? dificuldadesEscolares;
+  List<AulasEspecializadas> aulasEspecializadas;
+  List<String> medicamentosUsados;
+  String? acompanhamentoProfissionalDeSaude;
+  List<String> vacinasFaltando;
+  String? observacoes;
+  HistoriaPregressa? historiaPregressa;
   Paciente({
     this.id,
-    required this.nome,
-    required this.ativo,
-    this.cpf,
-    this.rg,
-    this.numeroCartaoSus,
-    this.dataNasc,
-    required this.sexo,
-    required this.motivoAcolhimento,
-    this.localAcolhimentoAnterior,
-    this.historiaPregressa,
-    this.orientacoes,
-    this.encaminhamentos,
     required this.casaDeApoioId,
+    required this.nome,
+    required this.cpf,
+    required this.rg,
+    required this.ativo,
+    required this.numeroCartaoSus,
+    required this.sexo,
+    required this.dataNasc,
+    required this.nomeMae,
+    required this.cidadeOrigem,
+    required this.motivoAcolhimento,
+    required this.acolhimentoAnterior,
+    this.localAcolhimentoAnterior,
+    this.dataAcolhimentoAnterior,
+    required this.nomeEscola,
+    this.serieTurnoEscola,
+    this.dificuldadesEscolares,
+    this.aulasEspecializadas = const [],
+    this.medicamentosUsados = const [],
+    this.acompanhamentoProfissionalDeSaude,
+    this.vacinasFaltando = const [],
+    this.observacoes,
+    this.historiaPregressa,
   });
-
-  // Método que calcula a idade do paciente a partir da data de nascimento e retorna uma string com a idade formatada.
-  static String calcularIdade(DateTime dataNascimento) {
-    final DateTime agora = DateTime.now();
-    final int idade = agora.year - dataNascimento.year;
-    final int mesAtual = agora.month;
-    final int mesNascimento = dataNascimento.month;
-    final int diaAtual = agora.day;
-    final int diaNascimento = dataNascimento.day;
-
-    String idadeString = "";
-    int anos = 0;
-    int dias = 0;
-    int meses = 0;
-
-    if (mesAtual < mesNascimento) {
-      anos = idade - 1;
-      meses = mesAtual - mesNascimento + 12;
-      if (diaAtual < diaNascimento) {
-        dias = diaAtual - diaNascimento + 30;
-      } else {
-        dias = diaAtual - diaNascimento;
-      }
-    } else if (mesAtual == mesNascimento) {
-      if (diaAtual < diaNascimento) {
-        anos = idade - 1;
-        meses = mesAtual - mesNascimento + 11;
-        dias = diaAtual - diaNascimento + 30;
-      } else {
-        anos = idade;
-        meses = mesAtual - mesNascimento;
-        dias = diaAtual - diaNascimento;
-      }
-    } else {
-      anos = idade;
-      if (diaAtual >= diaNascimento) {
-        meses = mesAtual - mesNascimento;
-        dias = diaAtual - diaNascimento;
-      } else {
-        meses = mesAtual - mesNascimento - 1;
-        dias = diaAtual - diaNascimento + 30;
-      }
-    }
-
-    if (anos > 0) idadeString += "${anos}a ";
-    if (meses > 0) idadeString += "${meses}m ";
-    if (dias > 0) idadeString += "${dias}d";
-
-    if (idadeString.isEmpty) idadeString = "Menos de 1 dia";
-
-    return idadeString;
-  }
-
-  // Este método foi substituído pelo método acima pois é menos preciso
-  // static String calcularIdade(DateTime dataNascimento){
-  //   final DateTime agora = DateTime.now();
-  //   int dias = agora.difference(dataNascimento).inDays;
-  //   final int anos = (dias / 365).floor();
-  //   final int meses = ((dias % 365) / 30).floor();
-  //   dias = (dias % 365) % 30;
-
-  //   String idadeString = "";
-  //   if (anos > 0) idadeString += "${anos}a ";
-  //   if (meses > 0) idadeString += "${meses}m ";
-  //   if (dias > 0) idadeString += "${dias}d";
-
-  //   return idadeString;
-  // }
-
-  factory Paciente.fromDocument(DocumentSnapshot doc) {
-    return Paciente(
-      nome: doc['nome'] as String,
-      sexo: doc['sexo'] as String,
-      numeroCartaoSus: doc['numeroCartaoSus'] as String,
-      rg: doc['rg'] as String,
-      cpf: doc['cpf'] as String,
-      orientacoes: doc['orientacoes'] as String,
-      encaminhamentos: doc['encaminhamentos'] as String,
-      motivoAcolhimento: doc['motivoAcolhimento'] as String,
-      localAcolhimentoAnterior: doc['localAcolhimentoAnterior'] as String,
-      dataNasc: doc['dataNascimento'].toDate() as DateTime,
-      ativo: doc['ativo'] as bool,
-      historiaPregressa: doc['historiaPregressa'] as HistoriaPregressa,
-      casaDeApoioId: doc['casaDeApoioId'] as String,
-    );
-  }
 
   Paciente copyWith({
     String? id,
+    String? casaDeApoioId,
     String? nome,
-    bool? ativo,
     String? cpf,
     String? rg,
+    bool? ativo,
     String? numeroCartaoSus,
-    DateTime? dataNasc,
     String? sexo,
+    DateTime? dataNasc,
+    String? nomeMae,
+    String? cidadeOrigem,
     String? motivoAcolhimento,
+    bool? acolhimentoAnterior,
     String? localAcolhimentoAnterior,
+    String? dataAcolhimentoAnterior,
+    String? nomeEscola,
+    String? serieTurnoEscola,
+    String? dificuldadesEscolares,
+    List<AulasEspecializadas>? aulasEspecializadas,
+    List<String>? medicamentosUsados,
+    String? acompanhamentoProfissionalDeSaude,
+    List<String>? vacinasFaltando,
+    String? observacoes,
     HistoriaPregressa? historiaPregressa,
-    String? orientacoes,
-    String? encaminhamentos,
-    String? casaDeApoioId,
   }) {
     return Paciente(
       id: id ?? this.id,
+      casaDeApoioId: casaDeApoioId ?? this.casaDeApoioId,
       nome: nome ?? this.nome,
-      ativo: ativo ?? this.ativo,
       cpf: cpf ?? this.cpf,
       rg: rg ?? this.rg,
+      ativo: ativo ?? this.ativo,
       numeroCartaoSus: numeroCartaoSus ?? this.numeroCartaoSus,
-      dataNasc: dataNasc ?? this.dataNasc,
       sexo: sexo ?? this.sexo,
+      dataNasc: dataNasc ?? this.dataNasc,
+      nomeMae: nomeMae ?? this.nomeMae,
+      cidadeOrigem: cidadeOrigem ?? this.cidadeOrigem,
       motivoAcolhimento: motivoAcolhimento ?? this.motivoAcolhimento,
+      acolhimentoAnterior: acolhimentoAnterior ?? this.acolhimentoAnterior,
       localAcolhimentoAnterior: localAcolhimentoAnterior ?? this.localAcolhimentoAnterior,
+      dataAcolhimentoAnterior: dataAcolhimentoAnterior ?? this.dataAcolhimentoAnterior,
+      nomeEscola: nomeEscola ?? this.nomeEscola,
+      serieTurnoEscola: serieTurnoEscola ?? this.serieTurnoEscola,
+      dificuldadesEscolares: dificuldadesEscolares ?? this.dificuldadesEscolares,
+      aulasEspecializadas: aulasEspecializadas ?? this.aulasEspecializadas,
+      medicamentosUsados: medicamentosUsados ?? this.medicamentosUsados,
+      acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude ?? this.acompanhamentoProfissionalDeSaude,
+      vacinasFaltando: vacinasFaltando ?? this.vacinasFaltando,
+      observacoes: observacoes ?? this.observacoes,
       historiaPregressa: historiaPregressa ?? this.historiaPregressa,
-      orientacoes: orientacoes ?? this.orientacoes,
-      encaminhamentos: encaminhamentos ?? this.encaminhamentos,
-      casaDeApoioId: casaDeApoioId ?? this.casaDeApoioId,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'casaDeApoioId': casaDeApoioId,
       'nome': nome,
-      'ativo': ativo,
       'cpf': cpf,
       'rg': rg,
+      'ativo': ativo,
       'numeroCartaoSus': numeroCartaoSus,
-      'dataNasc': dataNasc,
       'sexo': sexo,
+      'dataNasc': dataNasc,
+      'nomeMae': nomeMae,
+      'cidadeOrigem': cidadeOrigem,
       'motivoAcolhimento': motivoAcolhimento,
+      'acolhimentoAnterior': acolhimentoAnterior,
       'localAcolhimentoAnterior': localAcolhimentoAnterior,
+      'dataAcolhimentoAnterior': dataAcolhimentoAnterior,
+      'nomeEscola': nomeEscola,
+      'serieTurnoEscola': serieTurnoEscola,
+      'dificuldadesEscolares': dificuldadesEscolares,
+      'aulasEspecializadas': aulasEspecializadas.map((x) => x.toMap()).toList(),
+      'medicamentosUsados': medicamentosUsados,
+      'acompanhamentoProfissionalDeSaude': acompanhamentoProfissionalDeSaude,
+      'vacinasFaltando': vacinasFaltando,
+      'observacoes': observacoes,
       'historiaPregressa': historiaPregressa?.toMap(),
-      'orientacoes': orientacoes,
-      'encaminhamentos': encaminhamentos,
-      'casaDeApoioId': casaDeApoioId,
     };
   }
 
   factory Paciente.fromMap(Map<String, dynamic> map, {String? id}) {
     return Paciente(
       id: id ?? "",
-      nome: map['nome'] as String,
-      ativo: map['ativo'] as bool,
-      cpf: map['cpf'] != null ? map['cpf'] as String : null,
-      rg: map['rg'] != null ? map['rg'] as String : null,
-      numeroCartaoSus:
-          map['rg'] != null ? map['numeroCartaoSus'] as String : null,
-      dataNasc: map['dataNasc'] != null
-          ? (map['dataNasc'] as Timestamp).toDate()
-          : null,
-      sexo: map['sexo'] != null ? map['sexo'] as String : '',
-      motivoAcolhimento: map['motivoAcolhimento'] as String,
-      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null
-          ? map['localAcolhimentoAnterior'] as String
-          : null,
-      historiaPregressa: map['historiaPregressa'] != null
-          ? HistoriaPregressa.fromMap(
-              map['historiaPregressa'] as Map<String, dynamic>)
-          : null,
-      orientacoes:
-          map['orientacoes'] != null ? map['orientacoes'] as String : null,
-      encaminhamentos: map['encaminhamentos'] != null
-          ? map['encaminhamentos'] as String
-          : null,
       casaDeApoioId: map['casaDeApoioId'] as String,
+      nome: map['nome'] as String,
+      cpf: map['cpf'] as String,
+      rg: map['rg'] as String,
+      ativo: map['ativo'] as bool,
+      numeroCartaoSus: map['numeroCartaoSus'] as String,
+      sexo: map['sexo'] as String,
+      dataNasc: (map['dataNasc'] as Timestamp).toDate(),
+      nomeMae: map['nomeMae'] as String,
+      cidadeOrigem: map['cidadeOrigem'] as String,
+      motivoAcolhimento: map['motivoAcolhimento'] as String,
+      acolhimentoAnterior: map['acolhimentoAnterior'] as bool,
+      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null ? map['localAcolhimentoAnterior'] as String : null,
+      dataAcolhimentoAnterior: map['dataAcolhimentoAnterior'] != null ? map['dataAcolhimentoAnterior'] as String : null,
+      nomeEscola: map['nomeEscola'] as String,
+      serieTurnoEscola: map['serieTurnoEscola'] != null ? map['serieTurnoEscola'] as String : null,
+      dificuldadesEscolares: map['dificuldadesEscolares'] != null ? map['dificuldadesEscolares'] as String : null,
+      aulasEspecializadas: List<AulasEspecializadas>.from((map['aulasEspecializadas'] as List<dynamic>).map<AulasEspecializadas>((x) => AulasEspecializadas.fromMap(x as Map<String,dynamic>),),),
+      medicamentosUsados: List<String>.from(map['medicamentosUsados'] as List<dynamic>),
+      acompanhamentoProfissionalDeSaude: map['acompanhamentoProfissionalDeSaude'] != null ? map['acompanhamentoProfissionalDeSaude'] as String : null,
+      vacinasFaltando: List<String>.from(map['vacinasFaltando'] as List<dynamic>),
+      observacoes: map['observacoes'] != null ? map['observacoes'] as String : null,
+      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Paciente.fromJson(String source) =>
-      Paciente.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Paciente(id: $id, nome: $nome, ativo: $ativo, cpf: $cpf, rg: $rg, numeroCartaoSus: $numeroCartaoSus, dataNasc: $dataNasc, sexo: $sexo, motivoAcolhimento: $motivoAcolhimento, localAcolhimentoAnterior: $localAcolhimentoAnterior, historiaPregressa: $historiaPregressa, orientacoes: $orientacoes, encaminhamentos: $encaminhamentos, casaDeApoioId: $casaDeApoioId)';
   }
 
   @override
   bool operator ==(covariant Paciente other) {
     if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.nome == nome &&
-        other.ativo == ativo &&
-        other.cpf == cpf &&
-        other.rg == rg &&
-        other.numeroCartaoSus == numeroCartaoSus &&
-        other.dataNasc == dataNasc &&
-        other.sexo == sexo &&
-        other.motivoAcolhimento == motivoAcolhimento &&
-        other.localAcolhimentoAnterior == localAcolhimentoAnterior &&
-        other.historiaPregressa == historiaPregressa &&
-        other.orientacoes == orientacoes &&
-        other.encaminhamentos == encaminhamentos &&
-        other.casaDeApoioId == casaDeApoioId;
+  
+    return 
+      other.id == id &&
+      other.casaDeApoioId == casaDeApoioId &&
+      other.cpf == cpf &&
+      other.rg == rg;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        nome.hashCode ^
-        ativo.hashCode ^
-        cpf.hashCode ^
-        rg.hashCode ^
-        numeroCartaoSus.hashCode ^
-        dataNasc.hashCode ^
-        sexo.hashCode ^
-        motivoAcolhimento.hashCode ^
-        localAcolhimentoAnterior.hashCode ^
-        historiaPregressa.hashCode ^
-        orientacoes.hashCode ^
-        encaminhamentos.hashCode ^
-        casaDeApoioId.hashCode;
+      casaDeApoioId.hashCode;
+  }
+}
+
+class AulasEspecializadas {
+  String nomeAula;
+  String localAula;
+  String horarioAula;
+
+  AulasEspecializadas({
+    required this.nomeAula,
+    required this.localAula,
+    required this.horarioAula,
+  });
+
+  AulasEspecializadas copyWith({
+    String? nomeAula,
+    String? localAula,
+    String? horarioAula,
+  }) {
+    return AulasEspecializadas(
+      nomeAula: nomeAula ?? this.nomeAula,
+      localAula: localAula ?? this.localAula,
+      horarioAula: horarioAula ?? this.horarioAula,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'nomeAula': nomeAula,
+      'localAula': localAula,
+      'horarioAula': horarioAula,
+    };
+  }
+
+  factory AulasEspecializadas.fromMap(Map<String, dynamic> map) {
+    return AulasEspecializadas(
+      nomeAula: map['nomeAula'] as String,
+      localAula: map['localAula'] as String,
+      horarioAula: map['horarioAula'] as String,
+    );
+  }
+
+  @override
+  bool operator ==(covariant AulasEspecializadas other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.nomeAula == nomeAula &&
+      other.localAula == localAula &&
+      other.horarioAula == horarioAula;
+  }
+
+  @override
+  int get hashCode => nomeAula.hashCode ^ localAula.hashCode ^ horarioAula.hashCode;
+}
+
+class CadastroPaciente {
+  Paciente paciente;
+  DateTime dataCadastro;
+  DateTime dataAtualizacao;
+
+  CadastroPaciente({
+    required this.paciente,
+    required this.dataCadastro,
+    required this.dataAtualizacao,
+  });
+  
+  CadastroPaciente copyWith({
+    Paciente? paciente,
+    DateTime? dataCadastro,
+    DateTime? dataAtualizacao,
+  }) {
+    return CadastroPaciente(
+      paciente: paciente ?? this.paciente,
+      dataCadastro: dataCadastro ?? this.dataCadastro,
+      dataAtualizacao: dataAtualizacao ?? this.dataAtualizacao,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'paciente': paciente.toMap(),
+      'dataCadastro': dataCadastro,
+      'dataAtualizacao': dataAtualizacao,
+    };
+  }
+
+  factory CadastroPaciente.fromMap(Map<String, dynamic> map) {
+    return CadastroPaciente(
+      paciente: Paciente.fromMap(map['paciente'] as Map<String,dynamic>,id: map['id'] as String),
+      dataCadastro: (map['dataCadastro'] as Timestamp).toDate(),
+      dataAtualizacao: (map['dataAtualizacao'] as Timestamp).toDate(),
+    );
+  }
+
+  @override
+  bool operator ==(covariant CadastroPaciente other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.paciente == paciente &&
+      other.dataCadastro == dataCadastro &&
+      other.dataAtualizacao == dataAtualizacao;
+  }
+
+  @override
+  int get hashCode {
+    return paciente.hashCode ^
+      dataCadastro.hashCode ^
+      dataAtualizacao.hashCode;
   }
 }

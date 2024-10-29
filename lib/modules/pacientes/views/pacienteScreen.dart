@@ -1,5 +1,5 @@
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
@@ -86,7 +86,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
     if (widget.state.dataNascimento.text.length == 10) {
       DateTime data =
           DateFormat('dd/MM/yyyy').parse(widget.state.dataNascimento.text);
-      String dataString = Paciente.calcularIdade(data);
+      String dataString = PacientesController.calcularIdade(data);
       widget.state.idade.text = dataString;
     } else {
       widget.state.idade.text = "";
@@ -105,7 +105,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
               widget.paciente!.numeroCartaoSus ||
           widget.state.dataNascimento.text !=
               (widget.paciente?.dataNasc != null
-                  ? DateFormat('dd/MM/yyyy').format(widget.paciente!.dataNasc!)
+                  ? DateFormat('dd/MM/yyyy').format(widget.paciente!.dataNasc)
                   : '') ||
           widget.state.motivoAcolhimento.text !=
               widget.paciente!.motivoAcolhimento;
@@ -184,7 +184,7 @@ class _InfoPessoaisState extends State<InfoPessoais> {
               text: "Salvar",
               onPressed: () async {
                 await context
-                    .read<PacientesCadastradosController>()
+                    .read<PacientesController>()
                     .atualizaPaciente(
                         widget.state.cadastro(),
                         widget.paciente!.id ?? "",
@@ -435,7 +435,7 @@ class _HistoriaPregressaState extends State<HistPregressa> {
               text: "Salvar",
               onPressed: () async {
                 await context
-                    .read<PacientesCadastradosController>()
+                    .read<PacientesController>()
                     .atualizaPaciente(
                         widget.cadastroPacienteState.cadastro(),
                         widget.paciente!.id ?? "",

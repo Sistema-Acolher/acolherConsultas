@@ -1,6 +1,6 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
@@ -51,7 +51,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
     if (_stateCadastroPaciente.dataNascimento.text.length == 10) {
       DateTime data = DateFormat('dd/MM/yyyy')
           .parse(_stateCadastroPaciente.dataNascimento.text);
-      String dataString = Paciente.calcularIdade(data);
+      String dataString = PacientesController.calcularIdade(data);
       _stateCadastroPaciente.idade.text = dataString;
     } else {
       _stateCadastroPaciente.idade.text = "";
@@ -94,7 +94,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           Navigator.pop(context);
                           showLoading(context);
                           context
-                              .read<PacientesCadastradosController>()
+                              .read<PacientesController>()
                               .cadastrarPaciente(
                                   _stateCadastroPaciente.cadastro(),
                                   Provider.of<CasaDeApoio>(context))
@@ -288,6 +288,83 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     optionalController:
                         _stateCadastroPaciente.localAcolhimentoAnterior,
                     isChecked: radiobuttonNotifier,
+                  ),
+                  // Campos adicionais para medicamentos, vacinas e aulas especializadas
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Medicamentos Usados"),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _stateCadastroPaciente.medicamentosUsados.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_stateCadastroPaciente.medicamentosUsados[index]),
+                            );
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Lógica para adicionar medicamento
+                          },
+                          child: const Text("Adicionar Medicamento"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Vacinas Faltantes"),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _stateCadastroPaciente.vacinasFaltando.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_stateCadastroPaciente.vacinasFaltando[index]),
+                            );
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Lógica para adicionar vacina
+                          },
+                          child: const Text("Adicionar Vacina"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Aulas Especializadas"),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _stateCadastroPaciente.aulasEspecializadas.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                  _stateCadastroPaciente.aulasEspecializadas[index].nomeAula),
+                            );
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Lógica para adicionar aula especializada
+                          },
+                          child: const Text("Adicionar Aula Especializada"),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

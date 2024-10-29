@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
+import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
 import 'package:acolherconsultas/modules/sistema/views/homePaciente.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';

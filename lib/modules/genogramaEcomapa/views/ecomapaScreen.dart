@@ -3,11 +3,11 @@ import 'package:acolherconsultas/modules/genogramaEcomapa/models/ecomapa.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/tipoDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/undoRedoPilha.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoEcomapa.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/animatedAppbar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/services.dart';
@@ -83,7 +83,7 @@ class EcomapaScreen extends HookWidget {
         pacienteRaiz: {
           'nome': paciente?.nome ?? '',
           'sexo': paciente?.sexo ?? '',
-          'idade': Paciente.calcularIdade(paciente?.dataNasc ?? DateTime.now()),
+          'idade': PacientesController.calcularIdade(paciente?.dataNasc ?? DateTime.now()),
         }
       )
     );

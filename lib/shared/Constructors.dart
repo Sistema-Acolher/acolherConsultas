@@ -11,9 +11,11 @@ final Paciente pacienteTeste = Paciente(
   sexo: 'Masculino',
   motivoAcolhimento: 'Dor de cabeça persistente',
   localAcolhimentoAnterior: 'Maria Paola',
-  orientacoes: 'Repouso e hidratação',
-  encaminhamentos: 'Agendar consulta com neurologista',
-  casaDeApoioId: 'abc123',
+  casaDeApoioId: 'abc123', 
+  nomeMae: '', 
+  cidadeOrigem: '',
+  acolhimentoAnterior: false, 
+  nomeEscola: '',
 );
 
 final ConsultaCadastro consultaTeste = ConsultaCadastro(

@@ -1,22 +1,18 @@
-import 'dart:math';
-
 import 'package:acolherconsultas/modules/genogramaEcomapa/controllers/genogramaController.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/genograma.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/tipoDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/undoRedoPilha.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/quadroBrancoGenograma.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/animatedAppbar.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/services.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class GenogramaScreen extends HookWidget {
   final Genograma? genogramaVelho;
@@ -72,7 +68,7 @@ class GenogramaScreen extends HookWidget {
         pacienteRaiz: {
           'nome': paciente?.nome ?? 'Paciente',
           'sexo': paciente?.sexo ?? 'Masculino',
-          'idade': Paciente.calcularIdade(paciente?.dataNasc ?? DateTime.now()),
+          'idade': PacientesController.calcularIdade(paciente?.dataNasc ?? DateTime.now()),
         }
       )
     );

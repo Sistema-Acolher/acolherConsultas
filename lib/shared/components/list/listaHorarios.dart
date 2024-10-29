@@ -1,8 +1,6 @@
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -28,12 +26,6 @@ class _ListaHorarioState extends State<ListaHorario> {
   // Cria instancia de controller para chamar funções
   final consultaController = ConsultaController();
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<PacientesCadastradosController>().getPacientes();
-  }
-
   List<Widget> data(List<CadastroPaciente> pacientes) {
     List<DateTime> horarios = [];
     int consultaAtual=0;
@@ -44,7 +36,7 @@ class _ListaHorarioState extends State<ListaHorario> {
     for (var item in horarios) {
       Paciente? p;
       if (widget.consultasDoDia.isNotEmpty && consultaAtual<widget.consultasDoDia.length && widget.consultasDoDia[consultaAtual].dataHorario.hour==item.hour) {
-        p=pacientes.where((paciente) => paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull?.paciente;
+        p=pacientes.where((paciente) => paciente.paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull?.paciente;
         consultaAtual++;
       }else {
         p=null;
@@ -92,9 +84,8 @@ class _ListaHorarioState extends State<ListaHorario> {
 
   @override
   Widget build(BuildContext context) {
-    var pacientes=Provider.of<PacientesCadastradosController>(context).pacientes;
+    final temp = Provider.of<List<CadastroPaciente>>(context);
     widget.consultasDoDia.sort((a,b)=>a.dataHorario.compareTo(b.dataHorario));
-    
     return Container(
       decoration: BoxDecoration(
         color: widget.fundo?Colors.white:null,
@@ -103,7 +94,7 @@ class _ListaHorarioState extends State<ListaHorario> {
       padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: data(pacientes)
+        children: data(temp)
       ),
     );
   }

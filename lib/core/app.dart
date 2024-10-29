@@ -4,7 +4,8 @@ import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioCont
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
+import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // O ChangeNotifierProvider é um provedor de estado que notifica os 'ouvintes' quando o objeto fornecido muda.
-        ChangeNotifierProvider(create: (_) => PacientesCadastradosController()),
+        StreamProvider<List<CadastroPaciente>>(
+          create: (context) => PacientesController().pacientesStream,
+          initialData: const [],
+        ),
         StreamProvider<List<ConsultaCadastro>>(
           create: (context) => ConsultaController().consultasStream,
           initialData: const [],

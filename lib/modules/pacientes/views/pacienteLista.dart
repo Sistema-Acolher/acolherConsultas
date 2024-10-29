@@ -1,6 +1,5 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
-import 'package:acolherconsultas/modules/pacientes/controllers/pacienteCadastradoController.dart';
-import 'package:acolherconsultas/modules/pacientes/models/pacienteCadastro.dart';
+import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastro.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
@@ -23,8 +22,6 @@ class _PacienteListaState extends State<PacienteLista> {
   late TextEditingController _busca;
   // Responsável por armazenar os pacientes filtrados após a busca
   late ValueNotifier<List<CadastroPaciente>> _pacientesFiltrados;
-  // Responsável por aguardar os dados vindos do banco
-  late Future<void> _loadPacientesFuture;
   late CasaDeApoio casaDeApoioSelected;
 
   @override
@@ -35,8 +32,8 @@ class _PacienteListaState extends State<PacienteLista> {
   }
 
   // Carrega os pacientes do banco, busca todos os pacientes e os filtra de acordo com o campo _busca
-  Future<void> _filtrarPacientes() async {
-    List<CadastroPaciente> todosPacientes = Provider.of<PacientesCadastradosController>(context, listen: false).pacientes
+  void _filtrarPacientes() {
+    List<CadastroPaciente> todosPacientes = Provider.of<List<CadastroPaciente>>(context)
       .where((element) => 
         element.paciente.casaDeApoioId==Provider.of<CasaDeApoio>(context).id
       ).toList();
@@ -54,90 +51,80 @@ class _PacienteListaState extends State<PacienteLista> {
   @override
   Widget build(BuildContext context) {
         // Reinicializa o future quando casaDeApoio muda
-        _loadPacientesFuture = _filtrarPacientes();
+        _filtrarPacientes();
         final casaDeApoioListener=Provider.of<CasaDeApoio>(context);
 
         return Scaffold(
           appBar: PageAppBar(titulo: "Pacientes", casaDeApoioSelecionada: casaDeApoioListener),
-          body: FutureBuilder<void>(
-            future: _loadPacientesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Erro ao carregar pacientes: ${snapshot.error}'));
-              } else {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                style: const TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 16,
-                                  color: Colors.black
-                                ),
-                                decoration: const InputDecoration(
-                                  hintStyle: TextStyle(color: Color(0xFF757575)),
-                                  hintText: "Qual paciente...",
-                                  contentPadding: EdgeInsets.only(left: 8, right: 4, bottom: 4),
-                                  border: InputBorder.none
-                                ),
-                                controller: _busca,
-                              ),
+          body: 
+            SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            style: const TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: 16,
+                              color: Colors.black
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: Color(casaDeApoioListener.cor??azul.value),
-                                borderRadius: BorderRadius.circular(7),
-                                border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
-                              ),
-                              child: Center(
-                                child: SearchButton(
-                                  backgroundColor: Color(casaDeApoioListener.cor??azul.value),
-                                  icon: Icons.search,
-                                  onPressed: _filtrarPacientes,
-                                ),
-                              ),
+                            decoration: const InputDecoration(
+                              hintStyle: TextStyle(color: Color(0xFF757575)),
+                              hintText: "Qual paciente...",
+                              contentPadding: EdgeInsets.only(left: 8, right: 4, bottom: 4),
+                              border: InputBorder.none
                             ),
-                          ],
+                            controller: _busca,
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.14),
-                              spreadRadius: 0,
-                              blurRadius: 10,
-                            )
-                          ]
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: Color(casaDeApoioListener.cor??azul.value),
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: Color(casaDeApoioListener.cor??azul.value))
+                          ),
+                          child: Center(
+                            child: SearchButton(
+                              backgroundColor: Color(casaDeApoioListener.cor??azul.value),
+                              icon: Icons.search,
+                              onPressed: _filtrarPacientes,
+                            ),
+                          ),
                         ),
-                        child: ValueListenableBuilder<List<CadastroPaciente>>(
-                          valueListenable: _pacientesFiltrados,
-                          builder: (context, pacientes, child) => ListaDePacientes(listaObjeto: pacientes)
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                );
-              }
-            },
-          ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.14),
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        )
+                      ]
+                    ),
+                    child: ValueListenableBuilder<List<CadastroPaciente>>(
+                      valueListenable: _pacientesFiltrados,
+                      builder: (context, pacientes, child) => ListaDePacientes(listaObjeto: pacientes)
+                    ),
+                  ),
+                ],
+              ),
+            ),
           floatingActionButton: StandartRoundButton(
               verticalPaddingFactor: 0.8,
               icon: Icons.add_box_outlined,

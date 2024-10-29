@@ -1,4 +1,4 @@
-import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -65,7 +65,7 @@ class _InputDateCadastroPacienteState extends State<InputDateCadastroPaciente> {
                 setState(() {
                   // Atribuição da data de nascimento e idade do paciente aos respectivos campos.
                   widget.controllerDataNascimento.text = DateFormat('dd/MM/yyyy').format(data);
-                  widget.controllerIdade!.text = Paciente.calcularIdade(data);
+                  widget.controllerIdade!.text = PacientesController.calcularIdade(data);
                 });
               }
             }

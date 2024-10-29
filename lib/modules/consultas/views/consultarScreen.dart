@@ -1,7 +1,7 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteCadastroState.dart';
+import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
 import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
