@@ -415,157 +415,151 @@ class EcomapaScreen extends HookWidget {
                             ),
                             content: Builder(
                               builder: (context) {
-                                var height = MediaQuery.of(context).size.height;
-                                var width = MediaQuery.of(context).size.width;
                                 return Form(
                                   key: globalKey,
-                                  child: SizedBox(
-                                    height: height * 0.4,
-                                    width: width * 0.95,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              TextFormField(
-                                                decoration: const InputDecoration(
-                                                  hintText: "Título da Relação"
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            TextFormField(
+                                              decoration: const InputDecoration(
+                                                hintText: "Título da Relação"
+                                              ),
+                                              controller: tituloController.value,
+                                              validator: (value) {
+                                                if(value == null || value.isEmpty){
+                                                  return "Título não pode ser vazio";
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(height: 30),
+                                            const Text(
+                                              "Força da relação",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text("Fraca"),
+                                                Radio(
+                                                  value: "fraca",
+                                                  groupValue: ligacao.value,
+                                                  onChanged: (value) {
+                                                    ligacao.value = value!;
+                                                  },
                                                 ),
-                                                controller: tituloController.value,
-                                                validator: (value) {
-                                                  if(value == null || value.isEmpty){
-                                                    return "Título não pode ser vazio";
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                              const SizedBox(height: 30),
-                                              const Text(
-                                                "Força da relação",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold
+                                                const Text("Média"),
+                                                Radio(
+                                                  value: "media",
+                                                  groupValue: ligacao.value,
+                                                  onChanged: (value) {
+                                                    ligacao.value = value!;
+                                                  },
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Text("Fraca"),
-                                                  Radio(
-                                                    value: "fraca",
-                                                    groupValue: ligacao.value,
-                                                    onChanged: (value) {
-                                                      ligacao.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Média"),
-                                                  Radio(
-                                                    value: "media",
-                                                    groupValue: ligacao.value,
-                                                    onChanged: (value) {
-                                                      ligacao.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Forte"),
-                                                  Radio(
-                                                    value: "forte",
-                                                    groupValue: ligacao.value,
-                                                    onChanged: (value) {
-                                                      ligacao.value = value!;
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                const Text("Forte"),
+                                                Radio(
+                                                  value: "forte",
+                                                  groupValue: ligacao.value,
+                                                  onChanged: (value) {
+                                                    ligacao.value = value!;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 30),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "Energia gasta pelo paciente",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold
+                                      ),
+                                      const SizedBox(width: 30),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Energia gasta pelo paciente",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text("Fraca"),
+                                                Radio(
+                                                  value: "fraca",
+                                                  groupValue: energiaGastaPaciente.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaPaciente.value = value!;
+                                                  },
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  const Text("Fraca"),
-                                                  Radio(
-                                                    value: "fraca",
-                                                    groupValue: energiaGastaPaciente.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaPaciente.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Média"),
-                                                  Radio(
-                                                    value: "media",
-                                                    groupValue: energiaGastaPaciente.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaPaciente.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Forte"),
-                                                  Radio(
-                                                    value: "forte",
-                                                    groupValue: energiaGastaPaciente.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaPaciente.value = value!;
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8),
-                                              const Text(
-                                                "Energia gasta pela parte",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold
+                                                const Text("Média"),
+                                                Radio(
+                                                  value: "media",
+                                                  groupValue: energiaGastaPaciente.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaPaciente.value = value!;
+                                                  },
                                                 ),
+                                                const Text("Forte"),
+                                                Radio(
+                                                  value: "forte",
+                                                  groupValue: energiaGastaPaciente.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaPaciente.value = value!;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8),
+                                            const Text(
+                                              "Energia gasta pela parte",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold
                                               ),
-                                              Row(
-                                                children: [
-                                                  const Text("Fraca"),
-                                                  Radio(
-                                                    value: "fraca",
-                                                    groupValue: energiaGastaParte.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaParte.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Média"),
-                                                  Radio(
-                                                    value: "media",
-                                                    groupValue: energiaGastaParte.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaParte.value = value!;
-                                                    },
-                                                  ),
-                                                  const Text("Forte"),
-                                                  Radio(
-                                                    value: "forte",
-                                                    groupValue: energiaGastaParte.value,
-                                                    onChanged: (value) {
-                                                      energiaGastaParte.value = value!;
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text("Fraca"),
+                                                Radio(
+                                                  value: "fraca",
+                                                  groupValue: energiaGastaParte.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaParte.value = value!;
+                                                  },
+                                                ),
+                                                const Text("Média"),
+                                                Radio(
+                                                  value: "media",
+                                                  groupValue: energiaGastaParte.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaParte.value = value!;
+                                                  },
+                                                ),
+                                                const Text("Forte"),
+                                                Radio(
+                                                  value: "forte",
+                                                  groupValue: energiaGastaParte.value,
+                                                  onChanged: (value) {
+                                                    energiaGastaParte.value = value!;
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 );
                               }

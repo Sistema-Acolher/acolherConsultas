@@ -143,26 +143,8 @@ class GenogramaScreen extends HookWidget {
       temDesenho.value = false;
       textoCirculo.value = texto;
     }
-    Offset _lastFocalPoint = Offset.zero;
+    Offset lastFocalPoint = Offset.zero;
 
-    _centerOnTouch() {
-        if (_lastFocalPoint == Offset.zero) return;
-
-        // Get the size of the InteractiveViewer's child
-        final RenderBox renderBox = context.findRenderObject() as RenderBox;
-        final Size size = renderBox.size;
-
-        // Calculate the translation required to center on the touch point
-        final double dx = -_lastFocalPoint.dx + size.width / 2;
-        final double dy = -_lastFocalPoint.dy + size.height / 2;
-
-        // Apply the translation to the current transformation matrix
-        final Matrix4 currentMatrix = viewTransformationController.value.value;
-        final Matrix4 translationMatrix = Matrix4.identity()..translate(dx, dy);
-
-        // Update the transformation controller's value
-        viewTransformationController.value.value = currentMatrix * translationMatrix;
-    }
 
     elementoPadrao(String sexo){
       TextEditingController? nomeController = TextEditingController();
@@ -184,119 +166,113 @@ class GenogramaScreen extends HookWidget {
                 ),
                 content: Builder(
                   builder: (context) {
-                    var height = MediaQuery.of(context).size.height;
-                    var width = MediaQuery.of(context).size.width;
                     return Form(
                       key: globalKey,
-                      child: SizedBox(
-                        height: height * 0.4,
-                        width: width * 0.95,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  TextFormField(
-                                    decoration: const InputDecoration(
-                                      hintText: "Nome da Pessoa",
-                                    ),
-                                    controller: nomeController,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Nome da Pessoa",
                                   ),
-                                  const SizedBox(height: 30),
-                                  TextFormField(
-                                    decoration: const InputDecoration(
-                                      hintText: "Idade da Pessoa",
-                                    ),
-                                    controller: idadeController,
-                                    keyboardType: TextInputType.number,
-                                    // only numbers are allowed
-                                    inputFormatters: <TextInputFormatter>[
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                    // max 100 and min 0
-                                    validator: (value) {
-                                      if (value!.isNotEmpty && (int.parse(value) > 100 || int.parse(value) < 0)) {
-                                        return 'Idade inválida';
-                                      }
-                                      return null;
-                                    },
+                                  controller: nomeController,
+                                ),
+                                const SizedBox(height: 30),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: "Idade da Pessoa",
                                   ),
-                                ],
-                              ),
+                                  controller: idadeController,
+                                  keyboardType: TextInputType.number,
+                                  // only numbers are allowed
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  // max 100 and min 0
+                                  validator: (value) {
+                                    if (value!.isNotEmpty && (int.parse(value) > 100 || int.parse(value) < 0)) {
+                                      return 'Idade inválida';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 30),
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Qual o Estado?",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold
+                          ),
+                          const SizedBox(width: 30),
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Qual o Estado?",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Radio(
+                                      value: "viva",
+                                      groupValue: estadoPessoa.value,
+                                      onChanged: (value) {
+                                        estadoPessoa.value = value!;
+                                      },
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    const Text("Viva"),
+                                    Radio(
+                                      value: "falecida",
+                                      groupValue: estadoPessoa.value,
+                                      onChanged: (value) {
+                                        estadoPessoa.value = value!;
+                                      },
+                                    ),
+                                    const Text("Falecida"),
+                                    Radio(
+                                      value: "desconhecida",
+                                      groupValue: estadoPessoa.value,
+                                      onChanged: (value) {
+                                        estadoPessoa.value = value!;
+                                      },
+                                    ),
+                                    const Text("Desconhecida"),
+                                  ],
+                                ),
+                                estadoPessoa.value == "falecida" ?
+                                  // motivo do falecimento
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Radio(
-                                        value: "viva",
-                                        groupValue: estadoPessoa.value,
-                                        onChanged: (value) {
-                                          estadoPessoa.value = value!;
-                                        },
-                                      ),
-                                      const Text("Viva"),
-                                      Radio(
-                                        value: "falecida",
-                                        groupValue: estadoPessoa.value,
-                                        onChanged: (value) {
-                                          estadoPessoa.value = value!;
-                                        },
-                                      ),
-                                      const Text("Falecida"),
-                                      Radio(
-                                        value: "desconhecida",
-                                        groupValue: estadoPessoa.value,
-                                        onChanged: (value) {
-                                          estadoPessoa.value = value!;
-                                        },
-                                      ),
-                                      const Text("Desconhecida"),
-                                    ],
-                                  ),
-                                  estadoPessoa.value == "falecida" ?
-                                    // motivo do falecimento
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Qual o Motivo do Falecimento?",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                          ),
+                                      const Text(
+                                        "Qual o Motivo do Falecimento?",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
                                         ),
-                                        TextFormField(
-                                          decoration: const InputDecoration(
-                                            hintText: "Motivo do Falecimento",
-                                          ),
-                                          controller: motivoFalecimentoController,
-                                        )
-                                      ],
-                                    ) : const SizedBox()
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                      ),
+                                      TextFormField(
+                                        decoration: const InputDecoration(
+                                          hintText: "Motivo do Falecimento",
+                                        ),
+                                        controller: motivoFalecimentoController,
+                                      )
+                                    ],
+                                  ) : const SizedBox()
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     );
                   }
@@ -364,7 +340,7 @@ class GenogramaScreen extends HookWidget {
               InteractiveViewer(
                 onInteractionStart: (details) {
                   if(desenhoAtivo.value){
-                    _lastFocalPoint = details.localFocalPoint;
+                    lastFocalPoint = details.localFocalPoint;
                   }
                 },
                 onInteractionUpdate: (details) {
@@ -374,7 +350,7 @@ class GenogramaScreen extends HookWidget {
                     double distanciaRelativaAltura = altura * 0.2;
                     double distanciaRelativaLargura = largura * 0.2;
                     // Mover para a direita
-                    if(largura - details.localFocalPoint.dx < distanciaRelativaLargura && _lastFocalPoint.dx - details.localFocalPoint.dx <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
+                    if(largura - details.localFocalPoint.dx < distanciaRelativaLargura && lastFocalPoint.dx - details.localFocalPoint.dx <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
                       changeTransformations(
                         viewTransformationController, 
                         viewTransformationController.value.value.getMaxScaleOnAxis(), 
@@ -387,7 +363,7 @@ class GenogramaScreen extends HookWidget {
                       altura -= MediaQuery.of(context).padding.top;
                       altura -= kToolbarHeight;
                     }
-                    if(altura - details.localFocalPoint.dy < distanciaRelativaAltura && _lastFocalPoint.dy - details.localFocalPoint.dy <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
+                    if(altura - details.localFocalPoint.dy < distanciaRelativaAltura && lastFocalPoint.dy - details.localFocalPoint.dy <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
                       changeTransformations(
                         viewTransformationController,
                         viewTransformationController.value.value.getMaxScaleOnAxis(), 
@@ -396,7 +372,7 @@ class GenogramaScreen extends HookWidget {
                       );
                     }
                     // Mover para esquerda
-                    if(details.localFocalPoint.dx < distanciaRelativaLargura * 1.5 && _lastFocalPoint.dx - details.localFocalPoint.dx >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
+                    if(details.localFocalPoint.dx < distanciaRelativaLargura * 1.5 && lastFocalPoint.dx - details.localFocalPoint.dx >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
                       changeTransformations(
                         viewTransformationController, 
                         viewTransformationController.value.value.getMaxScaleOnAxis(), 
@@ -405,7 +381,7 @@ class GenogramaScreen extends HookWidget {
                       );
                     }
                     // Mover para cima
-                    if(details.localFocalPoint.dy < distanciaRelativaAltura && _lastFocalPoint.dy - details.localFocalPoint.dy >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
+                    if(details.localFocalPoint.dy < distanciaRelativaAltura && lastFocalPoint.dy - details.localFocalPoint.dy >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
                       changeTransformations(
                         viewTransformationController, 
                         viewTransformationController.value.value.getMaxScaleOnAxis(), 
@@ -413,7 +389,7 @@ class GenogramaScreen extends HookWidget {
                         -viewTransformationController.value.value.getTranslation()[1] - (4)
                       );
                     }
-                    _lastFocalPoint = details.localFocalPoint;
+                    lastFocalPoint = details.localFocalPoint;
                   }
                 },
                 // boundaryMargin: EdgeInsets.all(100),
@@ -494,35 +470,25 @@ class GenogramaScreen extends HookWidget {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: const Text("Escolha a Cor do Desenho"),
-                                  content: SingleChildScrollView(
-                                    child: ColorPicker(
-                                      color: corDesenho.value,
-                                      onColorChanged: (Color color) {
-                                        opcaoSelecionada(Icons.draw_outlined, TipoDesenho.caneta, color);
-                                      },
-                                      pickersEnabled: const <ColorPickerType, bool>{
-                                        ColorPickerType.accent: false,
-                                        ColorPickerType.bw: false,
-                                        ColorPickerType.primary: false,
-                                        ColorPickerType.wheel: true,
-                                      },
-                                    )
+                                  surfaceTintColor: Colors.transparent,
+                                  backgroundColor: Colors.transparent,
+                                  scrollable: true,
+                                  content: ColorPicker(
+                                    enableShadesSelection: false,
+                                    color: corDesenho.value,
+                                    onColorChanged: (Color color) {
+                                      opcaoSelecionada(Icons.draw_outlined, TipoDesenho.caneta, color);
+                                    },
+                                    pickersEnabled: const <ColorPickerType, bool>{
+                                      ColorPickerType.accent: false,
+                                      ColorPickerType.bw: false,
+                                      ColorPickerType.primary: false,
+                                      ColorPickerType.wheel: true,
+                                      ColorPickerType.customSecondary: false,
+                                      ColorPickerType.both: false,
+                                      ColorPickerType.custom: false
+                                    },
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      }, 
-                                      child: const Text("Cancelar")
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      }, 
-                                      child: const Text("Ok")
-                                    ),
-                                  ],
                                 );
                               }
                             );
