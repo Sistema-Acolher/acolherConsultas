@@ -64,6 +64,28 @@ class ConsultaController extends ChangeNotifier {
     return docsSnapshot.data() as Map<String, dynamic>;
   }
 
+  // Busca todas as consultas com dataHorario menor que hore
+  Future<String?> mudarEstadoConsultas() async {
+    try {
+      DateTime today = DateTime.now();
+      QuerySnapshot docsSnapshot = await _firestore.collection("consultas")
+        .where("dataHorario", isLessThan: DateTime(today.year, today.month, today.day))
+        .where("estado", isEqualTo: "agendada")
+        .get();
+
+      if(docsSnapshot.size<=0){
+        return null;
+      }
+
+      for (var consulta in docsSnapshot.docs) {
+        await consulta.reference.update({"estado": "atrasada"});
+      }
+      return "Consulta realizada com sucesso";
+    } on Exception catch (e) {
+      return "Erro ao cadastrar: $e";
+    }
+  }
+
   // Vê se um horário naquela casa de apoio está ocupado, retorna null ou o horário
   Future<Map<String, dynamic>?> horarioOcupado(String casaApoioId, DateTime dataHorario) async {
     QuerySnapshot querySnapshot = await _firestore.collection("consultas")
@@ -80,7 +102,6 @@ class ConsultaController extends ChangeNotifier {
   }
 
   // Funções da controller -----------------------------------
-
   // Busca consulta a partir do id da mesma
   Future<ConsultaCadastro> getConsulta(String consultaId) async {
     var consulta = await buscarConsulta(consultaId);
@@ -150,5 +171,4 @@ class ConsultaController extends ChangeNotifier {
       return "Erro ao cadastrar: $e";
     }
   }
-
 }

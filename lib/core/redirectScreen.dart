@@ -1,4 +1,5 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
+import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/sistema/views/loadingLogo.dart';
 import 'package:acolherconsultas/modules/usuarios/views/usuarioVerificaEmail.dart';
 import "package:collection/collection.dart";
@@ -41,12 +42,13 @@ class RedirectScreen extends StatelessWidget {
                   valueListenable: context.read<UsuarioController>().emailVerificado, 
                   builder: (context, emailVerificado, child) {
                     if(emailVerificado){
+                      ConsultaController().mudarEstadoConsultas();
+                      final listaCasas = Provider.of<List<CasaDeApoio>>(context);
                       switch (snapshot.data![0]){
                         case NivelAcesso.admin:
                           return const HomeAdmin();
                         case NivelAcesso.acolher:
                           // Seleciona a casa de apoio Servos como padrão
-                          final listaCasas = Provider.of<List<CasaDeApoio>>(context);
                           if (listaCasas.isNotEmpty) {
                             Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
                               listaCasas.sorted((CasaDeApoio a, CasaDeApoio b) => a.nome?.compareTo(b.nome ?? "") ?? 0).first
@@ -58,10 +60,15 @@ class RedirectScreen extends StatelessWidget {
                           }
                         case NivelAcesso.casaDeApoio:
                           // Seleciona a casa de apoio do usuário da instituição
-                          Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
-                            snapshot.data![1].firstWhere((element) => element.id == context.read<UsuarioController>().usuarioAtual!.casaDeApoioId)
-                          );
-                          return const HomeInstituicao();
+                          if (listaCasas.isNotEmpty) {
+                            Provider.of<CasaDeApoioController>(context, listen: false).selecionarCasaDeApoio(
+                              listaCasas.firstWhere((element) => element.id == context.read<UsuarioController>().usuarioAtual!.casaDeApoioId)
+                            );
+                            return const HomeInstituicao();
+                          } else {
+                            // Exibir um indicador de carregamento enquanto os dados estão vazios.
+                            return const LoadingLogo();
+                          }
                         default: {
                           context.read<UsuarioController>().logout();
                           return const UsuarioLoginScreen();
