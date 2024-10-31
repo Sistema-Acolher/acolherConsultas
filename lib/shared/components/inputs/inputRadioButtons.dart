@@ -11,6 +11,7 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
     required this.controller,
     this.optionalController,
     required this.isChecked,
+    this.readOnly = false,
   });
 
   final List<String> options;
@@ -18,12 +19,15 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
   final TextEditingController controller;
   final TextEditingController? optionalController;
   final ValueNotifier<bool> isChecked;
+  final bool readOnly;
 
   @override
-  State<InputRadioButtonsCadastroPaciente> createState() => _InputRadioButtonsCadastroPacienteState();
+  State<InputRadioButtonsCadastroPaciente> createState() =>
+      _InputRadioButtonsCadastroPacienteState();
 }
 
-class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCadastroPaciente> {
+class _InputRadioButtonsCadastroPacienteState
+    extends State<InputRadioButtonsCadastroPaciente> {
   bool showTextBox = false;
   bool mostrarErro = true;
 
@@ -51,7 +55,9 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
               widget.options.length,
               (index) => Expanded(
                 child: Opacity(
-                  opacity: widget.controller.text == widget.options[index] ? 1.0 : 0.5,
+                  opacity: widget.controller.text == widget.options[index]
+                      ? 1.0
+                      : 0.5,
                   child: RadioListTile(
                     activeColor: preto,
                     title: AutoSizeText(
@@ -64,21 +70,23 @@ class _InputRadioButtonsCadastroPacienteState extends State<InputRadioButtonsCad
                     groupValue: widget.controller.text,
                     visualDensity: const VisualDensity(horizontal: -4.0),
                     dense: true,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.controller.text = value!;
-                        widget.isChecked.value = true;
-                        mostrarErro = false;
-                        showTextBox = value == 'Sim';
-                      });
-                    },
+                    onChanged: widget.readOnly
+                        ? null
+                        : (value) {
+                            setState(() {
+                              widget.controller.text = value as String;
+                              widget.isChecked.value = true;
+                              mostrarErro = false;
+                              showTextBox = value == 'Sim';
+                            });
+                          },
                   ),
                 ),
               ),
             ),
           ],
         ),
-        if (mostrarErro && widget.isChecked.value)
+        if (mostrarErro && widget.isChecked.value && !widget.readOnly)
           const Text(
             'Selecione pelo menos uma opção.',
             style: TextStyle(

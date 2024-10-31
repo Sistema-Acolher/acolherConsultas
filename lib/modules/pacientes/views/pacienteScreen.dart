@@ -183,12 +183,10 @@ class _InfoPessoaisState extends State<InfoPessoais> {
             child: StandartRoundButton(
               text: "Salvar",
               onPressed: () async {
-                await context
-                    .read<PacientesController>()
-                    .atualizaPaciente(
-                        widget.state.cadastro(),
-                        widget.paciente!.id ?? "",
-                        widget.paciente!.casaDeApoioId);
+                await context.read<PacientesController>().atualizaPaciente(
+                    widget.state.cadastro(),
+                    widget.paciente!.id ?? "",
+                    widget.paciente!.casaDeApoioId);
               },
               icon: Symbols.book,
             ),
@@ -434,12 +432,10 @@ class _HistoriaPregressaState extends State<HistPregressa> {
             child: StandartRoundButton(
               text: "Salvar",
               onPressed: () async {
-                await context
-                    .read<PacientesController>()
-                    .atualizaPaciente(
-                        widget.cadastroPacienteState.cadastro(),
-                        widget.paciente!.id ?? "",
-                        widget.paciente!.casaDeApoioId);
+                await context.read<PacientesController>().atualizaPaciente(
+                    widget.cadastroPacienteState.cadastro(),
+                    widget.paciente!.id ?? "",
+                    widget.paciente!.casaDeApoioId);
               },
               icon: Symbols.book,
             ),

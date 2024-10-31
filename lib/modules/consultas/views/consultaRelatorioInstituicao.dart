@@ -1,115 +1,294 @@
-import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
-import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
-import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
-import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
-import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
-import 'package:acolherconsultas/shared/components/buttons/bigRoundButton.dart';
-import 'package:acolherconsultas/shared/components/list/listaHorarios.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 
-class ConsultaRelatorioInstituicao extends StatefulWidget {
-  const ConsultaRelatorioInstituicao(
-      {super.key, this.pacienteConsulta, this.dadosConsulta});
+class ConsultaRelatorioInstituicao extends StatelessWidget {
+  final ConsultaCadastro dadosConsulta;
+  final Consulta? relatorioPacienteConsulta;
 
-  final Paciente? pacienteConsulta;
-  final ConsultaCadastro? dadosConsulta;
-
-  @override
-  State<ConsultaRelatorioInstituicao> createState() =>
-      _ConsultaRelatorioInstituicaoState();
-}
-
-class _ConsultaRelatorioInstituicaoState
-    extends State<ConsultaRelatorioInstituicao> {
-  final CadastroPacienteState _cadastroPacienteState = CadastroPacienteState();
-  // Usado para selecionar o paciente e trocar o menu que aparece
-  Paciente? pacienteSelecionado;
-  late List<ConsultaCadastro> consultasDia;
-
-  void loadConsultas() {
-    consultasDia = Provider.of<List<ConsultaCadastro>>(context)
-        .where((element) =>
-            element.dataHorario.day == DateTime.now().day &&
-            element.casaDeApoioId == Provider.of<CasaDeApoio>(context).id)
-        .toList();
-  }
+  const ConsultaRelatorioInstituicao({
+    Key? key,
+    required this.dadosConsulta,
+    this.relatorioPacienteConsulta,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    loadConsultas();
+    final ValueNotifier<bool> isChecked = ValueNotifier(false);
 
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            // Caso venha a partir da pagina do paciente, troca a appbar
-            child: widget.pacienteConsulta == null
-                ? PageAppBar(
-                    titulo: "Consultar",
-                    casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context))
-                : PacienteAppbar(paciente: widget.pacienteConsulta)),
-        floatingActionButtonLocation:
-            widget.pacienteConsulta != null || pacienteSelecionado != null
-                ? FloatingActionButtonLocation.endFloat
-                : null,
-        floatingActionButton:
-            widget.pacienteConsulta != null || pacienteSelecionado != null
-                ? BigRoundButton(
-                    text: "Historia Pregressa",
-                    icon: Icons.history_edu,
-                    onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .push(MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                                  appBar: PacienteAppbar(
-                                      paciente: widget.pacienteConsulta ??
-                                          pacienteSelecionado),
-                                  body: HistPregressa(
-                                      cadastroPacienteState:
-                                          _cadastroPacienteState),
-                                ))),
-                  )
-                : null,
-        body: Padding(
-            padding: const EdgeInsets.only(bottom: 60, left: 10, right: 10),
-            child: widget.pacienteConsulta != null ||
-                    pacienteSelecionado != null
-                ?
-                // ConsultaCadastro caso possua paciente setado
-                const Center(
-                    //IconButton(onPressed: () => ConsultaController().atualizarConsulta(widget.state, widget.dadosConsulta?.casaDeApoioId), icon: Icon())
-                    child: Text(
-                      "Consultar Relatorio",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: PageAppBar(
+          titulo: "Relatório",
+          casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InputTextoAcolher(
+                label: "Nome da Criança",
+                controller: TextEditingController(
+                    text: dadosConsulta.pacienteNome ?? ''),
+                readOnly: true,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Horário",
+                      controller: TextEditingController(
+                        text: TimeOfDay.fromDateTime(dadosConsulta.dataHorario)
+                            .format(context),
+                      ),
+                      readOnly: true,
                     ),
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Selecione uma consulta:",
-                        style: TextStyle(
-                            fontSize: 20,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Data",
+                      controller: TextEditingController(
+                        text: DateFormat('dd/MM/yyyy')
+                            .format(dadosConsulta.dataHorario),
                       ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          decoration: BoxDecoration(
-                              color: Colors.amber[100],
-                              borderRadius: BorderRadius.circular(15)),
-                          child: ListaHorario(
-                            consultasDoDia: consultasDia,
-                            onSelect: (p) => setState(() {
-                              pacienteSelecionado = p;
-                            }),
-                          ),
-                        ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Peso",
+                      controller: TextEditingController(
+                          text:
+                              relatorioPacienteConsulta?.peso.toString() ?? ''),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Estatura",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta?.comprimentoPorIdade
+                                .toString() ??
+                            '',
                       ),
-                    ],
-                  )));
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "IMC",
+                      controller: TextEditingController(
+                        text:
+                            relatorioPacienteConsulta?.imcPorIdade.toString() ??
+                                '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InputRadioButtonsCadastroPaciente(
+                      options: const ["Adequado", "Inadequado"],
+                      label: "Condição Geral",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta
+                                ?.auscultaCardiaca //Falta o dado do adequado ou não
+                                .toString() ??
+                            '',
+                      ),
+                      isChecked: isChecked,
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Freq.cardíaca",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta
+                                ?.auscultaCardiaca //Falta o dado da frequencia cardiaca
+                                .toString() ??
+                            '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Temperatura",
+                      controller: TextEditingController(
+                        text:
+                            relatorioPacienteConsulta?.temperatura.toString() ??
+                                '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Saturação",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta?.saturacao.toString() ??
+                            '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Pressão arterial",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta?.saturacao.toString() ??
+                            '', //Falta o dado da pressão arterial
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Ausculta pulmonar",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta?.auscultaPulmonar
+                                .toString() ??
+                            '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Ausculta cardíaca",
+                      controller: TextEditingController(
+                        text: relatorioPacienteConsulta?.auscultaCardiaca
+                                .toString() ??
+                            '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InputTextoAcolher(
+                      label: "Orofaringe",
+                      controller: TextEditingController(
+                        text:
+                            relatorioPacienteConsulta?.orofaringe.toString() ??
+                                '',
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Análise Geral',
+                controller: TextEditingController(
+                  text:
+                      relatorioPacienteConsulta?.analiseGeral.toString() ?? '',
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Exame físico',
+                controller: TextEditingController(
+                  text: relatorioPacienteConsulta?.analiseGeral.toString() ??
+                      '', //Falta o dado do exame fisico
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Avaliações',
+                controller: TextEditingController(
+                  text: relatorioPacienteConsulta?.avaliacoes.toString() ?? '',
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Orientações - Cuidador',
+                controller: TextEditingController(
+                  text:
+                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
+                          '', //Falta o dado da orientação
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Orientações - Crianças/Adolescntes',
+                controller: TextEditingController(
+                  text:
+                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
+                          '', //Falta o dado da orientação
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputCaixaDeTexto(
+                label: 'Orientações - Coordenação da casa',
+                controller: TextEditingController(
+                  text:
+                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
+                          '', //Falta o dado da orientação
+                ),
+                editable: false,
+              ),
+              const SizedBox(height: 16),
+              InputTextoAcolher(
+                label: "Assinatura",
+                controller: TextEditingController(
+                  text: dadosConsulta.pacienteNome
+                      .toString(), //falta a assinatura
+                ),
+                readOnly: true,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

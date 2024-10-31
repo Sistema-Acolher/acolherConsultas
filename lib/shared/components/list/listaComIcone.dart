@@ -170,7 +170,8 @@ class _ListaComIconeState extends State<ListaComIcone> {
 
   // Dialog que abre a opção de reagendar e de consultar.
   Future<void> _optionsDialogBuilder(
-      BuildContext context, ConsultaCadastro consulta) {
+      BuildContext context, ConsultaCadastro consulta,
+      [Consulta? consultaPaciente]) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -211,14 +212,17 @@ class _ListaComIconeState extends State<ListaComIcone> {
                   padding: const EdgeInsets.only(top: 40),
                   child: CircleButton(
                     title: "Relatório",
-                    icon: Icons.content_paste,
+                    icon: Icons.insert_drive_file_outlined,
                     onPressed: () {
                       Navigator.pop(context);
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ConsultaRelatorioInstituicao(
-                            pacienteConsulta: widget.paciente,
-                            dadosConsulta: consulta),
-                      ));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ConsultaRelatorioInstituicao(
+                            dadosConsulta: consulta,
+                            relatorioPacienteConsulta: consultaPaciente,
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
