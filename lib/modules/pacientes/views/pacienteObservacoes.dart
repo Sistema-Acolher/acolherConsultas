@@ -39,10 +39,10 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
                 ConsultaDropdown(
                   text: "Consultas realizadas",
                   child: ListaComIcone(
-                    label: "Atrasadas",
+                    label: "Prévias",
                     paciente: widget.paciente,
                     listaConsulta: consultasPaciente
-                        .where((element) => element.estado == "atrasada")
+                        .where((element) => element.estado == "concluida")
                         .toList(),
                     eInstituicao: true,
                   ),

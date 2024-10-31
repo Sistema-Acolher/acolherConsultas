@@ -42,7 +42,6 @@ class _ListaComIconeState extends State<ListaComIcone> {
     if (widget.listaConsulta != null) {
       return Column(
         children: [
-          // Builder da lista de consultas
           for (int i = 0;
               i <
                   (widget.listaConsulta!.length >= 3
@@ -50,7 +49,6 @@ class _ListaComIconeState extends State<ListaComIcone> {
                       : widget.listaConsulta!.length);
               i++)
             _buildListItem(widget.listaConsulta![i]),
-          // Reticências
           if (widget.listaConsulta!.length > 3)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -61,12 +59,11 @@ class _ListaComIconeState extends State<ListaComIcone> {
                     height: 30,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color.fromARGB(255, 117, 117, 117)
-                              .withOpacity(0.5),
+                          color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 3,
                           offset: const Offset(0, 2),
@@ -75,7 +72,7 @@ class _ListaComIconeState extends State<ListaComIcone> {
                     ),
                     child: Center(
                       child: IconButton(
-                        padding: const EdgeInsets.all(0),
+                        padding: EdgeInsets.zero,
                         onPressed: () => _consultasDialogBuilder(context),
                         icon: const Icon(
                           Symbols.more_horiz,
@@ -93,85 +90,72 @@ class _ListaComIconeState extends State<ListaComIcone> {
     return const SizedBox.shrink();
   }
 
-  Widget _buildListItem(var item, {bool dialog = false}) {
-    if (item is ConsultaCadastro) {
-      final formattedDate =
-          DateFormat.yMMMd("pt_BR").format(item.dataHorario); // Formatar a data
-      final formattedDateDialog =
-          DateFormat.yMd("pt_BR").format(item.dataHorario); // Formatar a data
-      final formattedTime =
-          DateFormat.Hm().format(item.dataHorario); // Formatar o horário
+  Widget _buildListItem(ConsultaCadastro item, {bool dialog = false}) {
+    final formattedDate = DateFormat.yMMMd("pt_BR").format(item.dataHorario);
+    final formattedTime = DateFormat.Hm().format(item.dataHorario);
 
-      return Container(
-        padding: const EdgeInsets.all(8),
-        margin: const EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 117, 117, 117).withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Data
-            Expanded(child: Text(dialog ? formattedDateDialog : formattedDate)),
-            // Horário
-            Text(formattedTime),
-            // Divisor
-            Container(
-              width: 2,
-              height: 30,
-              color: Colors.black,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-            ),
-            // Ícone
-            IconButton(
-              visualDensity: const VisualDensity(
-                  horizontal: VisualDensity.minimumDensity,
-                  vertical: VisualDensity.minimumDensity),
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                item.estado == "concluida"
-                    ? Icons.remove_red_eye
-                    : (item.estado == "agendada" || item.estado == "atrasada")
-                        ? Icons.edit_outlined
-                        : null,
-                size: 30,
-              ),
-              onPressed: () {
-                if (item.estado == "concluida") {
-                  // Ação para estado concluído
-                } else if (item.estado == "agendada" ||
-                    item.estado == "atrasada") {
-                  _optionsDialogBuilder(context, item);
-                }
-              },
-            )
-          ],
-        ),
-      );
-    } else {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('aaaaa'),
-          SizedBox(height: 4),
-          Divider(color: Colors.grey),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(top: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 2),
+          ),
         ],
-      );
-    }
+      ),
+      child: Row(
+        children: [
+          Expanded(child: Text(dialog ? formattedDate : formattedDate)),
+          Text(formattedTime),
+          Container(
+            width: 2,
+            height: 30,
+            color: Colors.black,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+          IconButton(
+            visualDensity: const VisualDensity(
+                horizontal: VisualDensity.minimumDensity,
+                vertical: VisualDensity.minimumDensity),
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              item.estado == "concluida"
+                  ? Icons.remove_red_eye
+                  : (item.estado == "agendada" || item.estado == "atrasada")
+                      ? Icons.edit_outlined
+                      : null,
+              size: 30,
+            ),
+            onPressed: () {
+              if (item.estado == "concluida") {
+                if (widget.eInstituicao == true) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ConsultaRelatorioInstituicao(
+                        dadosConsulta: item,
+                      ),
+                    ),
+                  );
+                }
+              } else if (item.estado == "agendada" ||
+                  item.estado == "atrasada") {
+                _optionsDialogBuilder(context, item);
+              }
+            },
+          )
+        ],
+      ),
+    );
   }
 
-  // Dialog que abre a opção de reagendar e de consultar.
   Future<void> _optionsDialogBuilder(
-      BuildContext context, ConsultaCadastro consulta,
-      [Consulta? consultaPaciente]) {
+      BuildContext context, ConsultaCadastro consulta) {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -219,7 +203,6 @@ class _ListaComIconeState extends State<ListaComIcone> {
                         MaterialPageRoute(
                           builder: (context) => ConsultaRelatorioInstituicao(
                             dadosConsulta: consulta,
-                            relatorioPacienteConsulta: consultaPaciente,
                           ),
                         ),
                       );
@@ -243,7 +226,6 @@ class _ListaComIconeState extends State<ListaComIcone> {
     );
   }
 
-  // Dialog que abre o resto das consultas.
   Future<void> _consultasDialogBuilder(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -270,7 +252,6 @@ class _ListaComIconeState extends State<ListaComIcone> {
     );
   }
 
-// Dialog que confirma deletar a consulta.
   Future<void> _consultaDeleteDialogBuilder(
       BuildContext context, ConsultaCadastro consultaRemove) {
     return showDialog<void>(
