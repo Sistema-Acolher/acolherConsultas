@@ -81,6 +81,8 @@ class QuadroBrancoGenograma extends HookWidget {
             }
           }
 
+          corDesenho.value = elementoEncontrado.cor;
+
           genograma.value = newEcomapa;
           desenhoAtual.value = ElementosDesenho(
             id: id,
