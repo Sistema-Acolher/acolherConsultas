@@ -4,7 +4,7 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/dropdown/consultaDropdown.dart';
-import 'package:acolherconsultas/shared/components/list/listaComIcone.dart';
+import 'package:acolherconsultas/shared/components/list/listaComIconeConsultas.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ class _ConsultaListaState extends State<ConsultaLista> {
             children: [
               ConsultaDropdown(
                 text: "Consultas previstas", 
-                child: ListaComIcone(
+                child: ListaComIconeConsultas(
                   label: "Previstas",
                   paciente: widget.paciente,
                   listaConsulta: consultasPaciente.where((element) => element.estado=="agendada").toList()
@@ -46,7 +46,7 @@ class _ConsultaListaState extends State<ConsultaLista> {
               ),
               ConsultaDropdown(
                 text: "Consultas atrasadas", 
-                child: ListaComIcone(
+                child: ListaComIconeConsultas(
                   label: "Atrasadas",
                   paciente: widget.paciente,
                   listaConsulta: consultasPaciente.where((element) => element.estado=="atrasada").toList()
@@ -54,7 +54,7 @@ class _ConsultaListaState extends State<ConsultaLista> {
               ),
               ConsultaDropdown(
                 text: "Consultas prévias", 
-                child: ListaComIcone(
+                child: ListaComIconeConsultas(
                   label: "Prévias",
                   paciente: widget.paciente,
                   listaConsulta: consultasPaciente.where((element) => element.estado=="concluida").toList()

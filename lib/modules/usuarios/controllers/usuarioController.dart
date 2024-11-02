@@ -47,12 +47,31 @@ class UsuarioController extends ChangeNotifier {
   }
 
   Future<void> atualizarUsuario(Map<String, dynamic> usuario) async {
+    if(usuario["nivelAcesso"] != "casaDeApoio"){
+      usuario.remove("casaDeApoioId");
+    }
+    String id = usuario["id"];
+    usuario.remove("id");
+    await _firestore.collection("usuarios").doc(id).update(usuario);    
   }
 
   Future<void> removerUsuario(Map<String, dynamic> usuario) async {
   }
 
   // Funções extras do banco -----------------------------------
+  Stream<List<Usuario>> get usuariosStream {
+    return _firestore.collection('usuarios').snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          var temp = doc.data();
+          temp.addAll({'id':doc.id});
+          return Usuario.fromMap(temp);
+        }).toList();
+      },
+    );
+  }
+
+
   Future<Map<String, dynamic>?> selecionar(String uid) async {
     DocumentSnapshot docSnapshot = await _firestore.collection("usuarios").doc(uid).get();
 

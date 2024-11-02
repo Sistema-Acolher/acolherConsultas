@@ -7,6 +7,7 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
+import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,6 +32,10 @@ class MyApp extends StatelessWidget {
         ),
         StreamProvider<List<ConsultaCadastro>>(
           create: (context) => ConsultaController().consultasStream,
+          initialData: const [],
+        ),
+        StreamProvider<List<Usuario>>(
+          create: (context) => UsuarioController().usuariosStream,
           initialData: const [],
         ),
         ChangeNotifierProvider(create: (_) => UsuarioController()),

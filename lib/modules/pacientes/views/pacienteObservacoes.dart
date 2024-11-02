@@ -3,7 +3,7 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/dropdown/consultaDropdown.dart';
-import 'package:acolherconsultas/shared/components/list/listaComIcone.dart';
+import 'package:acolherconsultas/shared/components/list/listaComIconeConsultas.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
               children: [
                 ConsultaDropdown(
                   text: "Consultas realizadas",
-                  child: ListaComIcone(
+                  child: ListaComIconeConsultas(
                     label: "Prévias",
                     paciente: widget.paciente,
                     listaConsulta: consultasPaciente
