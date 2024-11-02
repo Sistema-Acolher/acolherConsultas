@@ -37,34 +37,16 @@ class _UsuarioListaState extends State<UsuarioLista> {
   @override
   Widget build(BuildContext context) {    
     return SingleChildScrollView(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.14),
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        )
-                      ]
-                    ),
-                    child: ValueListenableBuilder<List<Usuario>>(
-                      valueListenable: todosUsuarios,
-                      builder: (context, usuarios, child) => ListaComIcone(
-                        listaElementos: usuarios,
-                        onEdit: (Usuario usuario){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroUsuarioScreen(usuario: usuario)));
-                        },
-                      )
-                    ),
-                  ),
-                ],
-              ),
-            );
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 50),
+      child: ValueListenableBuilder<List<Usuario>>(
+        valueListenable: todosUsuarios,
+        builder: (context, usuarios, child) => ListaComIcone(
+          listaElementos: usuarios,
+          onEdit: (Usuario usuario){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroUsuarioScreen(usuario: usuario)));
+          },
+        )
+      ),
+    );
   }
 }

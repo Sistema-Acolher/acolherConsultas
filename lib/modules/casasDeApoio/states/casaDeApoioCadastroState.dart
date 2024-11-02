@@ -1,5 +1,4 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
-import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 
 class CasaDeApoioCadastroState {

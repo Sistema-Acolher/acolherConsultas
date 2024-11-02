@@ -31,34 +31,16 @@ class _CasaDeApoioListaState extends State<CasaDeApoioLista> {
     _filtrarPacientes();
     
     return SingleChildScrollView(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.14),
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        )
-                      ]
-                    ),
-                    child: ValueListenableBuilder<List<CasaDeApoio>>(
-                      valueListenable: todosCasaDeApoios,
-                      builder: (context, casaDeApoios, child) => ListaComIcone(
-                        listaElementos: casaDeApoios,
-                        onEdit: (CasaDeApoio casaDeApoio){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroCasaDeApoioScreen(casaDeApoio: casaDeApoio)));
-                        },
-                      )
-                    ),
-                  ),
-                ],
-              ),
-            );
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 50),
+      child: ValueListenableBuilder<List<CasaDeApoio>>(
+        valueListenable: todosCasaDeApoios,
+        builder: (context, casaDeApoios, child) => ListaComIcone(
+          listaElementos: casaDeApoios,
+          onEdit: (CasaDeApoio casaDeApoio){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroCasaDeApoioScreen(casaDeApoio: casaDeApoio)));
+          },
+        )
+      ),
+    );
   }
 }
