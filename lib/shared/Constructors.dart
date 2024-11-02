@@ -48,11 +48,11 @@ final ConsultaCadastro consultaTeste = ConsultaCadastro(
     peso: 30.5,
     comprimentoPorIdade: 50,
     imcPorIdade: 60,
-    fc: "80 bpm",
+    frequenciaCardiaca: "80 bpm",
     saturacao: "98%",
     auscultaCardiaca: "Normal",
     auscultaPulmonar: "Normal",
-    pa: "120/80 mmHg",
+    pressaoArterial: "120/80 mmHg",
     temperatura: 36.5,
     otoscopia: "Normal",
     orofaringe: "Normal",
@@ -63,6 +63,6 @@ final ConsultaCadastro consultaTeste = ConsultaCadastro(
     comoSeSenteHoje: "Bem",
     analiseGeral: "Saudável",
     avaliacoes: "Rotina",
-    intervencoes: "Nenhuma"
+    intervencoes: "Nenhuma",
   ),
 );

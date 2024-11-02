@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Consulta {
@@ -28,11 +27,11 @@ class Consulta {
   double peso;
   int comprimentoPorIdade;
   int imcPorIdade;
-  String fc;
+  String frequenciaCardiaca;
   String saturacao;
   String auscultaCardiaca;
   String auscultaPulmonar;
-  String pa;
+  String pressaoArterial;
   double temperatura;
   String otoscopia;
   String orofaringe;
@@ -48,7 +47,7 @@ class Consulta {
   String intervencoes;
 
   // Dados somente crianças
-  String? fr;
+  String? frequenciaRespiratoria;
   int? bregmatica;
   bool? bregmaticaCalcificada;
   int? lambdoide;
@@ -97,6 +96,8 @@ class Consulta {
   DateTime? quandoSemenarca;
 
   Consulta({
+    // Dados somente crianças
+    // Dados somente adolescentes
     required this.idade,
     required this.cuidadorPrincipal,
     required this.queixaPrincipal,
@@ -122,11 +123,11 @@ class Consulta {
     required this.peso,
     required this.comprimentoPorIdade,
     required this.imcPorIdade,
-    required this.fc,
+    required this.frequenciaCardiaca,
     required this.saturacao,
     required this.auscultaCardiaca,
     required this.auscultaPulmonar,
-    required this.pa,
+    required this.pressaoArterial,
     required this.temperatura,
     required this.otoscopia,
     required this.orofaringe,
@@ -140,8 +141,7 @@ class Consulta {
     required this.analiseGeral,
     required this.avaliacoes,
     required this.intervencoes,
-    // Dados somente crianças
-    this.fr,
+    this.frequenciaRespiratoria,
     this.bregmatica,
     this.bregmaticaCalcificada,
     this.lambdoide,
@@ -161,7 +161,6 @@ class Consulta {
     this.reflexoPiscarAcustico,
     this.reflexoVomito,
     this.aperteNariz,
-    // Dados somente adolescentes
     this.atividadesLazer,
     this.identidadeGenero,
     this.sexualidade,
@@ -190,11 +189,6 @@ class Consulta {
   });
 
   Consulta copyWith({
-    String? id,
-    String? casaDeApoioId,
-    String? pacienteId,
-    String? estado,
-    String? nome,
     DateTime? idade,
     String? cuidadorPrincipal,
     String? queixaPrincipal,
@@ -220,11 +214,11 @@ class Consulta {
     double? peso,
     int? comprimentoPorIdade,
     int? imcPorIdade,
-    String? fc,
+    String? frequenciaCardiaca,
     String? saturacao,
     String? auscultaCardiaca,
     String? auscultaPulmonar,
-    String? pa,
+    String? pressaoArterial,
     double? temperatura,
     String? otoscopia,
     String? orofaringe,
@@ -238,8 +232,7 @@ class Consulta {
     String? analiseGeral,
     String? avaliacoes,
     String? intervencoes,
-    // Dados somente crianças
-    String? fr,
+    String? frequenciaRespiratoria,
     int? bregmatica,
     bool? bregmaticaCalcificada,
     int? lambdoide,
@@ -259,7 +252,6 @@ class Consulta {
     int? reflexoPiscarAcustico,
     int? reflexoVomito,
     int? aperteNariz,
-    // Dados somente adolescentes
     String? atividadesLazer,
     int? identidadeGenero,
     int? sexualidade,
@@ -292,22 +284,15 @@ class Consulta {
       queixaPrincipal: queixaPrincipal ?? this.queixaPrincipal,
       descricao: descricao ?? this.descricao,
       observacoesPaciente: observacoesPaciente ?? this.observacoesPaciente,
-      refeicoesComTecnologia:
-          refeicoesComTecnologia ?? this.refeicoesComTecnologia,
-      refeicoesDuranteODia:
-          refeicoesDuranteODia ?? this.refeicoesDuranteODia,
+      refeicoesComTecnologia: refeicoesComTecnologia ?? this.refeicoesComTecnologia,
+      refeicoesDuranteODia: refeicoesDuranteODia ?? this.refeicoesDuranteODia,
       consumiuFeijao: consumiuFeijao ?? this.consumiuFeijao,
       consumiuFrutas: consumiuFrutas ?? this.consumiuFrutas,
-      consumiuVerdurasLegumes:
-          consumiuVerdurasLegumes ?? this.consumiuVerdurasLegumes,
+      consumiuVerdurasLegumes: consumiuVerdurasLegumes ?? this.consumiuVerdurasLegumes,
       consumiuEmbutidos: consumiuEmbutidos ?? this.consumiuEmbutidos,
-      consumiuBebidasAdocicadas:
-          consumiuBebidasAdocicadas ?? this.consumiuBebidasAdocicadas,
-      consumiuMacarraoInstantaneoSalgado:
-          consumiuMacarraoInstantaneoSalgado ??
-              this.consumiuMacarraoInstantaneoSalgado,
-      consumiuBiscoitoRecheado:
-          consumiuBiscoitoRecheado ?? this.consumiuBiscoitoRecheado,
+      consumiuBebidasAdocicadas: consumiuBebidasAdocicadas ?? this.consumiuBebidasAdocicadas,
+      consumiuMacarraoInstantaneoSalgado: consumiuMacarraoInstantaneoSalgado ?? this.consumiuMacarraoInstantaneoSalgado,
+      consumiuBiscoitoRecheado: consumiuBiscoitoRecheado ?? this.consumiuBiscoitoRecheado,
       ingestaoHidrica: ingestaoHidrica ?? this.ingestaoHidrica,
       suplementacao: suplementacao ?? this.suplementacao,
       diurese: diurese ?? this.diurese,
@@ -319,95 +304,67 @@ class Consulta {
       peso: peso ?? this.peso,
       comprimentoPorIdade: comprimentoPorIdade ?? this.comprimentoPorIdade,
       imcPorIdade: imcPorIdade ?? this.imcPorIdade,
-      fc: fc ?? this.fc,
+      frequenciaCardiaca: frequenciaCardiaca ?? this.frequenciaCardiaca,
       saturacao: saturacao ?? this.saturacao,
       auscultaCardiaca: auscultaCardiaca ?? this.auscultaCardiaca,
       auscultaPulmonar: auscultaPulmonar ?? this.auscultaPulmonar,
-      pa: pa ?? this.pa,
+      pressaoArterial: pressaoArterial ?? this.pressaoArterial,
       temperatura: temperatura ?? this.temperatura,
       otoscopia: otoscopia ?? this.otoscopia,
       orofaringe: orofaringe ?? this.orofaringe,
-      avaliacaoMuscoesqueletica:
-          avaliacaoMuscoesqueletica ?? this.avaliacaoMuscoesqueletica,
+      avaliacaoMuscoesqueletica: avaliacaoMuscoesqueletica ?? this.avaliacaoMuscoesqueletica,
       avaliacaoPele: avaliacaoPele ?? this.avaliacaoPele,
       marcosPresentes: marcosPresentes ?? this.marcosPresentes,
       marcosAusentes: marcosAusentes ?? this.marcosAusentes,
-      observacoesDesenvolvimento:
-          observacoesDesenvolvimento ?? this.observacoesDesenvolvimento,
+      observacoesDesenvolvimento: observacoesDesenvolvimento ?? this.observacoesDesenvolvimento,
       comoSeSenteHoje: comoSeSenteHoje ?? this.comoSeSenteHoje,
-      observacoesPsicoemocionais:
-          observacoesPsicoemocionais ?? this.observacoesPsicoemocionais,
+      observacoesPsicoemocionais: observacoesPsicoemocionais ?? this.observacoesPsicoemocionais,
       analiseGeral: analiseGeral ?? this.analiseGeral,
       avaliacoes: avaliacoes ?? this.avaliacoes,
       intervencoes: intervencoes ?? this.intervencoes,
-      // Dados somente crianças
-      fr: fr ?? this.fr,
+      frequenciaRespiratoria: frequenciaRespiratoria ?? this.frequenciaRespiratoria,
       bregmatica: bregmatica ?? this.bregmatica,
-      bregmaticaCalcificada:
-          bregmaticaCalcificada ?? this.bregmaticaCalcificada,
+      bregmaticaCalcificada: bregmaticaCalcificada ?? this.bregmaticaCalcificada,
       lambdoide: lambdoide ?? this.lambdoide,
-      lambdoideCalcificada:
-          lambdoideCalcificada ?? this.lambdoideCalcificada,
+      lambdoideCalcificada: lambdoideCalcificada ?? this.lambdoideCalcificada,
       avaliacaoLinguagem: avaliacaoLinguagem ?? this.avaliacaoLinguagem,
       reflexoBusca: reflexoBusca ?? this.reflexoBusca,
       reflexoSuccao: reflexoSuccao ?? this.reflexoSuccao,
-      reflexoPreensaoPalmar:
-          reflexoPreensaoPalmar ?? this.reflexoPreensaoPalmar,
-      reflexoPreensaoPlantar:
-          reflexoPreensaoPlantar ?? this.reflexoPreensaoPlantar,
+      reflexoPreensaoPalmar: reflexoPreensaoPalmar ?? this.reflexoPreensaoPalmar,
+      reflexoPreensaoPlantar: reflexoPreensaoPlantar ?? this.reflexoPreensaoPlantar,
       reflexoBabinski: reflexoBabinski ?? this.reflexoBabinski,
-      reflexoTonicoCervical:
-          reflexoTonicoCervical ?? this.reflexoTonicoCervical,
+      reflexoTonicoCervical: reflexoTonicoCervical ?? this.reflexoTonicoCervical,
       reflexoMoro: reflexoMoro ?? this.reflexoMoro,
       reflexoMarcha: reflexoMarcha ?? this.reflexoMarcha,
-      reflexoPiscarOptico:
-          reflexoPiscarOptico ?? this.reflexoPiscarOptico,
-      reflexoBuscaESuccao:
-          reflexoBuscaESuccao ?? this.reflexoBuscaESuccao,
-      movimentosSimetricosFaciais:
-          movimentosSimetricosFaciais ?? this.movimentosSimetricosFaciais,
-      reflexoPiscarAcustico:
-          reflexoPiscarAcustico ?? this.reflexoPiscarAcustico,
+      reflexoPiscarOptico: reflexoPiscarOptico ?? this.reflexoPiscarOptico,
+      reflexoBuscaESuccao: reflexoBuscaESuccao ?? this.reflexoBuscaESuccao,
+      movimentosSimetricosFaciais: movimentosSimetricosFaciais ?? this.movimentosSimetricosFaciais,
+      reflexoPiscarAcustico: reflexoPiscarAcustico ?? this.reflexoPiscarAcustico,
       reflexoVomito: reflexoVomito ?? this.reflexoVomito,
       aperteNariz: aperteNariz ?? this.aperteNariz,
-      // Dados somente adolescentes
       atividadesLazer: atividadesLazer ?? this.atividadesLazer,
       identidadeGenero: identidadeGenero ?? this.identidadeGenero,
       sexualidade: sexualidade ?? this.sexualidade,
-      estagioTurnerMeninasMamas:
-          estagioTurnerMeninasMamas ?? this.estagioTurnerMeninasMamas,
-      estagioTurnerMeninasPelosPubianos:
-          estagioTurnerMeninasPelosPubianos ??
-              this.estagioTurnerMeninasPelosPubianos,
-      dataUltimaMenstruacao:
-          dataUltimaMenstruacao ?? this.dataUltimaMenstruacao,
+      estagioTurnerMeninasMamas: estagioTurnerMeninasMamas ?? this.estagioTurnerMeninasMamas,
+      estagioTurnerMeninasPelosPubianos: estagioTurnerMeninasPelosPubianos ?? this.estagioTurnerMeninasPelosPubianos,
+      dataUltimaMenstruacao: dataUltimaMenstruacao ?? this.dataUltimaMenstruacao,
       fluxoMenstrual: fluxoMenstrual ?? this.fluxoMenstrual,
-      regularidadeMenstruacao:
-          regularidadeMenstruacao ?? this.regularidadeMenstruacao,
+      regularidadeMenstruacao: regularidadeMenstruacao ?? this.regularidadeMenstruacao,
       quaoIrregular: quaoIrregular ?? this.quaoIrregular,
       dimenorreia: dimenorreia ?? this.dimenorreia,
       usoAbsorvente: usoAbsorvente ?? this.usoAbsorvente,
       usaMedicamento: usaMedicamento ?? this.usaMedicamento,
       qualMedicamento: qualMedicamento ?? this.qualMedicamento,
-      observacoesSaudeSexualEReprodutivaMeninas:
-          observacoesSaudeSexualEReprodutivaMeninas ??
-              this.observacoesSaudeSexualEReprodutivaMeninas,
+      observacoesSaudeSexualEReprodutivaMeninas: observacoesSaudeSexualEReprodutivaMeninas ?? this.observacoesSaudeSexualEReprodutivaMeninas,
       vidaSexualAtiva: vidaSexualAtiva ?? this.vidaSexualAtiva,
-      usaMetodoContraceptivo:
-          usaMetodoContraceptivo ?? this.usaMetodoContraceptivo,
-      qualMetodoContraceptivo:
-          qualMetodoContraceptivo ?? this.qualMetodoContraceptivo,
+      usaMetodoContraceptivo: usaMetodoContraceptivo ?? this.usaMetodoContraceptivo,
+      qualMetodoContraceptivo: qualMetodoContraceptivo ?? this.qualMetodoContraceptivo,
       jaFezPreventivo: jaFezPreventivo ?? this.jaFezPreventivo,
-      quandoFezPreventivo:
-          quandoFezPreventivo ?? this.quandoFezPreventivo,
+      quandoFezPreventivo: quandoFezPreventivo ?? this.quandoFezPreventivo,
       seMasturba: seMasturba ?? this.seMasturba,
-      frequenciaMasturbacao:
-          frequenciaMasturbacao ?? this.frequenciaMasturbacao,
-      estagioTurnerMeninosGenitalia:
-          estagioTurnerMeninosGenitalia ?? this.estagioTurnerMeninosGenitalia,
-      estagioTurnerMeninosPelosPubianos:
-          estagioTurnerMeninosPelosPubianos ??
-              this.estagioTurnerMeninosPelosPubianos,
+      frequenciaMasturbacao: frequenciaMasturbacao ?? this.frequenciaMasturbacao,
+      estagioTurnerMeninosGenitalia: estagioTurnerMeninosGenitalia ?? this.estagioTurnerMeninosGenitalia,
+      estagioTurnerMeninosPelosPubianos: estagioTurnerMeninosPelosPubianos ?? this.estagioTurnerMeninosPelosPubianos,
       semenarca: semenarca ?? this.semenarca,
       quandoSemenarca: quandoSemenarca ?? this.quandoSemenarca,
     );
@@ -415,7 +372,7 @@ class Consulta {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'idade': idade,
+      'idade': idade.millisecondsSinceEpoch,
       'cuidadorPrincipal': cuidadorPrincipal,
       'queixaPrincipal': queixaPrincipal,
       'descricao': descricao,
@@ -427,8 +384,7 @@ class Consulta {
       'consumiuVerdurasLegumes': consumiuVerdurasLegumes,
       'consumiuEmbutidos': consumiuEmbutidos,
       'consumiuBebidasAdocicadas': consumiuBebidasAdocicadas,
-      'consumiuMacarraoInstantaneoSalgado':
-          consumiuMacarraoInstantaneoSalgado,
+      'consumiuMacarraoInstantaneoSalgado': consumiuMacarraoInstantaneoSalgado,
       'consumiuBiscoitoRecheado': consumiuBiscoitoRecheado,
       'ingestaoHidrica': ingestaoHidrica,
       'suplementacao': suplementacao,
@@ -441,11 +397,11 @@ class Consulta {
       'peso': peso,
       'comprimentoPorIdade': comprimentoPorIdade,
       'imcPorIdade': imcPorIdade,
-      'fc': fc,
+      'frequenciaCardiaca': frequenciaCardiaca,
       'saturacao': saturacao,
       'auscultaCardiaca': auscultaCardiaca,
       'auscultaPulmonar': auscultaPulmonar,
-      'pa': pa,
+      'pressaoArterial': pressaoArterial,
       'temperatura': temperatura,
       'otoscopia': otoscopia,
       'orofaringe': orofaringe,
@@ -459,8 +415,7 @@ class Consulta {
       'analiseGeral': analiseGeral,
       'avaliacoes': avaliacoes,
       'intervencoes': intervencoes,
-      // Dados somente crianças
-      'fr': fr,
+      'frequenciaRespiratoria': frequenciaRespiratoria,
       'bregmatica': bregmatica,
       'bregmaticaCalcificada': bregmaticaCalcificada,
       'lambdoide': lambdoide,
@@ -480,15 +435,12 @@ class Consulta {
       'reflexoPiscarAcustico': reflexoPiscarAcustico,
       'reflexoVomito': reflexoVomito,
       'aperteNariz': aperteNariz,
-      // Dados somente adolescentes
       'atividadesLazer': atividadesLazer,
       'identidadeGenero': identidadeGenero,
       'sexualidade': sexualidade,
       'estagioTurnerMeninasMamas': estagioTurnerMeninasMamas,
-      'estagioTurnerMeninasPelosPubianos':
-          estagioTurnerMeninasPelosPubianos,
-      'dataUltimaMenstruacao':
-          dataUltimaMenstruacao != null ? Timestamp.fromDate(dataUltimaMenstruacao!) : null,
+      'estagioTurnerMeninasPelosPubianos': estagioTurnerMeninasPelosPubianos,
+      'dataUltimaMenstruacao': dataUltimaMenstruacao?.millisecondsSinceEpoch,
       'fluxoMenstrual': fluxoMenstrual,
       'regularidadeMenstruacao': regularidadeMenstruacao,
       'quaoIrregular': quaoIrregular,
@@ -496,34 +448,28 @@ class Consulta {
       'usoAbsorvente': usoAbsorvente,
       'usaMedicamento': usaMedicamento,
       'qualMedicamento': qualMedicamento,
-      'observacoesSaudeSexualEReprodutivaMeninas':
-          observacoesSaudeSexualEReprodutivaMeninas,
+      'observacoesSaudeSexualEReprodutivaMeninas': observacoesSaudeSexualEReprodutivaMeninas,
       'vidaSexualAtiva': vidaSexualAtiva,
       'usaMetodoContraceptivo': usaMetodoContraceptivo,
       'qualMetodoContraceptivo': qualMetodoContraceptivo,
       'jaFezPreventivo': jaFezPreventivo,
-      'quandoFezPreventivo': quandoFezPreventivo != null
-          ? Timestamp.fromDate(quandoFezPreventivo!)
-          : null,
+      'quandoFezPreventivo': quandoFezPreventivo?.millisecondsSinceEpoch,
       'seMasturba': seMasturba,
       'frequenciaMasturbacao': frequenciaMasturbacao,
       'estagioTurnerMeninosGenitalia': estagioTurnerMeninosGenitalia,
-      'estagioTurnerMeninosPelosPubianos':
-          estagioTurnerMeninosPelosPubianos,
+      'estagioTurnerMeninosPelosPubianos': estagioTurnerMeninosPelosPubianos,
       'semenarca': semenarca,
-      'quandoSemenarca': quandoSemenarca != null
-          ? Timestamp.fromDate(quandoSemenarca!)
-          : null,
+      'quandoSemenarca': quandoSemenarca?.millisecondsSinceEpoch,
     };
   }
 
   factory Consulta.fromMap(Map<String, dynamic> map) {
     return Consulta(
-      idade: (map['idade'] as Timestamp).toDate(),
+      idade: DateTime.fromMillisecondsSinceEpoch(map['idade'] as int),
       cuidadorPrincipal: map['cuidadorPrincipal'] as String,
       queixaPrincipal: map['queixaPrincipal'] as String,
       descricao: map['descricao'] as String,
-      observacoesPaciente: map['observacoesPaciente'] as String?,
+      observacoesPaciente: map['observacoesPaciente'] != null ? map['observacoesPaciente'] as String : null,
       refeicoesComTecnologia: map['refeicoesComTecnologia'] as int,
       refeicoesDuranteODia: map['refeicoesDuranteODia'] as String,
       consumiuFeijao: map['consumiuFeijao'] as int,
@@ -531,8 +477,7 @@ class Consulta {
       consumiuVerdurasLegumes: map['consumiuVerdurasLegumes'] as int,
       consumiuEmbutidos: map['consumiuEmbutidos'] as int,
       consumiuBebidasAdocicadas: map['consumiuBebidasAdocicadas'] as int,
-      consumiuMacarraoInstantaneoSalgado:
-          map['consumiuMacarraoInstantaneoSalgado'] as int,
+      consumiuMacarraoInstantaneoSalgado: map['consumiuMacarraoInstantaneoSalgado'] as int,
       consumiuBiscoitoRecheado: map['consumiuBiscoitoRecheado'] as int,
       ingestaoHidrica: map['ingestaoHidrica'] as String,
       suplementacao: map['suplementacao'] as String,
@@ -542,86 +487,72 @@ class Consulta {
       higieneCorporal: map['higieneCorporal'] as String,
       sono: map['sono'] as String,
       comprimento: map['comprimento'] as int,
-      peso: (map['peso'] as num).toDouble(),
+      peso: map['peso'] as double,
       comprimentoPorIdade: map['comprimentoPorIdade'] as int,
       imcPorIdade: map['imcPorIdade'] as int,
-      fc: map['fc'] as String,
+      frequenciaCardiaca: map['frequenciaCardiaca'] as String,
       saturacao: map['saturacao'] as String,
       auscultaCardiaca: map['auscultaCardiaca'] as String,
       auscultaPulmonar: map['auscultaPulmonar'] as String,
-      pa: map['pa'] as String,
-      temperatura: (map['temperatura'] as num).toDouble(),
+      pressaoArterial: map['pressaoArterial'] as String,
+      temperatura: map['temperatura'] as double,
       otoscopia: map['otoscopia'] as String,
       orofaringe: map['orofaringe'] as String,
       avaliacaoMuscoesqueletica: map['avaliacaoMuscoesqueletica'] as String,
       avaliacaoPele: map['avaliacaoPele'] as String,
       marcosPresentes: map['marcosPresentes'] as String,
       marcosAusentes: map['marcosAusentes'] as String,
-      observacoesDesenvolvimento:
-          map['observacoesDesenvolvimento'] as String?,
+      observacoesDesenvolvimento: map['observacoesDesenvolvimento'] != null ? map['observacoesDesenvolvimento'] as String : null,
       comoSeSenteHoje: map['comoSeSenteHoje'] as String,
-      observacoesPsicoemocionais:
-          map['observacoesPsicoemocionais'] as String?,
+      observacoesPsicoemocionais: map['observacoesPsicoemocionais'] != null ? map['observacoesPsicoemocionais'] as String : null,
       analiseGeral: map['analiseGeral'] as String,
       avaliacoes: map['avaliacoes'] as String,
       intervencoes: map['intervencoes'] as String,
-      // Dados somente crianças
-      fr: map['fr'] as String?,
-      bregmatica: map['bregmatica'] as int?,
-      bregmaticaCalcificada: map['bregmaticaCalcificada'] as bool?,
-      lambdoide: map['lambdoide'] as int?,
-      lambdoideCalcificada: map['lambdoideCalcificada'] as bool?,
-      avaliacaoLinguagem: map['avaliacaoLinguagem'] as String?,
-      reflexoBusca: map['reflexoBusca'] as int?,
-      reflexoSuccao: map['reflexoSuccao'] as int?,
-      reflexoPreensaoPalmar: map['reflexoPreensaoPalmar'] as int?,
-      reflexoPreensaoPlantar: map['reflexoPreensaoPlantar'] as int?,
-      reflexoBabinski: map['reflexoBabinski'] as int?,
-      reflexoTonicoCervical: map['reflexoTonicoCervical'] as int?,
-      reflexoMoro: map['reflexoMoro'] as int?,
-      reflexoMarcha: map['reflexoMarcha'] as int?,
-      reflexoPiscarOptico: map['reflexoPiscarOptico'] as int?,
-      reflexoBuscaESuccao: map['reflexoBuscaESuccao'] as int?,
-      movimentosSimetricosFaciais: map['movimentosSimetricosFaciais'] as int?,
-      reflexoPiscarAcustico: map['reflexoPiscarAcustico'] as int?,
-      reflexoVomito: map['reflexoVomito'] as int?,
-      aperteNariz: map['aperteNariz'] as int?,
-      // Dados somente adolescentes
-      atividadesLazer: map['atividadesLazer'] as String?,
-      identidadeGenero: map['identidadeGenero'] as int?,
-      sexualidade: map['sexualidade'] as int?,
-      estagioTurnerMeninasMamas: map['estagioTurnerMeninasMamas'] as int?,
-      estagioTurnerMeninasPelosPubianos:
-          map['estagioTurnerMeninasPelosPubianos'] as int?,
-      dataUltimaMenstruacao: map['dataUltimaMenstruacao'] != null
-          ? (map['dataUltimaMenstruacao'] as Timestamp).toDate()
-          : null,
-      fluxoMenstrual: map['fluxoMenstrual'] as int?,
-      regularidadeMenstruacao: map['regularidadeMenstruacao'] as int?,
-      quaoIrregular: map['quaoIrregular'] as String?,
-      dimenorreia: map['dimenorreia'] as bool?,
-      usoAbsorvente: map['usoAbsorvente'] as String?,
-      usaMedicamento: map['usaMedicamento'] as bool?,
-      qualMedicamento: map['qualMedicamento'] as String?,
-      observacoesSaudeSexualEReprodutivaMeninas:
-          map['observacoesSaudeSexualEReprodutivaMeninas'] as String?,
-      vidaSexualAtiva: map['vidaSexualAtiva'] as bool?,
-      usaMetodoContraceptivo: map['usaMetodoContraceptivo'] as bool?,
-      qualMetodoContraceptivo: map['qualMetodoContraceptivo'] as String?,
-      jaFezPreventivo: map['jaFezPreventivo'] as bool?,
-      quandoFezPreventivo: map['quandoFezPreventivo'] != null
-          ? (map['quandoFezPreventivo'] as Timestamp).toDate()
-          : null,
-      seMasturba: map['seMasturba'] as bool?,
-      frequenciaMasturbacao: map['frequenciaMasturbacao'] as String?,
-      estagioTurnerMeninosGenitalia:
-          map['estagioTurnerMeninosGenitalia'] as int?,
-      estagioTurnerMeninosPelosPubianos:
-          map['estagioTurnerMeninosPelosPubianos'] as int?,
-      semenarca: map['semenarca'] as bool?,
-      quandoSemenarca: map['quandoSemenarca'] != null
-          ? (map['quandoSemenarca'] as Timestamp).toDate()
-          : null,
+      frequenciaRespiratoria: map['frequenciaRespiratoria'] != null ? map['frequenciaRespiratoria'] as String : null,
+      bregmatica: map['bregmatica'] != null ? map['bregmatica'] as int : null,
+      bregmaticaCalcificada: map['bregmaticaCalcificada'] != null ? map['bregmaticaCalcificada'] as bool : null,
+      lambdoide: map['lambdoide'] != null ? map['lambdoide'] as int : null,
+      lambdoideCalcificada: map['lambdoideCalcificada'] != null ? map['lambdoideCalcificada'] as bool : null,
+      avaliacaoLinguagem: map['avaliacaoLinguagem'] != null ? map['avaliacaoLinguagem'] as String : null,
+      reflexoBusca: map['reflexoBusca'] != null ? map['reflexoBusca'] as int : null,
+      reflexoSuccao: map['reflexoSuccao'] != null ? map['reflexoSuccao'] as int : null,
+      reflexoPreensaoPalmar: map['reflexoPreensaoPalmar'] != null ? map['reflexoPreensaoPalmar'] as int : null,
+      reflexoPreensaoPlantar: map['reflexoPreensaoPlantar'] != null ? map['reflexoPreensaoPlantar'] as int : null,
+      reflexoBabinski: map['reflexoBabinski'] != null ? map['reflexoBabinski'] as int : null,
+      reflexoTonicoCervical: map['reflexoTonicoCervical'] != null ? map['reflexoTonicoCervical'] as int : null,
+      reflexoMoro: map['reflexoMoro'] != null ? map['reflexoMoro'] as int : null,
+      reflexoMarcha: map['reflexoMarcha'] != null ? map['reflexoMarcha'] as int : null,
+      reflexoPiscarOptico: map['reflexoPiscarOptico'] != null ? map['reflexoPiscarOptico'] as int : null,
+      reflexoBuscaESuccao: map['reflexoBuscaESuccao'] != null ? map['reflexoBuscaESuccao'] as int : null,
+      movimentosSimetricosFaciais: map['movimentosSimetricosFaciais'] != null ? map['movimentosSimetricosFaciais'] as int : null,
+      reflexoPiscarAcustico: map['reflexoPiscarAcustico'] != null ? map['reflexoPiscarAcustico'] as int : null,
+      reflexoVomito: map['reflexoVomito'] != null ? map['reflexoVomito'] as int : null,
+      aperteNariz: map['aperteNariz'] != null ? map['aperteNariz'] as int : null,
+      atividadesLazer: map['atividadesLazer'] != null ? map['atividadesLazer'] as String : null,
+      identidadeGenero: map['identidadeGenero'] != null ? map['identidadeGenero'] as int : null,
+      sexualidade: map['sexualidade'] != null ? map['sexualidade'] as int : null,
+      estagioTurnerMeninasMamas: map['estagioTurnerMeninasMamas'] != null ? map['estagioTurnerMeninasMamas'] as int : null,
+      estagioTurnerMeninasPelosPubianos: map['estagioTurnerMeninasPelosPubianos'] != null ? map['estagioTurnerMeninasPelosPubianos'] as int : null,
+      dataUltimaMenstruacao: map['dataUltimaMenstruacao'] != null ? DateTime.fromMillisecondsSinceEpoch(map['dataUltimaMenstruacao'] as int) : null,
+      fluxoMenstrual: map['fluxoMenstrual'] != null ? map['fluxoMenstrual'] as int : null,
+      regularidadeMenstruacao: map['regularidadeMenstruacao'] != null ? map['regularidadeMenstruacao'] as int : null,
+      quaoIrregular: map['quaoIrregular'] != null ? map['quaoIrregular'] as String : null,
+      dimenorreia: map['dimenorreia'] != null ? map['dimenorreia'] as bool : null,
+      usoAbsorvente: map['usoAbsorvente'] != null ? map['usoAbsorvente'] as String : null,
+      usaMedicamento: map['usaMedicamento'] != null ? map['usaMedicamento'] as bool : null,
+      qualMedicamento: map['qualMedicamento'] != null ? map['qualMedicamento'] as String : null,
+      observacoesSaudeSexualEReprodutivaMeninas: map['observacoesSaudeSexualEReprodutivaMeninas'] != null ? map['observacoesSaudeSexualEReprodutivaMeninas'] as String : null,
+      vidaSexualAtiva: map['vidaSexualAtiva'] != null ? map['vidaSexualAtiva'] as bool : null,
+      usaMetodoContraceptivo: map['usaMetodoContraceptivo'] != null ? map['usaMetodoContraceptivo'] as bool : null,
+      qualMetodoContraceptivo: map['qualMetodoContraceptivo'] != null ? map['qualMetodoContraceptivo'] as String : null,
+      jaFezPreventivo: map['jaFezPreventivo'] != null ? map['jaFezPreventivo'] as bool : null,
+      quandoFezPreventivo: map['quandoFezPreventivo'] != null ? DateTime.fromMillisecondsSinceEpoch(map['quandoFezPreventivo'] as int) : null,
+      seMasturba: map['seMasturba'] != null ? map['seMasturba'] as bool : null,
+      frequenciaMasturbacao: map['frequenciaMasturbacao'] != null ? map['frequenciaMasturbacao'] as String : null,
+      estagioTurnerMeninosGenitalia: map['estagioTurnerMeninosGenitalia'] != null ? map['estagioTurnerMeninosGenitalia'] as int : null,
+      estagioTurnerMeninosPelosPubianos: map['estagioTurnerMeninosPelosPubianos'] != null ? map['estagioTurnerMeninosPelosPubianos'] as int : null,
+      semenarca: map['semenarca'] != null ? map['semenarca'] as bool : null,
+      quandoSemenarca: map['quandoSemenarca'] != null ? DateTime.fromMillisecondsSinceEpoch(map['quandoSemenarca'] as int) : null,
     );
   }
 }
