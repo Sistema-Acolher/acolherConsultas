@@ -1,11 +1,64 @@
-
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
+import 'package:acolherconsultas/modules/casasDeApoio/views/casaDeApoioCadastro.dart';
+import 'package:acolherconsultas/shared/components/list/listaComIcone.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class CasaDeApoioLista extends StatelessWidget {
+
+class CasaDeApoioLista extends StatefulWidget {
   const CasaDeApoioLista({super.key});
 
   @override
+  State<CasaDeApoioLista> createState() => _CasaDeApoioListaState();
+}
+
+class _CasaDeApoioListaState extends State<CasaDeApoioLista> {
+  late ValueNotifier<List<CasaDeApoio>> todosCasaDeApoios;
+
+  @override
+  void initState() {
+    super.initState();
+    todosCasaDeApoios = ValueNotifier<List<CasaDeApoio>>([]);
+  }
+
+  void _filtrarPacientes() {
+    todosCasaDeApoios.value = Provider.of<List<CasaDeApoio>>(context)
+      .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Lista Casas de apoio"),);
+    _filtrarPacientes();
+    
+    return SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 50),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.14),
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        )
+                      ]
+                    ),
+                    child: ValueListenableBuilder<List<CasaDeApoio>>(
+                      valueListenable: todosCasaDeApoios,
+                      builder: (context, casaDeApoios, child) => ListaComIcone(
+                        listaElementos: casaDeApoios,
+                        onEdit: (CasaDeApoio casaDeApoio){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroCasaDeApoioScreen(casaDeApoio: casaDeApoio)));
+                        },
+                      )
+                    ),
+                  ),
+                ],
+              ),
+            );
   }
 }
