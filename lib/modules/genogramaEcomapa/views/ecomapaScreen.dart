@@ -315,6 +315,7 @@ class EcomapaScreen extends HookWidget {
                                         ecomapa.value.dataCriacao = DateTime.now();
                                         PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
                                         salvou.value = true;
+                                        Navigator.of(context).pop();
                                       }, 
                                       child: const Text("Salvar")
                                     ),
@@ -330,50 +331,50 @@ class EcomapaScreen extends HookWidget {
                         ),
                       ),
                     ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: undoRedoPilha.value.canUndo,
-                      builder: (_, canUndo, __) {
-                        // print("Can Undo: $canUndo");
-                        return Visibility(
-                          visible: (canUndo),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FloatingActionButton(
-                              heroTag: null,
-                              backgroundColor: amarelo,
-                              onPressed: canUndo
-                                ? () => undoRedoPilha.value.undo()
-                                : null,
-                              child: const Icon(
-                                Icons.undo_outlined,
-                                color: branco
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    ),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: undoRedoPilha.value.canRedo,
-                      builder: (_, canRedo, __) {
-                        // print("Can Redo: $canRedo");
-                        return Visibility(
-                          visible: canRedo,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FloatingActionButton(
-                              heroTag: null,
-                              backgroundColor: amarelo,
-                              onPressed: canRedo ? () => undoRedoPilha.value.redo() : null,
-                              child: const Icon(
-                                Icons.redo_outlined,
-                                color: branco
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    ),
+                    // ValueListenableBuilder<bool>(
+                    //   valueListenable: undoRedoPilha.value.canUndo,
+                    //   builder: (_, canUndo, __) {
+                    //     // print("Can Undo: $canUndo");
+                    //     return Visibility(
+                    //       visible: (canUndo),
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(8.0),
+                    //         child: FloatingActionButton(
+                    //           heroTag: null,
+                    //           backgroundColor: amarelo,
+                    //           onPressed: canUndo
+                    //             ? () => undoRedoPilha.value.undo()
+                    //             : null,
+                    //           child: const Icon(
+                    //             Icons.undo_outlined,
+                    //             color: branco
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   }
+                    // ),
+                    // ValueListenableBuilder<bool>(
+                    //   valueListenable: undoRedoPilha.value.canRedo,
+                    //   builder: (_, canRedo, __) {
+                    //     // print("Can Redo: $canRedo");
+                    //     return Visibility(
+                    //       visible: canRedo,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(8.0),
+                    //         child: FloatingActionButton(
+                    //           heroTag: null,
+                    //           backgroundColor: amarelo,
+                    //           onPressed: canRedo ? () => undoRedoPilha.value.redo() : null,
+                    //           child: const Icon(
+                    //             Icons.redo_outlined,
+                    //             color: branco
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   }
+                    // ),
                   ],
                 ),
               ) : Container()

@@ -26,7 +26,6 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
           itemCount: widget.elementos.length,
           itemBuilder: (context, index) {
             final formattedDate = DateFormat.yMMMd("pt_BR").format(widget.elementos[index].dataCriacao); // Formatar a data
-            // final formattedDateDialog = DateFormat.yMd("pt_BR").format(widget.elementos[index].dataCriacao); // Formatar a data
             final formattedTime = DateFormat.Hm().format(widget.elementos[index].dataCriacao); // Formatar o horário
       
             return Container(
@@ -78,7 +77,13 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
               ),
             );
           }
-        ) : Text(widget.isGenograma ? "Nenhum genograma cadastrado para este paciente" : "Nenhum ecomapa cadastrado para este paciente")
+        ) : Text(
+          widget.isGenograma ? "Sem Genogramas" : "Sem Ecomapas",
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        )
       ),
     );
   }

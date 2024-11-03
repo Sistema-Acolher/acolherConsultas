@@ -373,30 +373,6 @@ class QuadroBrancoGenogramaPainter extends CustomPainter {
           break;
       }
     }
-    //desenhar circulo no centro
-    // canvas.drawCircle(
-    //   Offset(size.width/2, size.height/2), 
-    //   10, 
-    //   Paint()
-    //   ..color = Colors.red
-    //   ..strokeWidth = 2
-    //   ..style = PaintingStyle.stroke
-    // );
-    // //linha horizontal e vertical no centro
-    // canvas.drawLine(
-    //   Offset(0, size.height/2),
-    //   Offset(size.width, size.height/2),
-    //   Paint()
-    //   ..color = Colors.red
-    //   ..strokeWidth = 2
-    // );
-    // canvas.drawLine(
-    //   Offset(size.width/2, 0),
-    //   Offset(size.width/2, size.height),
-    //   Paint()
-    //   ..color = Colors.red
-    //   ..strokeWidth = 2
-    // );
   }
 
   @override
