@@ -1,5 +1,4 @@
 import 'package:acolherconsultas/shared/colors.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +47,7 @@ class _InputRadioButtonsCadastroPacienteState
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
-            "${widget.label}:",
+            widget.label,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -67,6 +66,7 @@ class _InputRadioButtonsCadastroPacienteState
                       maxLines: 1,
                       widget.options[index],
                       style: const TextStyle(fontWeight: FontWeight.bold),
+                      minFontSize: 8,
                     ),
                     value: widget.options[index],
                     contentPadding: const EdgeInsets.all(0),

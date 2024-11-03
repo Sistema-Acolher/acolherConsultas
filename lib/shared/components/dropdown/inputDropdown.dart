@@ -40,7 +40,6 @@ class _InputDropdownState extends State<InputDropdown> {
           child: Text(
             widget.label,
             style: const TextStyle(
-              fontFamily: "Roboto",
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -102,7 +101,7 @@ class _InputDropdownState extends State<InputDropdown> {
             ),
           ),
         ),
-        if (mostrarErro && widget.checkNotifier.value)
+        if (mostrarErro && widget.checkNotifier.value && widget.controller.text.isEmpty)
           const Text(
             'Selecione pelo menos uma opção.',
             style: TextStyle(

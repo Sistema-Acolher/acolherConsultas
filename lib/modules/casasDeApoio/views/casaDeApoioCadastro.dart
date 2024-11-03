@@ -1,15 +1,18 @@
+import 'package:acolherconsultas/modules/casasDeApoio/controller/casaDeApoioController.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/states/casaDeApoioCadastroState.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:mask/models/hashtag_is.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 
 class CadastroCasaDeApoioScreen extends StatefulWidget {
   const CadastroCasaDeApoioScreen({super.key, this.casaDeApoio});
@@ -48,7 +51,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
       floatingActionButton: Visibility(
         visible: infoAlterada(),
         child: StandartRoundButton(
-          text: "Salvar",
+          text: widget.casaDeApoio != null ? "Salvar" : "Cadastrar",
           icon: Symbols.book,
           onPressed: (){
             if (_formKey.currentState!.validate()) {
@@ -57,17 +60,17 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                 mostrarErro = false;
               });
               if(widget.casaDeApoio != null) {
-                // atualizar();
+                atualizar();
               } else {
-                // cadastrar();
+                cadastrar();
               }
             }
             if(_casaDeApoioState.cor == Colors.transparent){
-                setState(() {
-                  erro = "Selecione uma cor para a instituição";
-                  mostrarErro = true;
-                });
-              }
+              setState(() {
+                erro = "Selecione uma cor para a instituição";
+                mostrarErro = true;
+              });
+            }
           },
         ),
       ),
@@ -92,7 +95,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   emptyMessage: "Informe o nome",
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.nome.text = _casaDeApoioState.nome.text.trim();
+                    });
                   },
                 ),
                 InputTextoAcolher(
@@ -109,7 +114,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   keyboardType: TextInputType.number,
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.cep.text = _casaDeApoioState.cep.text.trim();
+                    });
                   },
                 ),
                 InputTextoAcolher(
@@ -126,7 +133,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   keyboardType: TextInputType.name,
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.rua.text = _casaDeApoioState.rua.text.trim();
+                    });
                   },
                 ),
                 InputTextoAcolher(
@@ -143,7 +152,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   keyboardType: TextInputType.number,
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.numero.text = _casaDeApoioState.numero.text.trim();
+                    });
                   },
                 ),
                 InputTextoAcolher(
@@ -160,7 +171,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   keyboardType: TextInputType.name,
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.bairro.text = _casaDeApoioState.bairro.text.trim();
+                    });
                   },
                 ),
                 InputTextoAcolher(
@@ -177,7 +190,9 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   keyboardType: TextInputType.name,
                   icone: widget.casaDeApoio != null ? Icons.edit : null,
                   checkEdit: () {
-                    setState(() {});
+                    setState(() {
+                      _casaDeApoioState.cidade.text = _casaDeApoioState.cidade.text.trim();
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
@@ -254,27 +269,85 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
     if(widget.casaDeApoio == null){
       return true;
     }
-    if(_casaDeApoioState.nome.text != widget.casaDeApoio!.nome){
+    if(_casaDeApoioState.nome.text.trim() != widget.casaDeApoio!.nome){
       return true;
     }
-    if(_casaDeApoioState.cep.text != widget.casaDeApoio!.cep){
+    if(_casaDeApoioState.cep.text.trim() != widget.casaDeApoio!.cep){
       return true;
     }
-    if(_casaDeApoioState.rua.text != widget.casaDeApoio!.rua){
+    if(_casaDeApoioState.rua.text.trim() != widget.casaDeApoio!.rua){
       return true;
     }
-    if(_casaDeApoioState.numero.text != widget.casaDeApoio!.numero){
+    if(_casaDeApoioState.numero.text.trim() != widget.casaDeApoio!.numero){
       return true;
     }
-    if(_casaDeApoioState.bairro.text != widget.casaDeApoio!.bairro){
+    if(_casaDeApoioState.bairro.text.trim() != widget.casaDeApoio!.bairro){
       return true;
     }
-    if(_casaDeApoioState.cidade.text != widget.casaDeApoio!.cidade){
+    if(_casaDeApoioState.cidade.text.trim() != widget.casaDeApoio!.cidade){
       return true;
     }
     if(_casaDeApoioState.cor.value != widget.casaDeApoio!.cor){
       return true;
     }
     return false;
+  }
+
+  cadastrar() async{
+    context.read<CasaDeApoioController>().showLoading(context);
+    
+    final cadastro = _casaDeApoioState.cadastroCasaDeApoio();
+    await context.read<CasaDeApoioController>().criarCasaDeApoio(cadastro).then(
+      (value) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        
+        final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Sucesso',
+                  message:
+                      'Casa de Apoio cadastrada com sucesso!',
+                  contentType: ContentType.success,
+                ),
+                duration: const Duration(seconds: 10),
+              );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
+      );
+  }
+
+  atualizar() async{
+    context.read<CasaDeApoioController>().showLoading(context);
+    
+    // Cria um objeto de usuário e tenta atualizar no firebase
+    final cadastro = _casaDeApoioState.cadastroCasaDeApoio();
+    cadastro.id = widget.casaDeApoio?.id;
+    await context.read<CasaDeApoioController>().atualizarCasaDeApoio(cadastro.toMap()).then(
+      (value) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+
+        final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Sucesso',
+                  message:
+                      'Casa de Apoio atualizada com sucesso!',
+                  contentType: ContentType.success,
+                ),
+                duration: const Duration(seconds: 10),
+              );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
+    );
   }
 }

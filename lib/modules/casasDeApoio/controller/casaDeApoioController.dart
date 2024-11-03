@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
+import 'package:acolherconsultas/shared/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,16 @@ class CasaDeApoioController extends ChangeNotifier {
   ValueNotifier<CasaDeApoio> get casaDeApoioSelecionada => _casaDeApoioSelecionada;
 
   // CRUD -----------------------------------
-  Future<String> criarCasaDeApoio(Map<String, dynamic> casaDeApoio) async {
-    return "";
+  Future<String> criarCasaDeApoio(CasaDeApoio casaDeApoio) async {
+    DocumentReference<Map<String, dynamic>> casaDeApoioAdicionada = await _firestore.collection("casasDeApoio").add(casaDeApoio.toMap());
+
+    return casaDeApoioAdicionada.id;
   }
 
   Future<void> atualizarCasaDeApoio(Map<String, dynamic> casaDeApoio) async {
+    String id = casaDeApoio["id"];
+    casaDeApoio.remove("id");
+    await _firestore.collection("casasDeApoio").doc(id).update(casaDeApoio);
   }
 
   Future<List<Map<String, dynamic>>> selecionarTodosCasaDeApoio() async {
@@ -60,5 +66,17 @@ class CasaDeApoioController extends ChangeNotifier {
   // Método que seleciona uma casaDeApoio.
   void selecionarCasaDeApoio(CasaDeApoio casaDeApoio){
     casaDeApoioSelecionadaStream.sink.add(casaDeApoio);
+  }
+
+  showLoading(context){
+    showDialog(
+      context: context, 
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: preto,
+        )
+      ),
+      barrierDismissible: false
+    );
   }
 }

@@ -26,7 +26,14 @@ class StandartRoundButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(verde),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Colors.grey;
+            }
+            return verde;
+          }
+        ),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
           EdgeInsets.symmetric(horizontal: horizontalPaddingFactor*8, vertical: verticalPaddingFactor*8),
         ),
