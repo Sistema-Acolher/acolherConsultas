@@ -1,4 +1,3 @@
-import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
@@ -18,7 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask/mask.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:provider/provider.dart';
 
 // A classe CadastroPacienteScreen é a tela de cadastro de pacientes.
 
@@ -105,7 +103,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                               Navigator.pop(context);
                             });
 
-                            const snackBar = SnackBar(
+                            final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.transparent,
@@ -114,7 +112,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                                 message: 'Paciente Cadastrado',
                                 contentType: ContentType.success,
                               ),
-                              duration: Duration(seconds: 10),
+                              duration: const Duration(seconds: 10),
                             );
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()

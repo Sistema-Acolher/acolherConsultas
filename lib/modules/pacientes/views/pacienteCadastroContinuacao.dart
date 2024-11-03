@@ -5,18 +5,13 @@ import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
-import 'package:acolherconsultas/shared/components/dropdown/inputDropdown.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputDynamicTextField.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask/mask/mask.dart';
-import 'package:mask/models/hashtag_is.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +34,6 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
   
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: PacienteAppbar(
           paciente: widget.paciente,
@@ -117,7 +111,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                               Navigator.pop(context);
                             });
 
-                            const snackBar = SnackBar(
+                            final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.transparent,
@@ -126,7 +120,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                                 message: 'Paciente Cadastrado',
                                 contentType: ContentType.success,
                               ),
-                              duration: Duration(seconds: 10),
+                              duration: const Duration(seconds: 10),
                             );
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
