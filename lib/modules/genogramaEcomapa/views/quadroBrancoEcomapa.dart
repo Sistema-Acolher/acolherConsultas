@@ -24,10 +24,8 @@ class QuadroBrancoEcomapa extends HookWidget {
   final ValueNotifier<String?>? energiaGastaParte;
   final GlobalKey canvasGlobalKey;
   final ValueNotifier<bool> temDesenho;
-  int id = 0;
-  List<Offset> pontosIniciais = [];
 
-  QuadroBrancoEcomapa({
+  const QuadroBrancoEcomapa({
     super.key,
     required this.ecomapa,
     required this.desenhoAtual,
@@ -49,261 +47,238 @@ class QuadroBrancoEcomapa extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        buildAllSketches(context),
-        buildCurrentPath(context),
-      ],
-    );
-  }
+    // Use hooks to manage mutable state
+    final id = useState(0);
+    final pontosIniciais = useState<List<Offset>>([]);
 
-  void onPointerDown(PointerDownEvent details, BuildContext context) {
-    id = ecomapa.value.elementos.length + 1;
-    final box = context.findRenderObject() as RenderBox;
-    final offset = box.globalToLocal(details.position);
-    // print(id);
-    
-    if(desenhoAtivo.value && !edicaoTextoAtiva.value){
-      borrachaAtiva.value = false;
+    void onPointerDown(PointerDownEvent details) {
+      id.value = ecomapa.value.elementos.length + 1;
+      final box = context.findRenderObject() as RenderBox;
+      final offset = box.globalToLocal(details.position);
 
-      if(edicaoAtiva.value){
-        ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
-        // print(elementoEncontrado?.texto);
+      if (desenhoAtivo.value && !edicaoTextoAtiva.value) {
+        borrachaAtiva.value = false;
 
-        if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta && elementoEncontrado.id != 1){
+        if (edicaoAtiva.value) {
+          ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
+
+          if (elementoEncontrado != null &&
+              elementoEncontrado.tipo != TipoDesenho.caneta &&
+              elementoEncontrado.id != 1) {
+            temDesenho.value = true;
+            desenhoAtual.value = elementoEncontrado;
+            tipoDesenho.value = elementoEncontrado.tipo;
+            textoCirculo.value = elementoEncontrado.texto ?? "";
+            ligacao?.value = elementoEncontrado.ligacao;
+            energiaGastaPaciente?.value = elementoEncontrado.energiaGastaPaciente;
+            energiaGastaParte?.value = elementoEncontrado.energiaGastaParte;
+            id.value = elementoEncontrado.id;
+
+            pontosIniciais.value = [
+              Offset(elementoEncontrado.pontos[0].dx, elementoEncontrado.pontos[0].dy)
+            ];
+
+            final newEcomapa = ecomapa.value.copyWith(
+                elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0]));
+            ecomapa.value = newEcomapa;
+            desenhoAtual.value = ElementosDesenho(
+              id: id.value,
+              pontos: [offset],
+              tipo: tipoDesenho.value,
+              cor: tipoDesenho.value == TipoDesenho.caneta ? vermelho : preto,
+              tamanho: tipoDesenho.value == TipoDesenho.texto ? 25 : 80,
+              texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa
+                  ? textoCirculo.value
+                  : null,
+              ligacao: ligacao?.value,
+              energiaGastaPaciente: energiaGastaPaciente?.value,
+              energiaGastaParte: energiaGastaParte?.value,
+            );
+          } else {
+            temDesenho.value = false;
+            desenhoAtivo.value = false;
+          }
+        } else {
           temDesenho.value = true;
-          desenhoAtual.value = elementoEncontrado;
-          tipoDesenho.value = elementoEncontrado.tipo;
-          textoCirculo.value = elementoEncontrado.texto ?? "";
-          ligacao?.value = elementoEncontrado.ligacao;
-          energiaGastaPaciente?.value = elementoEncontrado.energiaGastaPaciente;
-          energiaGastaParte?.value = elementoEncontrado.energiaGastaParte;
-          id = elementoEncontrado.id;
-          // print(elementoEncontrado.pontos);
-          // print(pontosIniciais);
-          // print("asda");
-          pontosIniciais.add(Offset(elementoEncontrado.pontos[0].dx, elementoEncontrado.pontos[0].dy));
-          // print(pontosIniciais);
-
-          final newEcomapa = ecomapa.value.copyWith(
-            elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0])
-          ); 
-          ecomapa.value = newEcomapa;
           desenhoAtual.value = ElementosDesenho(
-            id: id,
+            id: id.value != 0 ? id.value : ecomapa.value.elementos.length + 1,
             pontos: [offset],
             tipo: tipoDesenho.value,
             cor: tipoDesenho.value == TipoDesenho.caneta ? vermelho : preto,
             tamanho: tipoDesenho.value == TipoDesenho.texto ? 25 : 80,
-            texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa ? textoCirculo.value : null,
+            texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa
+                ? textoCirculo.value
+                : null,
             ligacao: ligacao?.value,
             energiaGastaPaciente: energiaGastaPaciente?.value,
             energiaGastaParte: energiaGastaParte?.value,
           );
-        } else {
-          temDesenho.value = false;
-          desenhoAtivo.value = false;
+          id.value = id.value != 0 ? id.value : ecomapa.value.elementos.length + 1;
         }
-      } else {
-        temDesenho.value = true;
+      }
+    }
+
+    void onPointerMove(PointerMoveEvent details) {
+      final box = context.findRenderObject() as RenderBox;
+      final offset = box.globalToLocal(details.position);
+      var pontos = [offset];
+      if (tipoDesenho.value == TipoDesenho.caneta) {
+        pontos = List<Offset>.from(desenhoAtual.value.pontos)..add(offset);
+      }
+
+      if (desenhoAtivo.value && temDesenho.value && !edicaoTextoAtiva.value) {
+        borrachaAtiva.value = false;
         desenhoAtual.value = ElementosDesenho(
-          id: id != 0 ? id : ecomapa.value.elementos.length + 1,
-          pontos: [offset],
-          tipo: tipoDesenho.value,
+          id: id.value != 0 ? id.value : ecomapa.value.elementos.length + 1,
+          pontos: pontos,
           cor: tipoDesenho.value == TipoDesenho.caneta ? vermelho : preto,
+          tipo: tipoDesenho.value,
           tamanho: tipoDesenho.value == TipoDesenho.texto ? 25 : 80,
-          texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa ? textoCirculo.value : null,
+          texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa
+              ? textoCirculo.value
+              : null,
           ligacao: ligacao?.value,
           energiaGastaPaciente: energiaGastaPaciente?.value,
           energiaGastaParte: energiaGastaParte?.value,
         );
-        id = id != 0 ? id : ecomapa.value.elementos.length + 1;
       }
-      
+      id.value = id.value != 0 ? id.value : ecomapa.value.elementos.length + 1;
     }
-    // print("AAAAAAAAAAAAAAAAAAAAdadada");
-    // print(pontosIniciais);
-  }
 
-  void onPointerMove(PointerMoveEvent details, BuildContext context) {
-    final box = context.findRenderObject() as RenderBox;
-    final offset = box.globalToLocal(details.position);
-    var pontos = [offset];
-    if(tipoDesenho.value == TipoDesenho.caneta){
-      pontos = List<Offset>.from(desenhoAtual.value.pontos)
-       ..add(offset);
-    }
-    // print(pontosIniciais);
-    // print("asda222");
-    // print(temDesenho.value);
+    void onPointerUp(PointerUpEvent details) {
+      final box = context.findRenderObject() as RenderBox;
+      final offset = box.globalToLocal(details.position);
 
-    if(desenhoAtivo.value && temDesenho.value && !edicaoTextoAtiva.value){
-      borrachaAtiva.value = false;
-      desenhoAtual.value = ElementosDesenho(
-        id: id != 0 ? id : ecomapa.value.elementos.length + 1,
-        pontos: pontos,
-        cor: tipoDesenho.value == TipoDesenho.caneta ? vermelho : preto,
-        tipo: tipoDesenho.value,
-        tamanho: tipoDesenho.value == TipoDesenho.texto ? 25 : 80,
-        texto: tipoDesenho.value == TipoDesenho.texto || tipoDesenho.value == TipoDesenho.circuloEcomapa ? textoCirculo.value : null,
-        ligacao: ligacao?.value,
-        energiaGastaPaciente: energiaGastaPaciente?.value,
-        energiaGastaParte: energiaGastaParte?.value,
-      );
-    }
-    id = id != 0 ? id : ecomapa.value.elementos.length + 1;
-  }
+      if (desenhoAtivo.value && temDesenho.value) {
+        borrachaAtiva.value = false;
 
-  void onPointerUp(PointerUpEvent details, BuildContext context) {
-    final box = context.findRenderObject() as RenderBox;
-    final offset = box.globalToLocal(details.position);
+        if (edicaoTextoAtiva.value) {
+          ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
 
-    if(desenhoAtivo.value && temDesenho.value){
-      borrachaAtiva.value = false;
+          if (elementoEncontrado != null &&
+              elementoEncontrado.tipo != TipoDesenho.caneta &&
+              elementoEncontrado.id != 1) {
+            temDesenho.value = true;
+            desenhoAtual.value = elementoEncontrado;
+            tipoDesenho.value = elementoEncontrado.tipo;
+            textoCirculo.value = elementoEncontrado.texto ?? "";
+            ligacao?.value = elementoEncontrado.ligacao;
+            energiaGastaPaciente?.value = elementoEncontrado.energiaGastaPaciente;
+            energiaGastaParte?.value = elementoEncontrado.energiaGastaParte;
 
-      if(edicaoTextoAtiva.value){
-        ElementosDesenho? elementoEncontrado = ecomapa.value.editDesenho(offset);
-        // print(elementoEncontrado?.texto);
-
-        if(elementoEncontrado != null && elementoEncontrado.tipo != TipoDesenho.caneta && elementoEncontrado.id != 1){
-          temDesenho.value = true;
-          desenhoAtual.value = elementoEncontrado;
-          tipoDesenho.value = elementoEncontrado.tipo;
-          textoCirculo.value = elementoEncontrado.texto ?? "";
-          ligacao?.value = elementoEncontrado.ligacao;
-          energiaGastaPaciente?.value = elementoEncontrado.energiaGastaPaciente;
-          energiaGastaParte?.value = elementoEncontrado.energiaGastaParte;
-
-          // ler o texto alterado que o usuario digitar e alterar o original
-          showDialog(
-            context: context, 
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Altere o Texto:'),
-                content: TextFormField(
-                  onChanged: (value) => textoCirculo.value = value,
-                  initialValue: textoCirculo.value,
-                  maxLines: tipoDesenho.value == TipoDesenho.texto ? 5 : 1,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  keyboardType: TextInputType.multiline,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.black,
-                  ),
-                  cursorColor: preto,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Altere o Texto:'),
+                    content: TextFormField(
+                      onChanged: (value) => textoCirculo.value = value,
+                      initialValue: textoCirculo.value,
+                      maxLines: tipoDesenho.value == TipoDesenho.texto ? 5 : 1,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      keyboardType: TextInputType.multiline,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                      cursorColor: preto,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: 'Alteração',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
-                    hintText: 'Alteração',
-                    hintStyle: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => {
-                      Navigator.of(context).pop()
-                    },
-                    child: const Text('Cancelar'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      desenhoEditado.value = MapEntry(ElementosDesenho(
-                        id: 0,
-                        pontos: [],
-                        tipo: TipoDesenho.semDesenho,
-                        tamanho: 5,
-                      ), Operacoes.edicao);
-                      final newEcomapa = ecomapa.value.copyWith(
-                        elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0])
-                      ); 
-                      ecomapa.value = newEcomapa;
-                      desenhoAtual.value = ElementosDesenho(
-                          id: elementoEncontrado.id,
-                          pontos: elementoEncontrado.pontos,
-                          cor: elementoEncontrado.cor,
-                          tipo: elementoEncontrado.tipo,
-                          tamanho: elementoEncontrado.tamanho,
-                          texto: textoCirculo.value,
-                          ligacao: ligacao?.value,
-                          energiaGastaPaciente: energiaGastaPaciente?.value,
-                          energiaGastaParte: energiaGastaParte?.value,
-                        );
-                      desenhoEditado.value = MapEntry(elementoEncontrado, Operacoes.edicao);
-                      ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
-                      desenhoAtivo.value = false;
-                      // print("EDITOU");
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Confirmar'),
-                  ),
-                ],
-              );
-            }
+                    actions: [
+                      TextButton(
+                        onPressed: () => {Navigator.of(context).pop()},
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          desenhoEditado.value =
+                              MapEntry(ElementosDesenho(id: 0, pontos: [], tipo: TipoDesenho.semDesenho, tamanho: 5), Operacoes.edicao);
+                          final newEcomapa = ecomapa.value.copyWith(
+                              elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0]));
+                          ecomapa.value = newEcomapa;
+                          desenhoAtual.value = ElementosDesenho(
+                            id: elementoEncontrado.id,
+                            pontos: elementoEncontrado.pontos,
+                            cor: elementoEncontrado.cor,
+                            tipo: elementoEncontrado.tipo,
+                            tamanho: elementoEncontrado.tamanho,
+                            texto: textoCirculo.value,
+                            ligacao: ligacao?.value,
+                            energiaGastaPaciente: energiaGastaPaciente?.value,
+                            energiaGastaParte: energiaGastaParte?.value,
+                          );
+                          desenhoEditado.value = MapEntry(elementoEncontrado, Operacoes.edicao);
+                          ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
+                          desenhoAtivo.value = false;
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Confirmar'),
+                      ),
+                    ],
+                  );
+                });
+          } else {
+            temDesenho.value = false;
+            desenhoAtivo.value = false;
+          }
+        } else {
+          if (edicaoAtiva.value) {
+            desenhoEditado.value =
+                MapEntry(desenhoAtual.value.copyWith(pontos: pontosIniciais.value), Operacoes.edicao);
+          } else {
+            desenhoEditado.value = MapEntry(desenhoAtual.value, Operacoes.adicao);
+          }
+          ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
+          desenhoAtual.value = ElementosDesenho(
+            id: 0,
+            pontos: [],
+            tipo: tipoDesenho.value,
+            tamanho: 5,
           );
-          
-        } else {
-          temDesenho.value = false;
-          desenhoAtivo.value = false;
+          if (!edicaoAtiva.value) {
+            desenhoAtivo.value = false;
+          }
+          id.value = ecomapa.value.elementos.length + 1;
         }
-      } else {
-        if(edicaoAtiva.value){
-          // print("aadçç");
-          // print(pontosIniciais);
-          desenhoEditado.value = MapEntry(desenhoAtual.value.copyWith(pontos: pontosIniciais), Operacoes.edicao);
-        } else {
-          desenhoEditado.value = MapEntry(desenhoAtual.value, Operacoes.adicao);
-        }
-        ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
-        desenhoAtual.value = 
-        ElementosDesenho(
+      } else if (borrachaAtiva.value) {
+        desenhoAtual.value = ElementosDesenho(
           id: 0,
           pontos: [],
           tipo: tipoDesenho.value,
           tamanho: 5,
         );
-        if(!edicaoAtiva.value) {
-          desenhoAtivo.value = false;
-        }
-        id = ecomapa.value.elementos.length + 1;
+
+        desenhoEditado.value = MapEntry(
+            ecomapa.value.editDesenho(offset) ??
+                ElementosDesenho(
+                  id: 0,
+                  pontos: [],
+                  tipo: tipoDesenho.value,
+                  tamanho: 5,
+                ),
+            Operacoes.remocao);
+
+        final newEcomapa = ecomapa.value.copyWith(elementos: ecomapa.value.removeDesenho(offset));
+        ecomapa.value = newEcomapa;
       }
-    } else if(borrachaAtiva.value){
-      desenhoAtual.value = ElementosDesenho(
-        id: 0,
-        pontos: [],
-        tipo: tipoDesenho.value,
-        tamanho: 5,
-      );
-
-      // ecomapa.value.elementos.forEach((el) {
-      //   print("[${el.id}] ");
-      // });
-
-      // print(ecomapa.value.editDesenho(offset)?.id);
-
-      desenhoEditado.value = MapEntry(ecomapa.value.editDesenho(offset) ?? ElementosDesenho(
-        id: 0,
-        pontos: [],
-        tipo: tipoDesenho.value,
-        tamanho: 5,
-      ), Operacoes.remocao);
-
-      // print(desenhoEditado.value.key.id);
-
-      final newEcomapa = ecomapa.value.copyWith(
-        elementos: ecomapa.value.removeDesenho(offset)
-      ); 
-      ecomapa.value = newEcomapa;
-      // id = ecomapa.value.elementos.length + 1;
-      // print(desenhoEditado.value.key.id);
     }
-    // print(pontosIniciais); 
-    // pontosIniciais = [];
-    // print(ecomapa.value.elementos);
+
+    return Stack(
+      children: [
+        buildAllSketches(context),
+        buildCurrentPath(context, onPointerDown, onPointerMove, onPointerUp),
+      ],
+    );
   }
 
   Widget buildAllSketches(BuildContext context) {
@@ -326,11 +301,12 @@ class QuadroBrancoEcomapa extends HookWidget {
     );
   }
 
-  Widget buildCurrentPath(BuildContext context) {
+  Widget buildCurrentPath(BuildContext context, void Function(PointerDownEvent) onPointerDown,
+      void Function(PointerMoveEvent) onPointerMove, void Function(PointerUpEvent) onPointerUp) {
     return Listener(
-      onPointerDown: (details) => onPointerDown(details, context),
-      onPointerMove: (details) => onPointerMove(details, context),
-      onPointerUp: (details) => onPointerUp(details, context),
+      onPointerDown: onPointerDown,
+      onPointerMove: onPointerMove,
+      onPointerUp: onPointerUp,
       child: ValueListenableBuilder(
         valueListenable: desenhoAtual,
         builder: (context, desenho, child) {
