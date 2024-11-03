@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Consulta {
   // Dados comuns entre crianças e adolescentes
-  DateTime idade;
+  DateTime? idade;
   String cuidadorPrincipal;
   String queixaPrincipal;
   String descricao;
@@ -22,6 +22,7 @@ class Consulta {
   String evacuacoes;
   String itensHigiene;
   String higieneCorporal;
+  String higieneBucal;
   String sono;
   int comprimento;
   double peso;
@@ -47,6 +48,9 @@ class Consulta {
   String intervencoes;
 
   // Dados somente crianças
+  String? fontanelas;
+  String? cotoUmbilical;
+  String? genitalia;
   String? frequenciaRespiratoria;
   int? bregmatica;
   bool? bregmaticaCalcificada;
@@ -118,6 +122,7 @@ class Consulta {
     required this.evacuacoes,
     required this.itensHigiene,
     required this.higieneCorporal,
+    required this.higieneBucal,
     required this.sono,
     required this.comprimento,
     required this.peso,
@@ -141,6 +146,9 @@ class Consulta {
     required this.analiseGeral,
     required this.avaliacoes,
     required this.intervencoes,
+    this.fontanelas,
+    this.cotoUmbilical,
+    this.genitalia,
     this.frequenciaRespiratoria,
     this.bregmatica,
     this.bregmaticaCalcificada,
@@ -190,6 +198,7 @@ class Consulta {
 
   Consulta copyWith({
     DateTime? idade,
+    DateTime? dataConsulta,
     String? cuidadorPrincipal,
     String? queixaPrincipal,
     String? descricao,
@@ -209,6 +218,7 @@ class Consulta {
     String? evacuacoes,
     String? itensHigiene,
     String? higieneCorporal,
+    String? higieneBucal,
     String? sono,
     int? comprimento,
     double? peso,
@@ -232,6 +242,9 @@ class Consulta {
     String? analiseGeral,
     String? avaliacoes,
     String? intervencoes,
+    String? fontanelas,
+    String? cotoUmbilical,
+    String? genitalia,
     String? frequenciaRespiratoria,
     int? bregmatica,
     bool? bregmaticaCalcificada,
@@ -299,6 +312,7 @@ class Consulta {
       evacuacoes: evacuacoes ?? this.evacuacoes,
       itensHigiene: itensHigiene ?? this.itensHigiene,
       higieneCorporal: higieneCorporal ?? this.higieneCorporal,
+      higieneBucal: higieneBucal ?? this.higieneBucal,
       sono: sono ?? this.sono,
       comprimento: comprimento ?? this.comprimento,
       peso: peso ?? this.peso,
@@ -322,6 +336,9 @@ class Consulta {
       analiseGeral: analiseGeral ?? this.analiseGeral,
       avaliacoes: avaliacoes ?? this.avaliacoes,
       intervencoes: intervencoes ?? this.intervencoes,
+      fontanelas: fontanelas ?? this.fontanelas,
+      cotoUmbilical: cotoUmbilical ?? this.cotoUmbilical,
+      genitalia: genitalia ?? this.genitalia,
       frequenciaRespiratoria: frequenciaRespiratoria ?? this.frequenciaRespiratoria,
       bregmatica: bregmatica ?? this.bregmatica,
       bregmaticaCalcificada: bregmaticaCalcificada ?? this.bregmaticaCalcificada,
@@ -372,7 +389,7 @@ class Consulta {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'idade': idade.millisecondsSinceEpoch,
+      //'idade': idade,
       'cuidadorPrincipal': cuidadorPrincipal,
       'queixaPrincipal': queixaPrincipal,
       'descricao': descricao,
@@ -392,6 +409,7 @@ class Consulta {
       'evacuacoes': evacuacoes,
       'itensHigiene': itensHigiene,
       'higieneCorporal': higieneCorporal,
+      'higieneBucal': higieneBucal,
       'sono': sono,
       'comprimento': comprimento,
       'peso': peso,
@@ -415,6 +433,9 @@ class Consulta {
       'analiseGeral': analiseGeral,
       'avaliacoes': avaliacoes,
       'intervencoes': intervencoes,
+      'fontanelas': fontanelas,
+      'cotoUmbilical': cotoUmbilical,
+      'genitalia': genitalia,
       'frequenciaRespiratoria': frequenciaRespiratoria,
       'bregmatica': bregmatica,
       'bregmaticaCalcificada': bregmaticaCalcificada,
@@ -440,7 +461,9 @@ class Consulta {
       'sexualidade': sexualidade,
       'estagioTurnerMeninasMamas': estagioTurnerMeninasMamas,
       'estagioTurnerMeninasPelosPubianos': estagioTurnerMeninasPelosPubianos,
-      'dataUltimaMenstruacao': dataUltimaMenstruacao?.millisecondsSinceEpoch,
+      'dataUltimaMenstruacao': dataUltimaMenstruacao != null
+          ? Timestamp.fromDate(dataUltimaMenstruacao!)
+          : null,
       'fluxoMenstrual': fluxoMenstrual,
       'regularidadeMenstruacao': regularidadeMenstruacao,
       'quaoIrregular': quaoIrregular,
@@ -459,7 +482,8 @@ class Consulta {
       'estagioTurnerMeninosGenitalia': estagioTurnerMeninosGenitalia,
       'estagioTurnerMeninosPelosPubianos': estagioTurnerMeninosPelosPubianos,
       'semenarca': semenarca,
-      'quandoSemenarca': quandoSemenarca?.millisecondsSinceEpoch,
+      'quandoSemenarca':
+          quandoSemenarca != null ? Timestamp.fromDate(quandoSemenarca!) : null,
     };
   }
 
@@ -485,6 +509,7 @@ class Consulta {
       evacuacoes: map['evacuacoes'] as String,
       itensHigiene: map['itensHigiene'] as String,
       higieneCorporal: map['higieneCorporal'] as String,
+      higieneBucal: map['higieneBucal'] as String,
       sono: map['sono'] as String,
       comprimento: map['comprimento'] as int,
       peso: map['peso'] as double,
@@ -502,57 +527,72 @@ class Consulta {
       avaliacaoPele: map['avaliacaoPele'] as String,
       marcosPresentes: map['marcosPresentes'] as String,
       marcosAusentes: map['marcosAusentes'] as String,
-      observacoesDesenvolvimento: map['observacoesDesenvolvimento'] != null ? map['observacoesDesenvolvimento'] as String : null,
+      observacoesDesenvolvimento: map['observacoesDesenvolvimento'] as String?,
       comoSeSenteHoje: map['comoSeSenteHoje'] as String,
-      observacoesPsicoemocionais: map['observacoesPsicoemocionais'] != null ? map['observacoesPsicoemocionais'] as String : null,
+      observacoesPsicoemocionais: map['observacoesPsicoemocionais'] as String?,
       analiseGeral: map['analiseGeral'] as String,
       avaliacoes: map['avaliacoes'] as String,
       intervencoes: map['intervencoes'] as String,
-      frequenciaRespiratoria: map['frequenciaRespiratoria'] != null ? map['frequenciaRespiratoria'] as String : null,
-      bregmatica: map['bregmatica'] != null ? map['bregmatica'] as int : null,
-      bregmaticaCalcificada: map['bregmaticaCalcificada'] != null ? map['bregmaticaCalcificada'] as bool : null,
-      lambdoide: map['lambdoide'] != null ? map['lambdoide'] as int : null,
-      lambdoideCalcificada: map['lambdoideCalcificada'] != null ? map['lambdoideCalcificada'] as bool : null,
-      avaliacaoLinguagem: map['avaliacaoLinguagem'] != null ? map['avaliacaoLinguagem'] as String : null,
-      reflexoBusca: map['reflexoBusca'] != null ? map['reflexoBusca'] as int : null,
-      reflexoSuccao: map['reflexoSuccao'] != null ? map['reflexoSuccao'] as int : null,
-      reflexoPreensaoPalmar: map['reflexoPreensaoPalmar'] != null ? map['reflexoPreensaoPalmar'] as int : null,
-      reflexoPreensaoPlantar: map['reflexoPreensaoPlantar'] != null ? map['reflexoPreensaoPlantar'] as int : null,
-      reflexoBabinski: map['reflexoBabinski'] != null ? map['reflexoBabinski'] as int : null,
-      reflexoTonicoCervical: map['reflexoTonicoCervical'] != null ? map['reflexoTonicoCervical'] as int : null,
-      reflexoMoro: map['reflexoMoro'] != null ? map['reflexoMoro'] as int : null,
-      reflexoMarcha: map['reflexoMarcha'] != null ? map['reflexoMarcha'] as int : null,
-      reflexoPiscarOptico: map['reflexoPiscarOptico'] != null ? map['reflexoPiscarOptico'] as int : null,
-      reflexoBuscaESuccao: map['reflexoBuscaESuccao'] != null ? map['reflexoBuscaESuccao'] as int : null,
-      movimentosSimetricosFaciais: map['movimentosSimetricosFaciais'] != null ? map['movimentosSimetricosFaciais'] as int : null,
-      reflexoPiscarAcustico: map['reflexoPiscarAcustico'] != null ? map['reflexoPiscarAcustico'] as int : null,
-      reflexoVomito: map['reflexoVomito'] != null ? map['reflexoVomito'] as int : null,
-      aperteNariz: map['aperteNariz'] != null ? map['aperteNariz'] as int : null,
-      atividadesLazer: map['atividadesLazer'] != null ? map['atividadesLazer'] as String : null,
-      identidadeGenero: map['identidadeGenero'] != null ? map['identidadeGenero'] as int : null,
-      sexualidade: map['sexualidade'] != null ? map['sexualidade'] as int : null,
-      estagioTurnerMeninasMamas: map['estagioTurnerMeninasMamas'] != null ? map['estagioTurnerMeninasMamas'] as int : null,
-      estagioTurnerMeninasPelosPubianos: map['estagioTurnerMeninasPelosPubianos'] != null ? map['estagioTurnerMeninasPelosPubianos'] as int : null,
-      dataUltimaMenstruacao: map['dataUltimaMenstruacao'] != null ? DateTime.fromMillisecondsSinceEpoch(map['dataUltimaMenstruacao'] as int) : null,
-      fluxoMenstrual: map['fluxoMenstrual'] != null ? map['fluxoMenstrual'] as int : null,
-      regularidadeMenstruacao: map['regularidadeMenstruacao'] != null ? map['regularidadeMenstruacao'] as int : null,
-      quaoIrregular: map['quaoIrregular'] != null ? map['quaoIrregular'] as String : null,
-      dimenorreia: map['dimenorreia'] != null ? map['dimenorreia'] as bool : null,
-      usoAbsorvente: map['usoAbsorvente'] != null ? map['usoAbsorvente'] as String : null,
-      usaMedicamento: map['usaMedicamento'] != null ? map['usaMedicamento'] as bool : null,
-      qualMedicamento: map['qualMedicamento'] != null ? map['qualMedicamento'] as String : null,
-      observacoesSaudeSexualEReprodutivaMeninas: map['observacoesSaudeSexualEReprodutivaMeninas'] != null ? map['observacoesSaudeSexualEReprodutivaMeninas'] as String : null,
-      vidaSexualAtiva: map['vidaSexualAtiva'] != null ? map['vidaSexualAtiva'] as bool : null,
-      usaMetodoContraceptivo: map['usaMetodoContraceptivo'] != null ? map['usaMetodoContraceptivo'] as bool : null,
-      qualMetodoContraceptivo: map['qualMetodoContraceptivo'] != null ? map['qualMetodoContraceptivo'] as String : null,
-      jaFezPreventivo: map['jaFezPreventivo'] != null ? map['jaFezPreventivo'] as bool : null,
-      quandoFezPreventivo: map['quandoFezPreventivo'] != null ? DateTime.fromMillisecondsSinceEpoch(map['quandoFezPreventivo'] as int) : null,
-      seMasturba: map['seMasturba'] != null ? map['seMasturba'] as bool : null,
-      frequenciaMasturbacao: map['frequenciaMasturbacao'] != null ? map['frequenciaMasturbacao'] as String : null,
-      estagioTurnerMeninosGenitalia: map['estagioTurnerMeninosGenitalia'] != null ? map['estagioTurnerMeninosGenitalia'] as int : null,
-      estagioTurnerMeninosPelosPubianos: map['estagioTurnerMeninosPelosPubianos'] != null ? map['estagioTurnerMeninosPelosPubianos'] as int : null,
-      semenarca: map['semenarca'] != null ? map['semenarca'] as bool : null,
-      quandoSemenarca: map['quandoSemenarca'] != null ? DateTime.fromMillisecondsSinceEpoch(map['quandoSemenarca'] as int) : null,
+      // Dados somente crianças
+      fontanelas: map['fontanelas'] as String,
+      cotoUmbilical: map['cotoUmbilical'] as String,
+      genitalia: map['genitalia'] as String,
+      frequenciaRespiratoria: map['frequenciaRespiratoria'] as String?,
+      bregmatica: map['bregmatica'] as int?,
+      bregmaticaCalcificada: map['bregmaticaCalcificada'] as bool?,
+      lambdoide: map['lambdoide'] as int?,
+      lambdoideCalcificada: map['lambdoideCalcificada'] as bool?,
+      avaliacaoLinguagem: map['avaliacaoLinguagem'] as String?,
+      reflexoBusca: map['reflexoBusca'] as int?,
+      reflexoSuccao: map['reflexoSuccao'] as int?,
+      reflexoPreensaoPalmar: map['reflexoPreensaoPalmar'] as int?,
+      reflexoPreensaoPlantar: map['reflexoPreensaoPlantar'] as int?,
+      reflexoBabinski: map['reflexoBabinski'] as int?,
+      reflexoTonicoCervical: map['reflexoTonicoCervical'] as int?,
+      reflexoMoro: map['reflexoMoro'] as int?,
+      reflexoMarcha: map['reflexoMarcha'] as int?,
+      reflexoPiscarOptico: map['reflexoPiscarOptico'] as int?,
+      reflexoBuscaESuccao: map['reflexoBuscaESuccao'] as int?,
+      movimentosSimetricosFaciais: map['movimentosSimetricosFaciais'] as int?,
+      reflexoPiscarAcustico: map['reflexoPiscarAcustico'] as int?,
+      reflexoVomito: map['reflexoVomito'] as int?,
+      aperteNariz: map['aperteNariz'] as int?,
+      // Dados somente adolescentes
+      atividadesLazer: map['atividadesLazer'] as String?,
+      identidadeGenero: map['identidadeGenero'] as int?,
+      sexualidade: map['sexualidade'] as int?,
+      estagioTurnerMeninasMamas: map['estagioTurnerMeninasMamas'] as int?,
+      estagioTurnerMeninasPelosPubianos:
+          map['estagioTurnerMeninasPelosPubianos'] as int?,
+      dataUltimaMenstruacao: map['dataUltimaMenstruacao'] != null
+          ? (map['dataUltimaMenstruacao'] as Timestamp).toDate()
+          : null,
+      fluxoMenstrual: map['fluxoMenstrual'] as int?,
+      regularidadeMenstruacao: map['regularidadeMenstruacao'] as int?,
+      quaoIrregular: map['quaoIrregular'] as String?,
+      dimenorreia: map['dimenorreia'] as bool?,
+      usoAbsorvente: map['usoAbsorvente'] as String?,
+      usaMedicamento: map['usaMedicamento'] as bool?,
+      qualMedicamento: map['qualMedicamento'] as String?,
+      observacoesSaudeSexualEReprodutivaMeninas:
+          map['observacoesSaudeSexualEReprodutivaMeninas'] as String?,
+      vidaSexualAtiva: map['vidaSexualAtiva'] as bool?,
+      usaMetodoContraceptivo: map['usaMetodoContraceptivo'] as bool?,
+      qualMetodoContraceptivo: map['qualMetodoContraceptivo'] as String?,
+      jaFezPreventivo: map['jaFezPreventivo'] as bool?,
+      quandoFezPreventivo: map['quandoFezPreventivo'] != null
+          ? (map['quandoFezPreventivo'] as Timestamp).toDate()
+          : null,
+      seMasturba: map['seMasturba'] as bool?,
+      frequenciaMasturbacao: map['frequenciaMasturbacao'] as String?,
+      estagioTurnerMeninosGenitalia:
+          map['estagioTurnerMeninosGenitalia'] as int?,
+      estagioTurnerMeninosPelosPubianos:
+          map['estagioTurnerMeninosPelosPubianos'] as int?,
+      semenarca: map['semenarca'] as bool?,
+      quandoSemenarca: map['quandoSemenarca'] != null
+          ? (map['quandoSemenarca'] as Timestamp).toDate()
+          : null,
     );
   }
 }
@@ -606,7 +646,7 @@ class ConsultaCadastro {
     };
   }
 
-  factory ConsultaCadastro.fromMap(Map<String, dynamic> map) {
+factory ConsultaCadastro.fromMap(Map<String, dynamic> map) {
     return ConsultaCadastro(
       id: map['id'] != null ? map['id'] as String : null,
       casaDeApoioId: map['casaDeApoioId'] as String,
@@ -618,20 +658,21 @@ class ConsultaCadastro {
     );
   }
 
+
   @override
   bool operator ==(covariant ConsultaCadastro other) {
     if (identical(this, other)) return true;
-  
-    return other.id == id ;
+
+    return other.id == id;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      casaDeApoioId.hashCode ^
-      pacienteNome.hashCode ^
-      pacienteId.hashCode ^
-      dataHorario.hashCode ^
-      estado.hashCode;
+        casaDeApoioId.hashCode ^
+        pacienteNome.hashCode ^
+        pacienteId.hashCode ^
+        dataHorario.hashCode ^
+        estado.hashCode;
   }
 }

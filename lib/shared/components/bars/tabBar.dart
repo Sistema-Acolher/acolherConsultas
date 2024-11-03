@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatefulWidget {
-  final PreferredSizeWidget appBar;
+  final PreferredSizeWidget? appBar;
   final List<String> tabs_;
   final List<Widget> views_;
   final List<Widget>? fabs_;
-  const CustomTabBar({super.key, required this.appBar, required this.tabs_, required this.views_, this.fabs_});
+  const CustomTabBar({super.key, this.appBar, required this.tabs_, required this.views_, this.fabs_});
 
   @override
   State<CustomTabBar> createState() => _CustomTabBarState();
@@ -55,18 +55,20 @@ class _CustomTabBarState extends State<CustomTabBar> with TickerProviderStateMix
                   ),
                 ],
               ),
-              child:  TabBar.secondary(
-                controller: _tabController,
-                indicator: const UnderlineTabIndicator(
-                  borderSide: BorderSide(
-                    width: 4,
-                    color: Colors.black,
-                  )
+              child:  DefaultTabController( length: 3,
+                child: TabBar.secondary(
+                  controller: _tabController,
+                  indicator: const UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 4,
+                      color: Colors.black,
+                    )
+                  ),
+                  labelPadding: const EdgeInsets.only(left: 0, right: 0),
+                  unselectedLabelStyle: const TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Color(0xFF151515)),
+                  labelStyle:           const TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Color(0xFF5DB075)),
+                  tabs: listTabs
                 ),
-                labelPadding: const EdgeInsets.only(left: 0, right: 0),
-                unselectedLabelStyle: const TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Color(0xFF151515)),
-                labelStyle:           const TextStyle(letterSpacing: 1, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Color(0xFF5DB075)),
-                tabs: listTabs
               ),
             ),
             const SizedBox(height: 5),

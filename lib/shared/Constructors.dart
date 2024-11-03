@@ -43,6 +43,7 @@ final ConsultaCadastro consultaTeste = ConsultaCadastro(
     evacuacoes: "1 vez ao dia",
     itensHigiene: "Escova de dente, sabonete",
     higieneCorporal: "Normal",
+    higieneBucal: "Normal",
     sono: "8 horas por noite",
     comprimento: 120,
     peso: 30.5,
