@@ -24,30 +24,17 @@ class CadastroPacienteState extends ChangeNotifier {
   final acompanhamentoProfissionalDeSaude = TextEditingController();
   final observacoes = TextEditingController();
   final idade = TextEditingController();
+  final medicamentosUsados = TextEditingController();
+  final vacinasFaltando = TextEditingController();
 
   // Historial pregressa state
   final historiaPregressa = HistoriaPregressaState();
 
   // Listas e dados adicionais
   List<AulasEspecializadas> aulasEspecializadas = [];
-  List<String> medicamentosUsados = [];
-  List<String> vacinasFaltando = [];
-
   // Adicionar uma nova aula especializada
   void adicionarAulaEspecializada(AulasEspecializadas aula) {
     aulasEspecializadas.add(aula);
-    notifyListeners();
-  }
-
-  // Adicionar um novo medicamento
-  void adicionarMedicamento(String medicamento) {
-    medicamentosUsados.add(medicamento);
-    notifyListeners();
-  }
-
-  // Adicionar uma nova vacina
-  void adicionarVacina(String vacina) {
-    vacinasFaltando.add(vacina);
     notifyListeners();
   }
 
@@ -79,11 +66,11 @@ class CadastroPacienteState extends ChangeNotifier {
           ? null
           : dificuldadesEscolares.text.trim(),
       aulasEspecializadas: aulasEspecializadas,
-      medicamentosUsados: medicamentosUsados,
+      medicamentosUsados: medicamentosUsados.text.trim(),
       acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude.text.trim().isEmpty
           ? null
           : acompanhamentoProfissionalDeSaude.text.trim(),
-      vacinasFaltando: vacinasFaltando,
+      vacinasFaltando: vacinasFaltando.text.trim(),
       observacoes: observacoes.text.trim().isEmpty
           ? null
           : observacoes.text.trim(),

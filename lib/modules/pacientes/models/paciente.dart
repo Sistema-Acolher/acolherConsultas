@@ -27,9 +27,9 @@ class Paciente {
   String? serieTurnoEscola;
   String? dificuldadesEscolares;
   List<AulasEspecializadas> aulasEspecializadas;
-  List<String> medicamentosUsados;
+  String? medicamentosUsados;
   String? acompanhamentoProfissionalDeSaude;
-  List<String> vacinasFaltando;
+  String? vacinasFaltando;
   String? observacoes;
   HistoriaPregressa? historiaPregressa;
   Paciente({
@@ -52,9 +52,9 @@ class Paciente {
     this.serieTurnoEscola,
     this.dificuldadesEscolares,
     this.aulasEspecializadas = const [],
-    this.medicamentosUsados = const [],
+    this.medicamentosUsados,
     this.acompanhamentoProfissionalDeSaude,
-    this.vacinasFaltando = const [],
+    this.vacinasFaltando,
     this.observacoes,
     this.historiaPregressa,
   });
@@ -79,9 +79,9 @@ class Paciente {
     String? serieTurnoEscola,
     String? dificuldadesEscolares,
     List<AulasEspecializadas>? aulasEspecializadas,
-    List<String>? medicamentosUsados,
+    String? medicamentosUsados,
     String? acompanhamentoProfissionalDeSaude,
-    List<String>? vacinasFaltando,
+    String? vacinasFaltando,
     String? observacoes,
     HistoriaPregressa? historiaPregressa,
   }) {
@@ -163,9 +163,9 @@ class Paciente {
       serieTurnoEscola: map['serieTurnoEscola'] != null ? map['serieTurnoEscola'] as String : null,
       dificuldadesEscolares: map['dificuldadesEscolares'] != null ? map['dificuldadesEscolares'] as String : null,
       aulasEspecializadas: List<AulasEspecializadas>.from((map['aulasEspecializadas'] as List<dynamic>).map<AulasEspecializadas>((x) => AulasEspecializadas.fromMap(x as Map<String,dynamic>),),),
-      medicamentosUsados: List<String>.from(map['medicamentosUsados'] as List<dynamic>),
+      medicamentosUsados: map['medicamentosUsados'] as String,
       acompanhamentoProfissionalDeSaude: map['acompanhamentoProfissionalDeSaude'] != null ? map['acompanhamentoProfissionalDeSaude'] as String : null,
-      vacinasFaltando: List<String>.from(map['vacinasFaltando'] as List<dynamic>),
+      vacinasFaltando: map['vacinasFaltando'] as String,
       observacoes: map['observacoes'] != null ? map['observacoes'] as String : null,
       historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
     );

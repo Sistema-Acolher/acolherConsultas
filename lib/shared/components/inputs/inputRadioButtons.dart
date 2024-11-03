@@ -1,5 +1,6 @@
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,8 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
     required this.options,
     required this.label,
     required this.controller,
-    this.optionalController,
+    this.secondController,
+    this.thirdController,
     required this.isChecked,
     this.readOnly = false,
   });
@@ -17,7 +19,8 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
   final List<String> options;
   final String label;
   final TextEditingController controller;
-  final TextEditingController? optionalController;
+  final TextEditingController? secondController;
+  final TextEditingController? thirdController;
   final ValueNotifier<bool> isChecked;
   final bool readOnly;
 
@@ -94,12 +97,26 @@ class _InputRadioButtonsCadastroPacienteState
               fontSize: 13,
             ),
           ),
-        if (showTextBox && widget.optionalController != null)
-          InputCaixaDeTexto(
-            isCadastro: true,
-            label: widget.label,
-            controller: widget.optionalController!,
+        if (showTextBox && widget.secondController != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: InputTextoAcolher(
+                  label:"Data: ",
+                  controller: widget.secondController!,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: InputTextoAcolher(
+                  label: "Local: ",
+                  controller: widget.thirdController!,
+                ),
+              ),
+            ],
           ),
+
       ],
     );
   }

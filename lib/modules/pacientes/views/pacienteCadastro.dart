@@ -2,6 +2,7 @@ import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
+import 'package:acolherconsultas/modules/pacientes/views/pacienteCadastroContinuacao.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/buttons/standartRoundButton.dart';
@@ -67,7 +68,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: StandartRoundButton(
-          text: "Salvar",
+          text: "Continuar",
           icon: Symbols.book,
           onPressed: () {
             // Se o formulário for válido, exibe um diálogo de confirmação.
@@ -93,49 +94,9 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                           bool erro = false;
                           Navigator.pop(context);
                           showLoading(context);
-                          context
-                              .read<PacientesController>()
-                              .cadastrarPaciente(
-                                  _stateCadastroPaciente.cadastro(),
-                                  Provider.of<CasaDeApoio>(context))
-                              .then((value) {
-                            Navigator.pop(context);
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Sucesso',
-                                message: value,
-                                contentType: ContentType.success,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          }).onError((error, stackTrace) {
-                            erro = true;
-                            Future.delayed(Duration.zero, () {
-                              Navigator.pop(context);
-                            });
-
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Erro',
-                                message: error.toString(),
-                                contentType: ContentType.failure,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                          });
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                            PacienteCadastroContinuacao(paciente: widget.paciente, cadastroPacienteState: _stateCadastroPaciente)));
                           var isConnected =
                               await (Connectivity().checkConnectivity());
                           if (!erro &&
@@ -144,7 +105,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                               Navigator.pop(context);
                             });
 
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.transparent,
@@ -153,7 +114,7 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                                 message: 'Paciente Cadastrado',
                                 contentType: ContentType.success,
                               ),
-                              duration: const Duration(seconds: 10),
+                              duration: Duration(seconds: 10),
                             );
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
@@ -285,87 +246,11 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                     options: const ["Sim", "Não"],
                     label: "Acolhimento anterior",
                     controller: _controllerRadio,
-                    optionalController:
+                    secondController:
                         _stateCadastroPaciente.localAcolhimentoAnterior,
+                    thirdController: _stateCadastroPaciente.dataAcolhimentoAnterior,
                     isChecked: radiobuttonNotifier,
-                  ),
-                  // Campos adicionais para medicamentos, vacinas e aulas especializadas
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Medicamentos Usados"),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _stateCadastroPaciente.medicamentosUsados.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_stateCadastroPaciente.medicamentosUsados[index]),
-                            );
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Lógica para adicionar medicamento
-                          },
-                          child: const Text("Adicionar Medicamento"),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Vacinas Faltantes"),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _stateCadastroPaciente.vacinasFaltando.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(_stateCadastroPaciente.vacinasFaltando[index]),
-                            );
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Lógica para adicionar vacina
-                          },
-                          child: const Text("Adicionar Vacina"),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Aulas Especializadas"),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _stateCadastroPaciente.aulasEspecializadas.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(
-                                  _stateCadastroPaciente.aulasEspecializadas[index].nomeAula),
-                            );
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Lógica para adicionar aula especializada
-                          },
-                          child: const Text("Adicionar Aula Especializada"),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ),                  
                 ],
               ),
             ),
