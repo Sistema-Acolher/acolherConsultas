@@ -10,8 +10,6 @@ import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart
 import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:acolherconsultas/shared/components/text/confirmacao.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -89,36 +87,10 @@ class _CadastroPacienteScreenState extends State<CadastroPacienteScreen> {
                         nome: "",
                         dataHorario: DateTime.now(),
                         confimacao: () async {
-                          bool erro = false;
                           Navigator.pop(context);
-                          showLoading(context);
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
                             PacienteCadastroContinuacao(paciente: widget.paciente, cadastroPacienteState: _stateCadastroPaciente)));
-                          var isConnected =
-                              await (Connectivity().checkConnectivity());
-                          if (!erro &&
-                              isConnected.contains(ConnectivityResult.none)) {
-                            Future.delayed(Duration.zero, () {
-                              Navigator.pop(context);
-                            });
-
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Sucesso',
-                                message: 'Paciente Cadastrado',
-                                contentType: ContentType.success,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          }
                         })),
               );
             }

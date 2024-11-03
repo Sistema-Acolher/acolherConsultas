@@ -58,15 +58,37 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                         dataHorario: DateTime.now(),
                         confimacao: () async {
                           bool erro = false;
-                          Navigator.pop(context);
-                          showLoading(context);
-                          context
-                              .read<PacientesController>()
+                          showLoading(context);  // Mostra o diálogo de carregamento
+                          var actualContext = context;
+
+                          // Verifica a conectividade antes de tentar o cadastro
+                          var isConnected = await Connectivity().checkConnectivity();
+                          if (isConnected == ConnectivityResult.none) {
+                            Navigator.pop(actualContext);  // Fecha o diálogo de carregamento
+                            final snackBar = SnackBar(
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.transparent,
+                              content: AwesomeSnackbarContent(
+                                title: 'Erro',
+                                message: 'Sem conexão com a internet',
+                                contentType: ContentType.failure,
+                              ),
+                              duration: const Duration(seconds: 10),
+                            );
+                            ScaffoldMessenger.of(actualContext)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(snackBar);
+                            return;  // Encerra o processo para evitar pop adicionais
+                          }
+
+                          // Tenta cadastrar o paciente
+                          await PacientesController()
                               .cadastrarPaciente(
                                   widget.cadastroPacienteState.cadastro(),
-                                  Provider.of<CasaDeApoio>(context))
+                                  Provider.of<CasaDeApoio>(context, listen: false))
                               .then((value) {
-                            Navigator.pop(context);
+                            Navigator.pop(actualContext); // Fecha o diálogo de carregamento
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -78,16 +100,12 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                               ),
                               duration: const Duration(seconds: 10),
                             );
-                            ScaffoldMessenger.of(context)
+                            ScaffoldMessenger.of(actualContext)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(snackBar);
-                            Navigator.pop(context);
                           }).onError((error, stackTrace) {
                             erro = true;
-                            Future.delayed(Duration.zero, () {
-                              Navigator.pop(context);
-                            });
-
+                            Navigator.pop(actualContext);  // Fecha o diálogo de carregamento em caso de erro
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -103,14 +121,9 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                               ..hideCurrentSnackBar()
                               ..showSnackBar(snackBar);
                           });
-                          var isConnected =
-                              await (Connectivity().checkConnectivity());
-                          if (!erro &&
-                              isConnected.contains(ConnectivityResult.none)) {
-                            Future.delayed(Duration.zero, () {
-                              Navigator.pop(context);
-                            });
 
+                          // Confirma o sucesso da operação (sem erro e com conexão)
+                          if (!erro) {
                             final snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
@@ -125,8 +138,11 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(snackBar);
-                            Navigator.pop(context);
+                            Future.delayed(Duration(seconds: 1), () {
+                              Navigator.pop(actualContext);  // Fecha a tela após sucesso
+                            });
                           }
+
                         })),
               );
             }
@@ -162,7 +178,6 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                     child: InputTextoAcolher(
                       label: "Série/Turno:",
                       controller: widget.cadastroPacienteState.serieTurnoEscola,
-                      keyboardType: TextInputType.none,
                     ),
                   ),
                   Padding(
@@ -209,7 +224,6 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                     child: InputTextoAcolher(
                       label: "Observações:",
                       controller: widget.cadastroPacienteState.observacoes,
-                      keyboardType: TextInputType.none,
                     ),
                   ),
                 ],

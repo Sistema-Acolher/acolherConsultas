@@ -16,7 +16,7 @@ class CadastroPacienteState extends ChangeNotifier {
   final cidadeOrigem = TextEditingController();
   final motivoAcolhimento = TextEditingController();
   bool acolhimentoAnterior = false;
-  final localAcolhimentoAnterior = TextEditingController();
+    final localAcolhimentoAnterior = TextEditingController();
   final dataAcolhimentoAnterior = TextEditingController();
   final nomeEscola = TextEditingController();
   final serieTurnoEscola = TextEditingController();

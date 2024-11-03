@@ -21,6 +21,9 @@ class PacientesController extends ChangeNotifier {
   Future<String> criarPaciente(CadastroPaciente paciente) async {
     DocumentReference<Map<String, dynamic>> pacienteAdicionado = await _firestore.collection("pacientes").add(paciente.toMap());
 
+    paciente.paciente.id=pacienteAdicionado.id;
+    await _firestore.collection("pacientes").doc(pacienteAdicionado.id).update(paciente.toMap());
+
     return pacienteAdicionado.id;
   }
 
@@ -123,12 +126,8 @@ class PacientesController extends ChangeNotifier {
       } else {
         // Caso o paciente não esteja cadastrado, o cadastro é requisitado para o repositório de pacientes.
         // No caso, cadastra diretamente para o Firebase.
-        String id = await criarPaciente(cadastroPaciente);
-        cadastroPaciente.paciente.id = id;
-
-        _pacientes.add(cadastroPaciente);
-        _pacienteCadastrado = cadastroPaciente;
-        notifyListeners();
+        await criarPaciente(cadastroPaciente);
+        
         return "Paciente cadastrado!";
       }
     } on CadastroPacienteExpection catch (e) {
