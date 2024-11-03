@@ -143,6 +143,14 @@ class UsuarioController extends ChangeNotifier {
     }
   }
 
+  enviarEmailRecuperacaoSenha(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Função para enviar email de verificação
   enviarEmailVerificacao({FirebaseApp? tempApp}) async {
     try {

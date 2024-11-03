@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
@@ -34,13 +36,21 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   // Variáveis para mostrar erro do firebase
   bool mostrarErroFirebase = false;
   String erroFirebase = "";
+  bool isButtonEnabled = true;
 
   @override
   void initState() {
     super.initState();
     _usuarioCadastroState.nivelAcesso.addListener(() {
-      nivelSelecionadoNotifier.value = _usuarioCadastroState.nivelAcesso.text;
+      setState(() {
+        nivelSelecionadoNotifier.value = _usuarioCadastroState.nivelAcesso.text;
+      });
     });
+
+    _usuarioCadastroState.casaDeApoio.addListener(() {
+      setState(() {});
+    });
+
     switch(widget.usuario?.nivelAcesso.name){
       case "admin":
         _usuarioCadastroState.nivelAcesso.text = "Admin";
@@ -85,7 +95,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
       floatingActionButton: Visibility(
         visible: infoAlterada(),
         child: StandartRoundButton(
-          text: "Salvar",
+          text: widget.usuario != null ? "Salvar" : "Cadastrar",
           icon: Symbols.book,
           onPressed: (){
             if (radiobuttonNotifier.value == false) {
@@ -148,7 +158,9 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                       emptyMessage: "Informe o nome",
                       icone: widget.usuario != null ? Icons.edit : null,
                       checkEdit: () {
-                        setState(() {});
+                        setState(() {
+                          _usuarioCadastroState.nome.text = _usuarioCadastroState.nome.text.trim();
+                        });
                       },
                     ),
                     InputTextoAcolher(
@@ -220,6 +232,80 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                           ),
                         ),
                       ),
+                    // Botão para enviar email de recuperação de senha
+                    if(widget.usuario != null)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Caso precise alterar a senha:",
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            StandartRoundButton(
+                              text: "Enviar e-mail",
+                              icon: Symbols.email,
+                              onPressed: isButtonEnabled ? () async {
+                                setState(() {
+                                  isButtonEnabled = false;
+                                });
+                                
+                                Timer(const Duration(seconds: 30), () {
+                                  setState(() {
+                                    isButtonEnabled = true;
+                                  });
+                                });
+                                context.read<UsuarioController>().showLoading(context);
+                                try {
+                                  await context.read<UsuarioController>().enviarEmailRecuperacaoSenha(widget.usuario?.email ?? "").then(
+                                    (value) {
+                                      Navigator.of(context).pop();
+                                      final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'Sucesso',
+                                          message:
+                                              'Email de recuperação de senha enviado para ${widget.usuario?.email}',
+                                          contentType: ContentType.success,
+                                        ),
+                                        duration: const Duration(seconds: 10),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                        ..hideCurrentSnackBar()
+                                        ..showSnackBar(snackBar);
+                                    }
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  if(e.code.contains("user-not-found")){
+                                    setState(() {
+                                      erroFirebase = "Usuário não encontrado";
+                                      mostrarErroFirebase = true;
+                                    });
+                                  } else if(e.code.contains("network-request-failed")) {
+                                    setState(() {
+                                      erroFirebase = "Erro: Sem conexão com a internet";
+                                      mostrarErroFirebase = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      erroFirebase = "Erro: ${e.code}";
+                                      mostrarErroFirebase = true;
+                                    });
+                                  }
+                                }
+                              } : null
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -234,10 +320,10 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     if(widget.usuario == null){
       return true;
     }
-    if(_usuarioCadastroState.nome.text != widget.usuario?.nome){
+    if(_usuarioCadastroState.nome.text.trim() != widget.usuario?.nome){
       return true;
     }
-    if(_usuarioCadastroState.email.text != widget.usuario?.email){
+    if(_usuarioCadastroState.email.text.trim() != widget.usuario?.email){
       return true;
     }
     String nivelAcesso;
@@ -254,11 +340,23 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
       default:
         nivelAcesso = "";
     }
+    
     if(_usuarioCadastroState.nivelAcesso.text != nivelAcesso){
       return true;
     }
     
-    if(_usuarioCadastroState.casaDeApoio.text != casasDeApoioCadastradas.value.firstWhere((element) => element.id == widget.usuario?.casaDeApoioId).nome){
+    if(_usuarioCadastroState.casaDeApoio.text != casasDeApoioCadastradas.value.firstWhere(
+      (element) => element.id == widget.usuario?.casaDeApoioId,
+      orElse: () => CasaDeApoio(
+        nome: "",
+        cep: "",
+        rua: "",
+        numero: "",
+        bairro: "",
+        cidade: "",
+        cor: 0
+      )
+    ).nome){
       return true;
     }
     return false;
@@ -326,8 +424,24 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
         (value) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
+
+          final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Sucesso',
+                  message:
+                      'Usuário atualizado com sucesso!',
+                  contentType: ContentType.success,
+                ),
+                duration: const Duration(seconds: 10),
+              );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
         }
-        );
+      );
     } on FirebaseAuthException catch (e) {
       if(e.code.contains("email-already-in-use")){
         setState(() {

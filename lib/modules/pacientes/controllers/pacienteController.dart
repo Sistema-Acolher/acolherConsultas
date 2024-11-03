@@ -204,7 +204,7 @@ class PacientesController extends ChangeNotifier {
 class CadastroPacienteExpection implements Exception {
   final String message;
 
-  CadastroPacienteExpection(this.message); // Pass your message in constructor.
+  CadastroPacienteExpection(this.message);
 
   @override
   String toString() {
