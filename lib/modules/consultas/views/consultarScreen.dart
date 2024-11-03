@@ -346,7 +346,7 @@ class MarcosDeConsumoAlimentar extends StatelessWidget {
             label:
                 "Você tem costume de realizar as refeições assistindo à TV, mexendo no computador e/ou celular?",
             controller: state.refeicoesComTecnologia,
-            optionalController: state.refeicoesComTecnologia,
+            secondController: state.refeicoesComTecnologia,
             isChecked: radiobuttonNotifier,
           ),
           RefeicoesCheckbox(
@@ -1025,7 +1025,7 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
               options: const ["Sim", "Não"],
               label: "Usa medicamento",
               controller: state.usaMedicamento,
-              optionalController: state.qualMedicamento,
+              secondController: state.qualMedicamento,
               isChecked: radiobuttonNotifier),
           InputRadioButtonsCadastroPaciente(
               options: const ["Sim ", "Não"],
@@ -1036,19 +1036,19 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
               options: const ["Sim", "Não"],
               label: "Usa algum método contraceptivo",
               controller: state.usaMetodoContraceptivo,
-              optionalController: state.qualMetodoContraceptivo,
+              secondController: state.qualMetodoContraceptivo,
               isChecked: radiobuttonNotifier),
           InputRadioButtonsCadastroPaciente(
               options: const ["Sim", "Não"],
               label: "Ja fez preventivo",
               controller: state.jaFezPreventivo,
-              optionalController: state.quandoFezPreventivo,
+              secondController: state.quandoFezPreventivo,
               isChecked: radiobuttonNotifier),
           InputRadioButtonsCadastroPaciente(
               options: const ["Sim", "Não"],
               label: "Você se masturba",
               controller: state.seMasturba,
-              optionalController: state.frequenciaMasturbacao,
+              secondController: state.frequenciaMasturbacao,
               isChecked: radiobuttonNotifier),
           InputCaixaDeTexto(
             label: "Observações",
@@ -1114,13 +1114,13 @@ class SaudeSexualReprodutivaMeninos extends StatelessWidget {
               options: const ["Sim", "Não"],
               label: "Usa algum método contraceptivo",
               controller: state.usaMetodoContraceptivo,
-              optionalController: state.qualMetodoContraceptivo,
+              secondController: state.qualMetodoContraceptivo,
               isChecked: radiobuttonNotifier),
           InputRadioButtonsCadastroPaciente(
               options: const ["Sim", "Não"],
               label: "Você se masturba",
               controller: state.seMasturba,
-              optionalController: state.frequenciaMasturbacao,
+              secondController: state.frequenciaMasturbacao,
               isChecked: radiobuttonNotifier),
           InputCaixaDeTexto(
             label: "Observações",
@@ -1131,7 +1131,7 @@ class SaudeSexualReprodutivaMeninos extends StatelessWidget {
               options: const ["Sim", "Não"],
               label: "Semanarca",
               controller: state.semenarca,
-              optionalController: state.quandoSemenarca,
+              secondController: state.quandoSemenarca,
               isChecked: radiobuttonNotifier),
         ],
       ),
