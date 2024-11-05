@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/modules/sistema/views/infoScreen.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/states/usuarioLoginState.dart';
 import 'package:acolherconsultas/modules/usuarios/views/usuarioRecuperaSenha.dart';
@@ -198,13 +199,16 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> with TickerProv
                               },
                               child: const Hero(
                                 tag: "esqueciSenha",
-                                child: Text(
-                                  "Esqueci minha senha",
-                                  style: TextStyle(
-                                    color: cinza,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    "Esqueci minha senha",
+                                    style: TextStyle(
+                                      color: cinza,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline
+                                    ),
                                   ),
                                 ),
                               ),
@@ -235,7 +239,9 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> with TickerProv
                               child: IconButton(
                                 iconSize: 34,
                                 onPressed: () {
-                              
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => InfoScreen()
+                                  ));
                                 }, 
                                 icon: const Icon(Icons.info_outlined, color: preto,)
                               ),
