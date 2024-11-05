@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // A classe CasaDeApoioController é a classe que controla os casasDeApoio.

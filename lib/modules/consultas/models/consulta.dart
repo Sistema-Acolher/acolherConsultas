@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Consulta {
   // Dados comuns entre crianças e adolescentes
-  DateTime? idade;
   String cuidadorPrincipal;
   String queixaPrincipal;
   String descricao;
@@ -110,7 +109,6 @@ class Consulta {
   Consulta({
     // Dados somente crianças
     // Dados somente adolescentes
-    required this.idade,
     required this.cuidadorPrincipal,
     required this.queixaPrincipal,
     required this.descricao,
@@ -211,7 +209,6 @@ class Consulta {
   });
 
   Consulta copyWith({
-    DateTime? idade,
     DateTime? dataConsulta,
     String? cuidadorPrincipal,
     String? queixaPrincipal,
@@ -312,7 +309,6 @@ class Consulta {
     String? oriParaCoordenacao
   }) {
     return Consulta(
-      idade: idade ?? this.idade,
       cuidadorPrincipal: cuidadorPrincipal ?? this.cuidadorPrincipal,
       queixaPrincipal: queixaPrincipal ?? this.queixaPrincipal,
       descricao: descricao ?? this.descricao,
@@ -548,7 +544,6 @@ class Consulta {
 
   factory Consulta.fromMap(Map<String, dynamic> map) {
     return Consulta(
-      idade: DateTime.fromMillisecondsSinceEpoch(map['idade'] as int),
       cuidadorPrincipal: map['cuidadorPrincipal'] as String,
       queixaPrincipal: map['queixaPrincipal'] as String,
       descricao: map['descricao'] as String,

@@ -49,7 +49,6 @@ class _PacienteGenogramaState extends State<PacienteGenograma> {
             return const Center(child: CircularProgressIndicator());
           }
           else if (snapshot.hasError) {
-            print(snapshot.error);
             return const Center(child: Text('Erro ao carregar genogramas'));
           }
           else {

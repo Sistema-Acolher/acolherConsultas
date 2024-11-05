@@ -5,15 +5,15 @@ class InputDynamicTextField extends StatefulWidget {
   final List<String> inputValues; // List to store values for each field
   final TextEditingController controller; // Controller to show combined text
 
-  InputDynamicTextField({
-    Key? key,
+  const InputDynamicTextField({
+    super.key,
     required this.label,
     required this.inputValues,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
-  _InputDynamicTextFieldState createState() => _InputDynamicTextFieldState();
+  State<InputDynamicTextField> createState() => _InputDynamicTextFieldState();
 }
 
 class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
@@ -48,7 +48,7 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Text(
             widget.label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ),
         // Display each TextField with a delete button
@@ -64,19 +64,19 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                       widget.inputValues[index] = value; // Update specific input
                       _updateController(); // Update the combined controller value
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
                 IconButton(
                   onPressed: () => _removeField(index), // Remove field on press
-                  icon: Icon(Icons.remove), // Use "-" symbol
+                  icon: const Icon(Icons.remove), // Use "-" symbol
                 ),
               ],
             ),
           );
-        }).toList(),
+        }),
         // Only show the "+" button when there are no fields
         if (widget.inputValues.isEmpty || widget.inputValues.last.isNotEmpty)
           IconButton(
@@ -86,7 +86,7 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                 _updateController(); // Update the controller value
               });
             },
-            icon: Icon(Icons.add), // Use "+" symbol
+            icon: const Icon(Icons.add), // Use "+" symbol
           ),
       ],
     );

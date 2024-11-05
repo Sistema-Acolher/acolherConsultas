@@ -110,9 +110,6 @@ class ConsultaState extends ChangeNotifier {
   // Método que retorna um objeto Consulta com os dados preenchidos nos campos.
   Consulta cadastro() {
     Consulta consulta = Consulta(
-      idade: idade.text.trim().isEmpty
-          ? null
-          : DateFormat('dd/MM/yyyy').parse(idade.text),
       cuidadorPrincipal: cuidadorPrincipal.text.trim(),
       queixaPrincipal: queixaPrincipal.text.trim(),
       descricao: descricao.text.trim(),

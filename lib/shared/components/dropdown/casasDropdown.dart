@@ -12,7 +12,7 @@ class CasasDropdown extends StatefulWidget {
   const CasasDropdown({super.key, required this.casas});
 
   @override
-  _CasasDropdownState createState() => _CasasDropdownState();
+  State<CasasDropdown> createState() => _CasasDropdownState();
 }
 
 class _CasasDropdownState extends State<CasasDropdown> {

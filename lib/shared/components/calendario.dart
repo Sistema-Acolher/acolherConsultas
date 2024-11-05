@@ -35,7 +35,7 @@ class Calendario extends StatefulWidget {
   final Paciente? paciente;
 
   @override
-  _CalendarioState createState() => _CalendarioState();
+  State<Calendario> createState() => _CalendarioState();
 }
 
 class _CalendarioState extends State<Calendario> {
