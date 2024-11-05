@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/elementosDesenho.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/models/tipoDesenho.dart';
@@ -128,7 +127,7 @@ class QuadroBrancoEcomapaPainter extends CustomPainter {
             // ambas com uma seta no final apontando para o circulo
             // o tamanho da linha é proporcional à força da energia
 
-            final double distancia = 20;
+            const double distancia = 20;
             final double angulo = atan2(pontoCirculoNovo.dy - pontoCirculoCentral.dy, pontoCirculoNovo.dx - pontoCirculoCentral.dx);
             
             // pontos de energia do paciente, um na borda do circulo do paciente e outro a uma distancia proporcional à força da energia
@@ -172,7 +171,7 @@ class QuadroBrancoEcomapaPainter extends CustomPainter {
 
             // desenhar a seta apontando para o circulo correspondente
             final double anguloSeta = atan2(pontoEnergiaPaciente1.dy - pontoEnergiaPaciente2.dy, pontoEnergiaPaciente1.dx - pontoEnergiaPaciente2.dx);
-            final double tamanhoSeta = 10;
+            const double tamanhoSeta = 10;
             final Offset pontoSeta1 = Offset(
               pontoEnergiaPaciente2.dx + tamanhoSeta * cos(anguloSeta + pi / 6),
               pontoEnergiaPaciente2.dy + tamanhoSeta * sin(anguloSeta + pi / 6)

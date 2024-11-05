@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class ListaHorario extends StatefulWidget {
   final DateTime? dia;
   final List<ConsultaCadastro> consultasDoDia;
-  final Function(Paciente p)? onSelect;
+  final Function(ConsultaCadastro p)? onSelect;
   final Paciente? paciente;
   final ConsultaCadastro? consulta;
   final bool fundo;
@@ -34,17 +34,17 @@ class _ListaHorarioState extends State<ListaHorario> {
     }
     List<Widget> list = [];
     for (var item in horarios) {
-      Paciente? p;
+      ConsultaCadastro? p;
       if (widget.consultasDoDia.isNotEmpty && consultaAtual<widget.consultasDoDia.length && widget.consultasDoDia[consultaAtual].dataHorario.hour==item.hour) {
-        p=pacientes.where((paciente) => paciente.paciente.id==widget.consultasDoDia[consultaAtual].pacienteId).firstOrNull?.paciente;
+        p=widget.consultasDoDia[consultaAtual];
         consultaAtual++;
       }else {
         p=null;
       }
       if(p != null){
-        List<String> parts = p.nome.split(' ');
+        List<String> parts = p.pacienteNome!.split(' ');
         if (parts.length > 2) {
-          p.nome = '${parts[0]} ${parts[1]}';
+          p.pacienteNome = '${parts[0]} ${parts[1]}';
         }
       }
       list.add(Column(
@@ -64,7 +64,7 @@ class _ListaHorarioState extends State<ListaHorario> {
                     }
                   },
                   child: Text(
-                    p!=null?p.nome:"Vago",
+                    p?.pacienteNome ?? "Vago",
                     style: TextStyle(color: p==null?const Color(0xFF0AEC57):Colors.black,fontFamily: "MontSerrat",fontSize: 20)
                   ),
                 ),
@@ -84,7 +84,6 @@ class _ListaHorarioState extends State<ListaHorario> {
 
   @override
   Widget build(BuildContext context) {
-    final temp = Provider.of<List<CadastroPaciente>>(context);
     widget.consultasDoDia.sort((a,b)=>a.dataHorario.compareTo(b.dataHorario));
     return Container(
       decoration: BoxDecoration(
@@ -94,7 +93,7 @@ class _ListaHorarioState extends State<ListaHorario> {
       padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: data(temp)
+        children: data(Provider.of<List<CadastroPaciente>>(context))
       ),
     );
   }

@@ -173,28 +173,29 @@ class UsuarioController extends ChangeNotifier {
           if(_auth.currentUser == null){
             timer.cancel();
           } else {
-            await _auth.currentUser!.reload();
-            if(_auth.currentUser!.emailVerified){
-              showLoading(context);
-              _emailVerificado.value = _auth.currentUser!.emailVerified;
-              final snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Sucesso',
-                  message:
-                      'Seu e-mail foi verificado com sucesso!',
-                  contentType: ContentType.success,
-                ),
-                duration: const Duration(seconds: 10),
-              );
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
-              timer.cancel();
-            }
+            await _auth.currentUser!.reload().then((value) {
+              if(_auth.currentUser!.emailVerified){
+                showLoading(context);
+                _emailVerificado.value = _auth.currentUser!.emailVerified;
+                final snackBar = SnackBar(
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.transparent,
+                  content: AwesomeSnackbarContent(
+                    title: 'Sucesso',
+                    message:
+                        'Seu e-mail foi verificado com sucesso!',
+                    contentType: ContentType.success,
+                  ),
+                  duration: const Duration(seconds: 10),
+                );
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+                timer.cancel();
+              }
+            });
           }
         } on Exception {
           timer.cancel();

@@ -7,7 +7,7 @@ class ConsultaDropdown extends StatefulWidget {
   const ConsultaDropdown({required this.text, required this.child, super.key});
 
   @override
-  _ConsultaDropdownState createState() => _ConsultaDropdownState();
+  State<ConsultaDropdown> createState() => _ConsultaDropdownState();
 }
 
 class _ConsultaDropdownState extends State<ConsultaDropdown> with SingleTickerProviderStateMixin {

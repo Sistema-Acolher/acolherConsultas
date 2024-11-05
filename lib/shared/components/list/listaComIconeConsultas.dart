@@ -25,7 +25,7 @@ class ListaComIconeConsultas extends StatefulWidget {
   final bool? eInstituicao;
 
   @override
-  _ListaComIconeConsultasState createState() => _ListaComIconeConsultasState();
+  State<ListaComIconeConsultas> createState() => _ListaComIconeConsultasState();
 }
 
 class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
@@ -179,7 +179,6 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                     Navigator.pop(context);
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ConsultarScreen(
-                          pacienteConsulta: widget.paciente,
                           dadosConsulta: consulta),
                     ));
                   },

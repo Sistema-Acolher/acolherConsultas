@@ -6,7 +6,7 @@ class TextoColorido extends StatefulWidget {
   final String palavra;
 
   @override
-  _TextoColoridoState createState() => _TextoColoridoState();
+  State<TextoColorido> createState() => _TextoColoridoState();
 }
 
 class _TextoColoridoState extends State<TextoColorido> {

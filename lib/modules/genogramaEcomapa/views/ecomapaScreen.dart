@@ -99,7 +99,7 @@ class EcomapaScreen extends HookWidget {
     final ValueNotifier<bool> salvou = useState(false);
     final ValueNotifier<bool> temDesenho = useState(false);
 
-    final undoRedoPilha = useState(
+    useState(
       UndoRedoPilha(
         desenhosNotifier: ecomapa,
         desenhoAtualNotifier: desenhoAtual,

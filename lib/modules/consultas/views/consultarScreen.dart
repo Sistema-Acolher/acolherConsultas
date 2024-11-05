@@ -1,24 +1,24 @@
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
+import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/state/consultaState.dart';
 import 'package:acolherconsultas/modules/pacientes/controllers/pacienteController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
-import 'package:acolherconsultas/modules/pacientes/states/pacienteState.dart';
-import 'package:acolherconsultas/modules/pacientes/views/pacienteScreen.dart';
+import 'package:acolherconsultas/modules/sistema/views/loadingLogo.dart';
 import 'package:acolherconsultas/shared/components/bars/pacienteAppbar.dart';
 import 'package:acolherconsultas/shared/components/bars/pageAppBar.dart';
 import 'package:acolherconsultas/shared/components/buttons/bigRoundButton.dart';
-import 'package:acolherconsultas/shared/components/inputs/inputRadioButtons.dart';
+import 'package:acolherconsultas/shared/components/inputs/inputRadioButtonsConsulta.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputTexto.dart';
 import 'package:acolherconsultas/shared/components/list/listaHorarios.dart';
 import 'package:acolherconsultas/shared/components/inputs/inputCaixaDeTexto.dart';
 import 'package:flutter/material.dart';
+import 'package:mask/mask/mask.dart';
 import 'package:provider/provider.dart';
 
 class ConsultarScreen extends StatefulWidget {
-  const ConsultarScreen({super.key, this.pacienteConsulta, this.dadosConsulta});
+  const ConsultarScreen({super.key, this.dadosConsulta});
 
-  final Paciente? pacienteConsulta;
   final ConsultaCadastro? dadosConsulta;
 
   @override
@@ -26,11 +26,49 @@ class ConsultarScreen extends StatefulWidget {
 }
 
 class _ConsultarScreenState extends State<ConsultarScreen> {
-  final CadastroPacienteState _cadastroPacienteState = CadastroPacienteState();
+  final _formKey = GlobalKey<FormState>();
   final ConsultaState _consultaState = ConsultaState();
-  ValueNotifier<bool> radiobuttonNotifier = ValueNotifier<bool>(false);
-  // Usado para selecionar o paciente e trocar o menu que aparece
-  Paciente? pacienteSelecionado;
+  ValueNotifier<bool> refeicoesComTecnologiaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuFeijaoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuFrutasNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuVerdurasLegumesNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuEmbutidosNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuBebidasAdocicadasNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuMacarraoInstantaneoSalgadoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuBiscoitoRecheadoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonNotifierEstatura = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonNotifierIMC = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoBuscaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoSuccaoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoPreensaoPalmarNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoPreensaoPlantarNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoBabinskiNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoTonicoCervicalNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoMoroNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoMarchaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoPiscarOpticoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonPiscarOpticoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonBuscaESuccaoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> movimentosSimetricosFaciaisNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonPiscarAcusticoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonVomitoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> aperteNarizNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonNotifierG = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonNotifierS = ValueNotifier<bool>(false);
+  ValueNotifier<bool> vidaSexualAtivaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> usaMetodoContraceptivoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> seMasturbaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> semenarcaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> fluxoMenstrualNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> regularidadeMenstrualNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> dismenorreiaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> usaMedicamentoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> vidaSexualAtivaNotifierW = ValueNotifier<bool>(false);
+  ValueNotifier<bool> usaMetodoContraceptivoNotifierW = ValueNotifier<bool>(false);
+  ValueNotifier<bool> jaFezPreventivoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> seMasturbaNotifierW = ValueNotifier<bool>(false);
+
+  ConsultaCadastro? consultaSelecionado;
   late List<ConsultaCadastro> consultasDia;
 
   @override
@@ -46,171 +84,277 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
         .toList();
   }
 
+  Future<void> _enviarConsulta() async {
+    var consulta = (widget.dadosConsulta??consultaSelecionado);
+    if (consulta!=null) {
+      await ConsultaController().realizarConsulta(consulta.id!, _consultaState.cadastro()).then((value) => {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(value)),
+        )
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     loadConsultas();
-
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            // Caso venha a partir da pagina do paciente, troca a appbar
-            child: widget.pacienteConsulta == null
-                ? PageAppBar(
-                    titulo: "Consultar",
-                    casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context))
-                : PacienteAppbar(paciente: widget.pacienteConsulta)),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: widget.dadosConsulta != null
+              ? PacienteAppbar(paciente: Provider.of<List<CadastroPaciente>>(context).where((paciente) => paciente.paciente.id==widget.dadosConsulta?.pacienteId).firstOrNull?.paciente)
+              : consultaSelecionado != null 
+              ? PageAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black,),
+                    onPressed: () => setState(() {
+                      consultaSelecionado=null;
+                    })),
+                  titulo: consultaSelecionado?.pacienteNome??"",
+                  casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context))
+              : PageAppBar(
+                  titulo: "Consultar",
+                  casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context)),
+        ),
         floatingActionButtonLocation:
-            widget.pacienteConsulta != null || pacienteSelecionado != null
+            widget.dadosConsulta != null || consultaSelecionado != null
                 ? FloatingActionButtonLocation.endFloat
                 : null,
         floatingActionButton:
-            widget.pacienteConsulta != null || pacienteSelecionado != null
+            widget.dadosConsulta != null || consultaSelecionado != null
                 ? BigRoundButton(
-                    text: "Historia Pregressa",
-                    icon: Icons.history_edu,
-                    onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .push(MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                                  appBar: PacienteAppbar(
-                                      paciente: widget.pacienteConsulta ??
-                                          pacienteSelecionado),
-                                  body: HistPregressa(
-                                      cadastroPacienteState:
-                                          _cadastroPacienteState),
-                                ))),
+                    text: "Enviar Consulta",
+                    icon: Icons.send,
+                    onPressed:
+                        _enviarConsulta, // Chama a função para enviar a consulta
                   )
                 : null,
-        body: widget.pacienteConsulta != null || pacienteSelecionado != null
+        body: widget.dadosConsulta != null || consultaSelecionado != null
             ? Center(
-                child: Builder(
-                  builder: (context) {
-                    Paciente paciente =
-                        (widget.pacienteConsulta ?? pacienteSelecionado)!; 
+                child: Form(
+                  key: _formKey,
+                  child: Builder(
+                    builder: (context) {
+                      ConsultaCadastro consulta = (widget.dadosConsulta ?? consultaSelecionado)!;
+                      Paciente? paciente = Provider.of<List<CadastroPaciente>>(context).where((paciente) => paciente.paciente.id==consulta.pacienteId).firstOrNull?.paciente;
+                      if(paciente!=null){
+                        String? idadeS = PacientesController.calcularIdade(paciente.dataNasc);
+                        final match = RegExp(r'^(\d+)a').firstMatch(idadeS);
+                        int idade = match != null ? int.parse(match.group(1)!) : 0;
+                        String? sexo = paciente.sexo;
 
-                    String? idadeS = PacientesController.calcularIdade(paciente.dataNasc);
-                    int? idade;
-
-                    final match = RegExp(r'^(\d+)a').firstMatch(idadeS);
-                    if (match != null) {
-                      idade= int.tryParse(match.group(1)!);
-                    }
-                    String? sexo = paciente.sexo;
-
-                    List<String> pageTitles;
-                    List<Widget> pageWidgets;
-
-                    if (idade != null) {
-                      if (idade > 12 || sexo == 'Feminino') {
-                        pageTitles = [
-                          "Informações básicas",
-                          "Higiene",
-                          "Exame físico",
-                          "Saúde sexual reprodutiva - Meninas",
-                          "Conclusões"
-                        ];
-                        pageWidgets = [
-                          InformacoesBasicas(state: _consultaState),
-                          Higiente(state: _consultaState),
-                          ExameFisico(
+                        List<String> pageTitles = [];
+                        List<Widget> pageWidgets = [];
+                        if (idade > 12 || sexo == 'Feminino') {
+                          pageTitles = [
+                            "Informações Básicas",
+                            "Consumo Alimentar",
+                            "Eliminações",
+                            "Higiene",
+                            "Sono",
+                            "Exame Físico",
+                            "Identidade de Genêro",
+                            "Estágio de Turner",
+                            "Saúde Sexual Reprodutiva",
+                            "Avaliação Psicoemocional",
+                            "Conclusões",
+                            "Casa de Apoio"
+                          ];
+                          pageWidgets = [
+                            InformacoesBasicas(state: _consultaState),
+                            MarcosDeConsumoAlimentar(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          SaudeSexualReprodutivaMeninas(
+                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
+                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                              consumiuFrutasNotifier: consumiuFrutasNotifier,
+                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
+                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
+                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
+                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
+                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                            Eliminacoes(state: _consultaState),
+                            Higiente(state: _consultaState),
+                            Sono(state: _consultaState),
+                            ExameFisico(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          ObservacoesFinais(state: _consultaState),
-                        ];
-                      } else if (idade > 12 && sexo == 'Masculino') {
-                        pageTitles = [
-                          "Informações básicas",
-                          "Higiene",
-                          "Exame físico",
-                          "Saúde sexual reprodutiva - Meninos",
-                          "Conclusões"
-                        ];
-                        pageWidgets = [
-                          InformacoesBasicas(state: _consultaState),
-                          Higiente(state: _consultaState),
-                          ExameFisico(
+                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
+                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                            IdentidadeGenero(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          SaudeSexualReprodutivaMeninos(
+                              radiobuttonNotifierG: radiobuttonNotifierG,
+                              radiobuttonNotifierS: radiobuttonNotifierS),
+                            EstagioDeTurnerMeninas(state: _consultaState),
+                            SaudeSexualReprodutivaMeninas(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          ObservacoesFinais(state: _consultaState),
-                        ];
-                      } else {
-                        pageTitles = [
-                          "Informações básicas",
-                          "Marcados de consumo alimentar",
-                          "Eliminações",
-                          "Sono",
-                          "Exame físico",
-                          "Avaliação psicoemocional",
-                          "Conclusões"
-                        ];
-                        pageWidgets = [
-                          InformacoesBasicas(state: _consultaState),
-                          MarcosDeConsumoAlimentar(
+                              fluxoMenstrualNotifier: fluxoMenstrualNotifier,
+                              regularidadeMenstrualNotifier: regularidadeMenstrualNotifier,
+                              dismenorreiaNotifier: dismenorreiaNotifier,
+                              usaMedicamentoNotifier: usaMedicamentoNotifier,
+                              vidaSexualAtivaNotifierW: vidaSexualAtivaNotifierW,
+                              usaMetodoContraceptivoNotifierW: usaMetodoContraceptivoNotifierW,
+                              jaFezPreventivoNotifier: jaFezPreventivoNotifier,
+                              seMasturbaNotifierW: seMasturbaNotifierW,
+                            ),
+                            AvaliacaoPsicoemocional(state: _consultaState),
+                            ObservacoesFinais(state: _consultaState),
+                            ParaCasa(state: _consultaState),
+                          ];
+                        } 
+                        else if (idade > 12 && sexo == 'Masculino') {
+                          pageTitles = [
+                            "Informações Básicas",
+                            "Consumo Alimentar",
+                            "Eliminações",
+                            "Higiene",
+                            "Sono",
+                            "Exame Físico",
+                            "Identidade de Genêro",
+                            "Estágio de Turner",
+                            "Saúde Sexual Reprodutiva",
+                            "Avaliação Psicoemocional",
+                            "Conclusões",
+                            "Casa de Apoio"
+                          ];
+                          pageWidgets = [
+                            InformacoesBasicas(state: _consultaState),
+                            MarcosDeConsumoAlimentar(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          Eliminacoes(state: _consultaState),
-                          Sono(state: _consultaState),
-                          ExameFisico(
+                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
+                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                              consumiuFrutasNotifier: consumiuFrutasNotifier,
+                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
+                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
+                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
+                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
+                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                            Eliminacoes(state: _consultaState),
+                            Higiente(state: _consultaState),
+                            Sono(state: _consultaState),
+                            ExameFisico(
                               state: _consultaState,
-                              radiobuttonNotifier: radiobuttonNotifier),
-                          AvaliacaoPsicoemocional(state: _consultaState),
-                          ObservacoesFinais(state: _consultaState),
-                        ];
+                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
+                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                            IdentidadeGenero(
+                              state: _consultaState,
+                              radiobuttonNotifierG: radiobuttonNotifierG,
+                              radiobuttonNotifierS: radiobuttonNotifierS),
+                            EstagioDeTurnerMeninos(state: _consultaState),
+                            SaudeSexualReprodutivaMeninos(
+                              state: _consultaState,
+                              vidaSexualAtivaNotifier: vidaSexualAtivaNotifier,
+                              usaMetodoContraceptivoNotifier: usaMetodoContraceptivoNotifier,
+                              seMasturbaNotifier: seMasturbaNotifier,
+                              semenarcaNotifier: semenarcaNotifier,
+                            ),
+                            AvaliacaoPsicoemocional(state: _consultaState),
+                            ObservacoesFinais(state: _consultaState),
+                            ParaCasa(state: _consultaState)
+                          ];
+                        } 
+                        else {
+                          pageTitles = [
+                            "Informações Básicas",
+                            "Consumo Alimentar",
+                            "Eliminações",
+                            "Higiene",
+                            "Sono",
+                            "Exame Físico",
+                            "Avaliação Reflexos",
+                            "Avaliação Nervos",
+                            "Avaliação Psicoemocional",
+                            "Conclusões"
+                          ];
+                          pageWidgets = [
+                            InformacoesBasicas(state: _consultaState),
+                            MarcosDeConsumoAlimentar(
+                              state: _consultaState,
+                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
+                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                              consumiuFrutasNotifier: consumiuFrutasNotifier,
+                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
+                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
+                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
+                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
+                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                            Eliminacoes(state: _consultaState),
+                            Higiente(state: _consultaState),
+                            Sono(state: _consultaState),
+                            ExameFisicoCrianca(
+                              state: _consultaState,
+                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
+                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                            AvaliacaoReflexos(
+                              state: _consultaState,
+                              reflexoBuscaNotifier: reflexoBuscaNotifier,
+                              reflexoSuccaoNotifier: reflexoSuccaoNotifier,
+                              reflexoPreensaoPalmarNotifier: reflexoPreensaoPalmarNotifier,
+                              reflexoPreensaoPlantarNotifier: reflexoPreensaoPlantarNotifier,
+                              reflexoBabinskiNotifier: reflexoBabinskiNotifier,
+                              reflexoTonicoCervicalNotifier: reflexoTonicoCervicalNotifier,
+                              reflexoMoroNotifier: reflexoMoroNotifier,
+                              reflexoMarchaNotifier: reflexoMarchaNotifier,
+                              reflexoPiscarOpticoNotifier: reflexoPiscarOpticoNotifier,
+                            ),
+                            AvaliacaoNervos(
+                              state: _consultaState,
+                              reflexoPiscarOpticoNotifier: radiobuttonPiscarOpticoNotifier,
+                              reflexoBuscaESuccaoNotifier: radiobuttonBuscaESuccaoNotifier,
+                              movimentosSimetricosFaciaisNotifier: movimentosSimetricosFaciaisNotifier,
+                              reflexoPiscarAcusticoNotifier: radiobuttonPiscarAcusticoNotifier,
+                              reflexoVomitoNotifier: radiobuttonVomitoNotifier,
+                              aperteNarizNotifier: aperteNarizNotifier,
+                            ),
+                            AvaliacaoPsicoemocional(state: _consultaState),
+                            ObservacoesFinais(state: _consultaState),
+                          ];
+                        }
+                        return ExibirConsulta(
+                          pageTitles: pageTitles,
+                          pageWidgets: pageWidgets,
+                        );
                       }
-                    } else {
-                      pageTitles = [
-                          "Informações básicas",
-                          "Conclusões"
-                        ];
-                        pageWidgets = [
-                          InformacoesBasicas(state: _consultaState),
-                          ObservacoesFinais(state: _consultaState),
-                        ];
-                    }
-                    return MyHomePage(
-                      pageTitles: pageTitles,
-                      pageWidgets: pageWidgets,
-                    );
-                  },
+                      else{
+                        return const LoadingLogo();
+                      }
+                    },
+                  ),
                 ),
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Selecione uma consulta:",
-                    style: TextStyle(
-                        fontSize: 20,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 20),
-                      decoration: BoxDecoration(
-                          color: Colors.amber[100],
-                          borderRadius: BorderRadius.circular(15)),
-                      child: ListaHorario(
-                        consultasDoDia: consultasDia,
-                        onSelect: (p) => setState(() {
-                          pacienteSelecionado = p;
-                        }),
+            : Padding(
+              padding: const EdgeInsets.only(bottom: 60,left: 30,right: 30),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Selecione uma consulta:",
+                      style: TextStyle(
+                          fontSize: 20,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        decoration: BoxDecoration(
+                            color: Colors.amber[100],
+                            borderRadius: BorderRadius.circular(15)),
+                        child: ListaHorario(
+                          consultasDoDia: consultasDia,
+                          onSelect: (p) => setState(() {
+                            consultaSelecionado = p;
+                          }),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ));
+                  ],
+                ),
+            ));
   }
 }
 
-class ObservacoesFinais extends StatelessWidget {
+class AvaliacaoPsicoemocional extends StatelessWidget {
   final ConsultaState state;
-  const ObservacoesFinais({required this.state});
+  const AvaliacaoPsicoemocional({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -235,9 +379,9 @@ class ObservacoesFinais extends StatelessWidget {
   }
 }
 
-class AvaliacaoPsicoemocional extends StatelessWidget {
+class ObservacoesFinais extends StatelessWidget {
   final ConsultaState state;
-  const AvaliacaoPsicoemocional({required this.state});
+  const ObservacoesFinais({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -249,12 +393,18 @@ class AvaliacaoPsicoemocional extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Marcos presentes:", controller: state.marcosPresentes),
+              label: "Marcos presentes:",
+              controller: state.marcosPresentes,
+              emptyMessage: "Informe os marcos presentes",
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Marcos ausentes:", controller: state.marcosAusentes),
+              label: "Marcos ausentes:",
+              controller: state.marcosAusentes,
+              emptyMessage: "Informe os marcos ausentes",
+            ),
           ),
           InputCaixaDeTexto(
             label: "Observações do desenvolvimento",
@@ -284,7 +434,7 @@ class AvaliacaoPsicoemocional extends StatelessWidget {
 
 class InformacoesBasicas extends StatelessWidget {
   final ConsultaState state;
-  const InformacoesBasicas({required this.state});
+  const InformacoesBasicas({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -298,6 +448,7 @@ class InformacoesBasicas extends StatelessWidget {
             child: InputTextoAcolher(
               label: "Cuidador Principal",
               controller: state.cuidadorPrincipal,
+              emptyMessage: "Informe o cuidador princial",
             ),
           ),
           Padding(
@@ -305,6 +456,7 @@ class InformacoesBasicas extends StatelessWidget {
             child: InputTextoAcolher(
               label: "Queixa Principal",
               controller: state.queixaPrincipal,
+              emptyMessage: "Informe a queixa principal",
             ),
           ),
           InputCaixaDeTexto(
@@ -325,14 +477,29 @@ class InformacoesBasicas extends StatelessWidget {
 
 class MarcosDeConsumoAlimentar extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
 
-  // Construtor sem `const` e com parâmetro de `Key`
-  MarcosDeConsumoAlimentar({
-    Key? key,
+  // Notifiers específicos para cada RadioButton
+  final ValueNotifier<bool> refeicoesComTecnologiaNotifier;
+  final ValueNotifier<bool> consumiuFeijaoNotifier;
+  final ValueNotifier<bool> consumiuFrutasNotifier;
+  final ValueNotifier<bool> consumiuVerdurasLegumesNotifier;
+  final ValueNotifier<bool> consumiuEmbutidosNotifier;
+  final ValueNotifier<bool> consumiuBebidasAdocicadasNotifier;
+  final ValueNotifier<bool> consumiuMacarraoInstantaneoSalgadoNotifier;
+  final ValueNotifier<bool> consumiuBiscoitoRecheadoNotifier;
+
+  const MarcosDeConsumoAlimentar({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.refeicoesComTecnologiaNotifier,
+    required this.consumiuFeijaoNotifier,
+    required this.consumiuFrutasNotifier,
+    required this.consumiuVerdurasLegumesNotifier,
+    required this.consumiuEmbutidosNotifier,
+    required this.consumiuBebidasAdocicadasNotifier,
+    required this.consumiuMacarraoInstantaneoSalgadoNotifier,
+    required this.consumiuBiscoitoRecheadoNotifier,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -341,70 +508,70 @@ class MarcosDeConsumoAlimentar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputRadioButtonsCadastroPaciente(
-            options: const ["Sim", "Não", "Não sabe"],
+          InputRadioButtonsConsulta(
+            options: const ["Sim ", "Não", "Não sabe"],
             label:
                 "Você tem costume de realizar as refeições assistindo à TV, mexendo no computador e/ou celular?",
             controller: state.refeicoesComTecnologia,
-            secondController: state.refeicoesComTecnologia,
-            isChecked: radiobuttonNotifier,
+            isChecked: refeicoesComTecnologiaNotifier,
           ),
           RefeicoesCheckbox(
             refeicoesController: state.refeicoesDuranteODia,
           ),
           const Text("Ontem você consumiu?"),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label: "Feijão",
             controller: state.consumiuFeijao,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuFeijaoNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label: "Frutas frescas (não considerar suco de frutas)",
             controller: state.consumiuFrutas,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuFrutasNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label:
                 "Verduras e/ou legumes (não considerar batata, mandioca, aipim, macaxeira, cará e inhame)",
             controller: state.consumiuVerdurasLegumes,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuVerdurasLegumesNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label:
                 "Hambúrguer e/ou embutidos (presunto, mortadela, salame, linguiça, salsicha)",
             controller: state.consumiuEmbutidos,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuEmbutidosNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label:
                 "Bebidas adoçadas (refrigerante, suco de caixinha, suco em pó, água de coco de caixinha, xaropes de guaraná/groselha, suco de fruta com adição de açúcar)",
             controller: state.consumiuBebidasAdocicadas,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuBebidasAdocicadasNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label:
                 "Macarrão instantâneo, salgadinhos de pacote ou biscoitos salgados",
             controller: state.consumiuMacarraoInstantaneoSalgado,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuMacarraoInstantaneoSalgadoNotifier,
           ),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
             options: const ["Sim", "Não", "Não sabe"],
             label:
                 "Biscoito recheado, doces ou guloseimas (balas, pirulitos, chiclete, caramelo, gelatina)",
             controller: state.consumiuBiscoitoRecheado,
-            isChecked: radiobuttonNotifier,
+            isChecked: consumiuBiscoitoRecheadoNotifier,
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
               label: "Ingesta Hídrica (quantidade)",
               controller: state.ingestaoHidrica,
+              emptyMessage: "Informe a ingestão hídrica",
             ),
           ),
           Padding(
@@ -412,6 +579,7 @@ class MarcosDeConsumoAlimentar extends StatelessWidget {
             child: InputTextoAcolher(
               label: "Suplementação de Ferro e/ou vitaminas",
               controller: state.suplementacao,
+              emptyMessage: "Informe a suplementação",
             ),
           ),
         ],
@@ -422,7 +590,7 @@ class MarcosDeConsumoAlimentar extends StatelessWidget {
 
 class Eliminacoes extends StatelessWidget {
   final ConsultaState state;
-  const Eliminacoes({required this.state});
+  const Eliminacoes({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -435,13 +603,15 @@ class Eliminacoes extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Diurese: coloração, odor/dor, frequência",
-                controller: state.diurese),
+                controller: state.diurese,
+                emptyMessage: "Informe a diurese"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Evacuações: aspecto, coloração, dor, frequência",
-                controller: state.evacuacoes),
+                controller: state.evacuacoes,
+                emptyMessage: "Informe a evacuação"),
           ),
         ],
       ),
@@ -452,7 +622,7 @@ class Eliminacoes extends StatelessWidget {
 class Higiente extends StatelessWidget {
   final ConsultaState state;
 
-  const Higiente({required this.state});
+  const Higiente({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -465,20 +635,23 @@ class Higiente extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Itens utilizados para higiene ( banho e escovação)",
-                controller: state.itensHigiene),
+                controller: state.itensHigiene,
+                emptyMessage: "Informe os itens de higiene"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Higiene corporal  (sequência, frequência)",
-                controller: state.higieneCorporal),
+                controller: state.higieneCorporal,
+                emptyMessage: "Informe a higiene corporal"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label:
                     "Higiene Bucal (verificar presença de cáries, frequência escovação, uso correto do fio dental)",
-                controller: state.higieneBucal),
+                controller: state.higieneBucal,
+                emptyMessage: "Informe a higiene bucal"),
           ),
         ],
       ),
@@ -488,7 +661,7 @@ class Higiente extends StatelessWidget {
 
 class Sono extends StatelessWidget {
   final ConsultaState state;
-  const Sono({required this.state});
+  const Sono({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -511,13 +684,15 @@ class Sono extends StatelessWidget {
 
 class ExameFisico extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
+  final ValueNotifier<bool> radiobuttonNotifierEstatura;
+  final ValueNotifier<bool> radiobuttonNotifierIMC;
 
-  ExameFisico({
-    Key? key,
+  const ExameFisico({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.radiobuttonNotifierEstatura,
+    required this.radiobuttonNotifierIMC,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -533,30 +708,30 @@ class ExameFisico extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: InputTextoAcolher(
-                    label: "Comprimento",
-                    placeHolder: "cm",
-                    controller: state.comprimento,
-                  ),
+                      label: "Comprimento",
+                      placeHolder: "cm",
+                      controller: state.comprimento,
+                      emptyMessage: "Informe o comprimento"),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   flex: 1,
                   child: InputTextoAcolher(
-                    label: "Peso",
-                    placeHolder: "kg",
-                    controller: state.peso,
-                  ),
+                      label: "Peso",
+                      placeHolder: "kg",
+                      controller: state.peso,
+                      emptyMessage: "Informe o peso"),
                 ),
               ],
             ),
           ),
           //EstaturaForm(),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
               options: const ["Adequado", "Baixa estatura pra idade"],
               label: "Estatura X Idade",
               controller: state.comprimentoPorIdade,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
+              isChecked: radiobuttonNotifierEstatura),
+          InputRadioButtonsConsulta(
               options: const [
                 "Obsidade",
                 "Sobrepeso",
@@ -566,48 +741,64 @@ class ExameFisico extends StatelessWidget {
               ],
               label: "IMC X Idade",
               controller: state.imcPorIdade,
-              isChecked: radiobuttonNotifier),
-          SizedBox(height: 20), // Espaço entre os grupos
+              isChecked: radiobuttonNotifierIMC),
+          const SizedBox(height: 20), // Espaço entre os grupos
           //ImcForm(),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(label: "FC:", controller: state.frequenciaCardiaca),
+            child: InputTextoAcolher(
+                label: "FC:",
+                controller: state.frequenciaCardiaca,
+                emptyMessage: "Informe a FC"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Saturação:", controller: state.saturacao),
+                label: "Saturação:",
+                controller: state.saturacao,
+                emptyMessage: "Informe a saturação"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Ausculta Cardíaca:",
-                controller: state.auscultaCardiaca),
+                controller: state.auscultaCardiaca,
+                emptyMessage: "Informe a ausculta cardíaca"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Ausculta Pulmonar:",
-                controller: state.auscultaPulmonar),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(label: "PA:", controller: state.pressaoArterial),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(
-                label: "Temperatura:", controller: state.temperatura),
+                controller: state.auscultaPulmonar,
+                emptyMessage: "Informe a ausculta pulmonar"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Otoscopia:", controller: state.otoscopia),
+                label: "PA:",
+                controller: state.pressaoArterial,
+                emptyMessage: "Informe a PA"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Orofaringe:", controller: state.orofaringe),
+                label: "Temperatura:",
+                controller: state.temperatura,
+                emptyMessage: "Informe a temperatura"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: InputTextoAcolher(
+                label: "Otoscopia:",
+                controller: state.otoscopia,
+                emptyMessage: "Informe a otoscopia"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: InputTextoAcolher(
+                label: "Orofaringe:",
+                controller: state.orofaringe,
+                emptyMessage: "Informe a orofaringe"),
           ),
           InputCaixaDeTexto(
             label:
@@ -629,13 +820,15 @@ class ExameFisico extends StatelessWidget {
 
 class ExameFisicoCrianca extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
+  final ValueNotifier<bool> radiobuttonNotifierEstatura;
+  final ValueNotifier<bool> radiobuttonNotifierIMC;
 
-  ExameFisicoCrianca({
-    Key? key,
+  const ExameFisicoCrianca({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.radiobuttonNotifierEstatura,
+    required this.radiobuttonNotifierIMC,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -651,30 +844,30 @@ class ExameFisicoCrianca extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: InputTextoAcolher(
-                    label: "Comprimento",
-                    placeHolder: "cm",
-                    controller: state.comprimento,
-                  ),
+                      label: "Comprimento",
+                      placeHolder: "cm",
+                      controller: state.comprimento,
+                      emptyMessage: "Informe o comprimento"),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   flex: 1,
                   child: InputTextoAcolher(
-                    label: "Peso",
-                    placeHolder: "kg",
-                    controller: state.peso,
-                  ),
+                      label: "Peso",
+                      placeHolder: "kg",
+                      controller: state.peso,
+                      emptyMessage: "Informe o peso"),
                 ),
               ],
             ),
           ),
           //EstaturaForm(),
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
               options: const ["Adequado", "Baixa estatura pra idade"],
               label: "Estatura X Idade",
               controller: state.comprimentoPorIdade,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
+              isChecked: radiobuttonNotifierEstatura),
+          InputRadioButtonsConsulta(
               options: const [
                 "Obsidade",
                 "Sobrepeso",
@@ -684,48 +877,64 @@ class ExameFisicoCrianca extends StatelessWidget {
               ],
               label: "IMC X Idade",
               controller: state.imcPorIdade,
-              isChecked: radiobuttonNotifier),
-          SizedBox(height: 20), // Espaço entre os grupos
+              isChecked: radiobuttonNotifierIMC),
+          const SizedBox(height: 20), // Espaço entre os grupos
           //ImcForm(),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(label: "FC:", controller: state.frequenciaCardiaca),
+            child: InputTextoAcolher(
+                label: "FC:",
+                controller: state.frequenciaCardiaca,
+                emptyMessage: "Informe a FC"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Saturação:", controller: state.saturacao),
+                label: "Saturação:",
+                controller: state.saturacao,
+                emptyMessage: "Informe a saturação"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Ausculta Cardíaca:",
-                controller: state.auscultaCardiaca),
+                controller: state.auscultaCardiaca,
+                emptyMessage: "Informe a ausculta cardíaca"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Ausculta Pulmonar:",
-                controller: state.auscultaPulmonar),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(label: "PA:", controller: state.pressaoArterial),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: InputTextoAcolher(
-                label: "Temperatura:", controller: state.temperatura),
+                controller: state.auscultaPulmonar,
+                emptyMessage: "Informe a ausculta pulmonar"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Otoscopia:", controller: state.otoscopia),
+                label: "PA:",
+                controller: state.pressaoArterial,
+                emptyMessage: "Informe a PA"),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Orofaringe:", controller: state.orofaringe),
+                label: "Temperatura:",
+                controller: state.temperatura,
+                emptyMessage: "Informe a temperatura"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: InputTextoAcolher(
+                label: "Otoscopia:",
+                controller: state.otoscopia,
+                emptyMessage: "Informe a otoscopia"),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: InputTextoAcolher(
+                label: "Orofaringe:",
+                controller: state.orofaringe,
+                emptyMessage: "Informe a orofaringe"),
           ),
           InputCaixaDeTexto(
             label:
@@ -742,17 +951,26 @@ class ExameFisicoCrianca extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Fontanelas:", controller: state.fontanelas),
+                label: "Fontanelas:",
+                controller: state.fontanelas,
+                validation: (value) => Mask.validations
+                    .generic(value, error: "Nao sei oq inválido", min: 3)),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Coto umbilical:", controller: state.cotoUmbilical),
+              label: "Coto umbilical:",
+              controller: state.cotoUmbilical,
+              validation: (value) => Mask.validations
+                  .generic(value, error: "Nao sei oq inválido", min: 3),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Genitalia:", controller: state.genitalia),
+                label: "Genitalia:",
+                controller: state.genitalia,
+                emptyMessage: "Informe a genitalia"),
           ),
           /*Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
@@ -788,13 +1006,31 @@ class ExameFisicoCrianca extends StatelessWidget {
 
 class AvaliacaoReflexos extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
 
-  AvaliacaoReflexos({
-    Key? key,
+  // Notifiers específicos para cada RadioButton
+  final ValueNotifier<bool> reflexoBuscaNotifier;
+  final ValueNotifier<bool> reflexoSuccaoNotifier;
+  final ValueNotifier<bool> reflexoPreensaoPalmarNotifier;
+  final ValueNotifier<bool> reflexoPreensaoPlantarNotifier;
+  final ValueNotifier<bool> reflexoBabinskiNotifier;
+  final ValueNotifier<bool> reflexoTonicoCervicalNotifier;
+  final ValueNotifier<bool> reflexoMoroNotifier;
+  final ValueNotifier<bool> reflexoMarchaNotifier;
+  final ValueNotifier<bool> reflexoPiscarOpticoNotifier;
+
+  const AvaliacaoReflexos({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.reflexoBuscaNotifier,
+    required this.reflexoSuccaoNotifier,
+    required this.reflexoPreensaoPalmarNotifier,
+    required this.reflexoPreensaoPlantarNotifier,
+    required this.reflexoBabinskiNotifier,
+    required this.reflexoTonicoCervicalNotifier,
+    required this.reflexoMoroNotifier,
+    required this.reflexoMarchaNotifier,
+    required this.reflexoPiscarOpticoNotifier,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -803,53 +1039,60 @@ class AvaliacaoReflexos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de busca (do nascimento aos 3-4 meses)",
-              controller: state.reflexoBusca,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de sucção (do nascimento aos 10-12 meses)",
-              controller: state.reflexoSuccao,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de preensão palmar (do nascimento aos 3-4 meses)",
-              controller: state.reflexoPreensaoPalmar,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label:
-                  "Reflexo de preensão plantar ( do nascimento aos 8-10 meses)",
-              controller: state.reflexoPreensaoPlantar,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de babinski ( do nascimento aos 24 meses)",
-              controller: state.reflexoBabinski,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label:
-                  "Reflexo de tônico-cervical ( dos 2-3 meses aos 4-6 meses)",
-              controller: state.reflexoTonicoCervical,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de Moro ( do nascimento aos 4-6 meses)",
-              controller: state.reflexoMoro,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de Marcha ( até o andar voluntário)",
-              controller: state.reflexoMarcha,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo do piscar óptico",
-              controller: state.reflexoPiscarOptico,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de busca (do nascimento aos 3-4 meses)",
+            controller: state.reflexoBusca,
+            isChecked: reflexoBuscaNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de sucção (do nascimento aos 10-12 meses)",
+            controller: state.reflexoSuccao,
+            isChecked: reflexoSuccaoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de preensão palmar (do nascimento aos 3-4 meses)",
+            controller: state.reflexoPreensaoPalmar,
+            isChecked: reflexoPreensaoPalmarNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de preensão plantar (do nascimento aos 8-10 meses)",
+            controller: state.reflexoPreensaoPlantar,
+            isChecked: reflexoPreensaoPlantarNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de babinski (do nascimento aos 24 meses)",
+            controller: state.reflexoBabinski,
+            isChecked: reflexoBabinskiNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de tônico-cervical (dos 2-3 meses aos 4-6 meses)",
+            controller: state.reflexoTonicoCervical,
+            isChecked: reflexoTonicoCervicalNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de Moro (do nascimento aos 4-6 meses)",
+            controller: state.reflexoMoro,
+            isChecked: reflexoMoroNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de Marcha (até o andar voluntário)",
+            controller: state.reflexoMarcha,
+            isChecked: reflexoMarchaNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo do piscar óptico",
+            controller: state.reflexoPiscarOptico,
+            isChecked: reflexoPiscarOpticoNotifier,
+          ),
         ],
       ),
     );
@@ -858,13 +1101,25 @@ class AvaliacaoReflexos extends StatelessWidget {
 
 class AvaliacaoNervos extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
 
-  AvaliacaoNervos({
-    Key? key,
+  // Notifiers específicos para cada RadioButton
+  final ValueNotifier<bool> reflexoPiscarOpticoNotifier;
+  final ValueNotifier<bool> reflexoBuscaESuccaoNotifier;
+  final ValueNotifier<bool> movimentosSimetricosFaciaisNotifier;
+  final ValueNotifier<bool> reflexoPiscarAcusticoNotifier;
+  final ValueNotifier<bool> reflexoVomitoNotifier;
+  final ValueNotifier<bool> aperteNarizNotifier;
+
+  const AvaliacaoNervos({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.reflexoPiscarOpticoNotifier,
+    required this.reflexoBuscaESuccaoNotifier,
+    required this.movimentosSimetricosFaciaisNotifier,
+    required this.reflexoPiscarAcusticoNotifier,
+    required this.reflexoVomitoNotifier,
+    required this.aperteNarizNotifier,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -873,37 +1128,43 @@ class AvaliacaoNervos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo do piscar óptico",
-              controller: state.reflexoPiscarOptico,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de busca e sucção",
-              controller: state.reflexoBuscaESuccao,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Movimentos Simétricos Faciais",
-              controller: state.movimentosSimetricosFaciais,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo piscar acústico",
-              controller: state.reflexoPiscarAcustico,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label: "Reflexo de vômito",
-              controller: state.reflexoVomito,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["P", "A", "N/V"],
-              label:
-                  "Aperte o nariz, a boca abre-se e a língua eleva-se na linha média",
-              controller: state.aperteNariz,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo do piscar óptico",
+            controller: state.reflexoPiscarOptico,
+            isChecked: reflexoPiscarOpticoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de busca e sucção",
+            controller: state.reflexoBuscaESuccao,
+            isChecked: reflexoBuscaESuccaoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Movimentos Simétricos Faciais",
+            controller: state.movimentosSimetricosFaciais,
+            isChecked: movimentosSimetricosFaciaisNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo piscar acústico",
+            controller: state.reflexoPiscarAcustico,
+            isChecked: reflexoPiscarAcusticoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label: "Reflexo de vômito",
+            controller: state.reflexoVomito,
+            isChecked: reflexoVomitoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P", "A", "N/V"],
+            label:
+                "Aperte o nariz, a boca abre-se e a língua eleva-se na linha média",
+            controller: state.aperteNariz,
+            isChecked: aperteNarizNotifier,
+          ),
         ],
       ),
     );
@@ -912,13 +1173,15 @@ class AvaliacaoNervos extends StatelessWidget {
 
 class IdentidadeGenero extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
+  final ValueNotifier<bool> radiobuttonNotifierG;
+  final ValueNotifier<bool> radiobuttonNotifierS;
 
-  IdentidadeGenero({
-    Key? key,
+  const IdentidadeGenero({
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.radiobuttonNotifierG,
+    required this.radiobuttonNotifierS,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -927,7 +1190,7 @@ class IdentidadeGenero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputRadioButtonsCadastroPaciente(
+          InputRadioButtonsConsulta(
               options: const [
                 "Transgênero",
                 "Cisgênero",
@@ -936,12 +1199,12 @@ class IdentidadeGenero extends StatelessWidget {
               ],
               label: "Identidade de gênero",
               controller: state.identidadeGenero,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
+              isChecked: radiobuttonNotifierG),
+          InputRadioButtonsConsulta(
               options: const ["Heterossexual", "Homossexual", "Bissexual"],
               label: "Sexualidade",
               controller: state.sexualidade,
-              isChecked: radiobuttonNotifier),
+              isChecked: radiobuttonNotifierS),
         ],
       ),
     );
@@ -950,7 +1213,7 @@ class IdentidadeGenero extends StatelessWidget {
 
 class EstagioDeTurnerMeninas extends StatelessWidget {
   final ConsultaState state;
-  const EstagioDeTurnerMeninas({required this.state});
+  const EstagioDeTurnerMeninas({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -977,13 +1240,31 @@ class EstagioDeTurnerMeninas extends StatelessWidget {
 
 class SaudeSexualReprodutivaMeninas extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
+
+  // Notifiers específicos para cada RadioButton
+  final ValueNotifier<bool> fluxoMenstrualNotifier;
+  final ValueNotifier<bool> regularidadeMenstrualNotifier;
+  final ValueNotifier<bool> dismenorreiaNotifier;
+  final ValueNotifier<bool> usaMedicamentoNotifier;
+  final ValueNotifier<bool> vidaSexualAtivaNotifierW;
+  final ValueNotifier<bool> usaMetodoContraceptivoNotifierW;
+  final ValueNotifier<bool> jaFezPreventivoNotifier;
+  final ValueNotifier<bool> seMasturbaNotifierW;
+
+  final _controllerRadio = TextEditingController();
 
   SaudeSexualReprodutivaMeninas({
-    Key? key,
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.fluxoMenstrualNotifier,
+    required this.regularidadeMenstrualNotifier,
+    required this.dismenorreiaNotifier,
+    required this.usaMedicamentoNotifier,
+    required this.vidaSexualAtivaNotifierW,
+    required this.usaMetodoContraceptivoNotifierW,
+    required this.jaFezPreventivoNotifier,
+    required this.seMasturbaNotifierW,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1000,56 +1281,71 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
             icone: Icons.date_range_outlined,
             readOnly: true,
           ),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Leve", "Moderado", "Intenso"],
-              label: "Fluxo menstrual",
-              controller: state.fluxoMenstrual,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Regular", "Irregular"],
-              label: "Regularidade",
-              controller: state.regularidadeMenstruacao,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Presente", "Ausente"],
-              label: "Dismenorréia",
-              controller: state.dimenorreia,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["Leve", "Moderado", "Intenso"],
+            label: "Fluxo menstrual",
+            controller: state.fluxoMenstrual,
+            isChecked: fluxoMenstrualNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Regular", "Irregular"],
+            label: "Regularidade",
+            controller: state.regularidadeMenstruacao,
+            isChecked: regularidadeMenstrualNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Presente", "Ausente"],
+            label: "Dismenorréia",
+            controller: state.dimenorreia,
+            isChecked: dismenorreiaNotifier,
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
-                label: "Uso de absorvente ( trocas/higienização) :",
-                controller: state.usoAbsorvente),
+              label: "Uso de absorvente (trocas/higienização):",
+              controller: state.usoAbsorvente,
+              validation: (value) => Mask.validations
+                  .generic(value, error: "Nao sei oq inválido", min: 3),
+            ),
           ),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Usa medicamento",
-              controller: state.usaMedicamento,
-              secondController: state.qualMedicamento,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim ", "Não"],
-              label: "Tem vida sexual ativa",
-              controller: state.vidaSexualAtiva,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Usa algum método contraceptivo",
-              controller: state.usaMetodoContraceptivo,
-              secondController: state.qualMetodoContraceptivo,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Ja fez preventivo",
-              controller: state.jaFezPreventivo,
-              secondController: state.quandoFezPreventivo,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Você se masturba",
-              controller: state.seMasturba,
-              secondController: state.frequenciaMasturbacao,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Usa medicamento",
+            controller: _controllerRadio,
+            secondController: state.usaMedicamento,
+            thirdController: state.qualMedicamento,
+            isChecked: usaMedicamentoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim ", "Não"],
+            label: "Tem vida sexual ativa",
+            controller: state.vidaSexualAtiva,
+            isChecked: vidaSexualAtivaNotifierW,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Usa algum método contraceptivo",
+            controller: _controllerRadio,
+            secondController: state.usaMetodoContraceptivo,
+            thirdController: state.qualMetodoContraceptivo,
+            isChecked: usaMetodoContraceptivoNotifierW,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Ja fez preventivo",
+            controller: _controllerRadio,
+            secondController: state.jaFezPreventivo,
+            thirdController: state.quandoFezPreventivo,
+            isChecked: jaFezPreventivoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Você se masturba",
+            controller: _controllerRadio,
+            secondController: state.seMasturba,
+            thirdController: state.frequenciaMasturbacao,
+            isChecked: seMasturbaNotifierW,
+          ),
           InputCaixaDeTexto(
             label: "Observações",
             controller: state.observacoesSaudeSexualEReprodutivaMeninas,
@@ -1063,7 +1359,7 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
 
 class EstagioDeTurnerMeninos extends StatelessWidget {
   final ConsultaState state;
-  const EstagioDeTurnerMeninos({required this.state});
+  const EstagioDeTurnerMeninos({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -1090,13 +1386,23 @@ class EstagioDeTurnerMeninos extends StatelessWidget {
 
 class SaudeSexualReprodutivaMeninos extends StatelessWidget {
   final ConsultaState state;
-  final ValueNotifier<bool> radiobuttonNotifier;
+
+  // Notifiers específicos para cada RadioButton
+  final ValueNotifier<bool> vidaSexualAtivaNotifier;
+  final ValueNotifier<bool> usaMetodoContraceptivoNotifier;
+  final ValueNotifier<bool> seMasturbaNotifier;
+  final ValueNotifier<bool> semenarcaNotifier;
+
+  final _controllerRadio = TextEditingController();
 
   SaudeSexualReprodutivaMeninos({
-    Key? key,
+    super.key,
     required this.state,
-    required this.radiobuttonNotifier,
-  }) : super(key: key);
+    required this.vidaSexualAtivaNotifier,
+    required this.usaMetodoContraceptivoNotifier,
+    required this.seMasturbaNotifier,
+    required this.semenarcaNotifier,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1105,34 +1411,88 @@ class SaudeSexualReprodutivaMeninos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim ", "Não"],
-              label: "Tem vida sexual ativa",
-              controller: state.vidaSexualAtiva,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Usa algum método contraceptivo",
-              controller: state.usaMetodoContraceptivo,
-              secondController: state.qualMetodoContraceptivo,
-              isChecked: radiobuttonNotifier),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Você se masturba",
-              controller: state.seMasturba,
-              secondController: state.frequenciaMasturbacao,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["Sim ", "Não"],
+            label: "Tem vida sexual ativa",
+            controller: state.vidaSexualAtiva,
+            isChecked: vidaSexualAtivaNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Usa algum método contraceptivo",
+            controller: _controllerRadio,
+            secondController: state.usaMetodoContraceptivo,
+            thirdController: state.qualMetodoContraceptivo,
+            isChecked: usaMetodoContraceptivoNotifier,
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Você se masturba",
+            controller: _controllerRadio,
+            secondController: state.seMasturba,
+            thirdController: state.frequenciaMasturbacao,
+            isChecked: seMasturbaNotifier,
+          ),
           InputCaixaDeTexto(
             label: "Observações",
             controller: state.observacoesSaudeSexualEReprodutivaMeninas,
             isCadastro: true,
           ),
-          InputRadioButtonsCadastroPaciente(
-              options: const ["Sim", "Não"],
-              label: "Semanarca",
-              controller: state.semenarca,
-              secondController: state.quandoSemenarca,
-              isChecked: radiobuttonNotifier),
+          InputRadioButtonsConsulta(
+            options: const ["Sim", "Não"],
+            label: "Semanarca",
+            controller: _controllerRadio,
+            secondController: state.semenarca,
+            thirdController: state.quandoSemenarca,
+            isChecked: semenarcaNotifier,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ParaCasa extends StatelessWidget {
+  final ConsultaState state;
+  const ParaCasa({super.key, required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputCaixaDeTexto(
+            label: "Análise Geral",
+            controller: state.analiseGeralCasa,
+            isCadastro: true,
+          ),
+          InputCaixaDeTexto(
+            label: "Exame Físico",
+            controller: state.exameFisicoCasa,
+            isCadastro: true,
+          ),
+          InputCaixaDeTexto(
+            label: "Avaliações",
+            controller: state.avaliacoesCasa,
+            isCadastro: true,
+          ),
+          InputCaixaDeTexto(
+            label: "Orientação para o cuidador",
+            controller: state.oriParaCuidador,
+            isCadastro: true,
+          ),
+          InputCaixaDeTexto(
+            label: "Orientação para criança ou adolescente",
+            controller: state.oriParaPaciente,
+            isCadastro: true,
+          ),
+          InputCaixaDeTexto(
+            label: "Orientação para coordenação da casa",
+            controller: state.oriParaCoordenacao,
+            isCadastro: true,
+          )
         ],
       ),
     );
@@ -1146,7 +1506,7 @@ class InputCaixaLambdoide extends StatelessWidget {
   final TextEditingController?
       optionalController; // Adicionando o optionalController
 
-  InputCaixaLambdoide({
+  const InputCaixaLambdoide({super.key, 
     required this.label,
     required this.controller,
     required this.isCadastro,
@@ -1165,7 +1525,7 @@ class InputCaixaLambdoide extends StatelessWidget {
             decoration: InputDecoration(
               labelText: label,
               hintText: "______ cm",
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
           ),
@@ -1192,10 +1552,10 @@ class RefeicoesCheckbox extends StatefulWidget {
   final TextEditingController refeicoesController;
 
   // Construtor que recebe o controller como argumento
-  RefeicoesCheckbox({required this.refeicoesController});
+  const RefeicoesCheckbox({super.key, required this.refeicoesController});
 
   @override
-  _RefeicoesCheckboxState createState() => _RefeicoesCheckboxState();
+  State<RefeicoesCheckbox> createState() => _RefeicoesCheckboxState();
 }
 
 class _RefeicoesCheckboxState extends State<RefeicoesCheckbox> {
@@ -1252,8 +1612,10 @@ class _RefeicoesCheckboxState extends State<RefeicoesCheckbox> {
 }
 
 class EstaturaForm extends StatefulWidget {
+  const EstaturaForm({super.key});
+
   @override
-  _EstaturaFormState createState() => _EstaturaFormState();
+  State<EstaturaForm> createState() => _EstaturaFormState();
 }
 
 class _EstaturaFormState extends State<EstaturaForm> {
@@ -1263,7 +1625,7 @@ class _EstaturaFormState extends State<EstaturaForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("Estatura X Idade:"),
+        const Text("Estatura X Idade:"),
         Row(
           children: [
             Radio<String>(
@@ -1275,7 +1637,7 @@ class _EstaturaFormState extends State<EstaturaForm> {
                 });
               },
             ),
-            Text("Adequado"),
+            const Text("Adequado"),
           ],
         ),
         Row(
@@ -1289,7 +1651,7 @@ class _EstaturaFormState extends State<EstaturaForm> {
                 });
               },
             ),
-            Text("Baixa estatura para a idade"),
+            const Text("Baixa estatura para a idade"),
           ],
         ),
         Row(
@@ -1303,7 +1665,7 @@ class _EstaturaFormState extends State<EstaturaForm> {
                 });
               },
             ),
-            Text("Baixa estatura para idade"),
+            const Text("Baixa estatura para idade"),
           ],
         ),
       ],
@@ -1312,8 +1674,10 @@ class _EstaturaFormState extends State<EstaturaForm> {
 }
 
 class ImcForm extends StatefulWidget {
+  const ImcForm({super.key});
+
   @override
-  _ImcFormState createState() => _ImcFormState();
+  State<ImcForm> createState() => _ImcFormState();
 }
 
 class _ImcFormState extends State<ImcForm> {
@@ -1323,7 +1687,7 @@ class _ImcFormState extends State<ImcForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("IMC X Idade:"),
+        const Text("IMC X Idade:"),
         Row(
           children: [
             Radio<String>(
@@ -1335,7 +1699,7 @@ class _ImcFormState extends State<ImcForm> {
                 });
               },
             ),
-            Text("Obesidade"),
+            const Text("Obesidade"),
           ],
         ),
         Row(
@@ -1349,7 +1713,7 @@ class _ImcFormState extends State<ImcForm> {
                 });
               },
             ),
-            Text("Sobrepeso"),
+            const Text("Sobrepeso"),
           ],
         ),
         Row(
@@ -1363,7 +1727,7 @@ class _ImcFormState extends State<ImcForm> {
                 });
               },
             ),
-            Text("Eutrofia"),
+            const Text("Eutrofia"),
           ],
         ),
         Row(
@@ -1377,7 +1741,7 @@ class _ImcFormState extends State<ImcForm> {
                 });
               },
             ),
-            Text("Magreza"),
+            const Text("Magreza"),
           ],
         ),
         Row(
@@ -1391,7 +1755,7 @@ class _ImcFormState extends State<ImcForm> {
                 });
               },
             ),
-            Text("Magreza Acentuada"),
+            const Text("Magreza Acentuada"),
           ],
         ),
       ],
@@ -1406,7 +1770,7 @@ class InputCaixaBregmatica extends StatelessWidget {
   final TextEditingController?
       optionalController; // Adicionando o optionalController
 
-  InputCaixaBregmatica({
+  const InputCaixaBregmatica({super.key, 
     required this.label,
     required this.controller,
     required this.isCadastro,
@@ -1425,7 +1789,7 @@ class InputCaixaBregmatica extends StatelessWidget {
             decoration: InputDecoration(
               labelText: label,
               hintText: "______ cm",
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number, // Para aceitar apenas números
           ),
@@ -1451,17 +1815,17 @@ class InputCaixaBregmatica extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class ExibirConsulta extends StatefulWidget {
   final List<String> pageTitles;
   final List<Widget> pageWidgets;
 
-  MyHomePage({required this.pageTitles, required this.pageWidgets});
+  const ExibirConsulta({super.key, required this.pageTitles, required this.pageWidgets});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<ExibirConsulta> createState() => _ExibirConsultaState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ExibirConsultaState extends State<ExibirConsulta> {
   late PageController _pageController;
   int currentPageIndex = 0;
 
@@ -1479,7 +1843,7 @@ class _MyHomePageState extends State<MyHomePage> {
       currentPageIndex = index;
       _pageController.animateToPage(
         currentPageIndex,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     });
@@ -1491,11 +1855,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
     String? prevTitle = prevIndex >= 0 ? pageTitles[prevIndex] : null;
     String currentTitle = pageTitles[currentPageIndex];
-    String? nextTitle =
-        nextIndex < pageTitles.length ? pageTitles[nextIndex] : null;
+    String? nextTitle = nextIndex < pageTitles.length ? pageTitles[nextIndex] : null;
+    if(nextTitle != null){
+      List<String> parts = nextTitle.split(' ');
+      if (parts.length > 2 && parts[1].length==2) {
+        nextTitle = '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
+      }
+      else if(parts.length >= 2){
+        nextTitle = '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
+      }
+      else if (parts.length > 1) {
+        nextTitle = parts[0];
+      }
+    }
+    if(prevTitle != null){
+      List<String> parts = prevTitle.split(' ');
+      if (parts.length > 2 && parts[1].length==2) {
+        prevTitle = '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
+      }
+      else if(parts.length >= 2){
+        prevTitle = '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
+      }
+      else if (parts.length > 1) {
+        prevTitle = parts[0];
+      }
+    }
 
     return PreferredSize(
-      preferredSize: Size.fromHeight(80.0), // Adjust height as needed
+      preferredSize: const Size.fromHeight(80.0), // Adjust height as needed
       child: AppBar(
         title: Row(
           children: [
@@ -1510,9 +1897,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text(
                             prevTitle,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                            style: const TextStyle(
+                              color: Color.fromARGB(179, 0, 0, 0),
+                              fontSize: 10,
                             ),
                             softWrap: true,
                           ),
@@ -1529,7 +1916,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(
                     currentTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -1542,23 +1929,23 @@ class _MyHomePageState extends State<MyHomePage> {
             Flexible(
               flex: 1,
               child: nextTitle != null
-                  ? GestureDetector(
-                      onTap: () => _navigateToPage(nextIndex),
-                      child: Center(
-                        child: FittedBox(
-                          child: Text(
-                            nextTitle,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                            softWrap: true,
+                ? GestureDetector(
+                    onTap: () => _navigateToPage(nextIndex),
+                    child: Center(
+                      child: FittedBox(
+                        child: Text(
+                          nextTitle,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color.fromARGB(179, 0, 0, 0),
+                            fontSize: 10,
                           ),
+                          softWrap: true,
                         ),
                       ),
-                    )
-                  : Container(), // Empty container when no next page
+                    ),
+                  )
+                : Container(), // Empty container when no next page
             ),
           ],
         ),

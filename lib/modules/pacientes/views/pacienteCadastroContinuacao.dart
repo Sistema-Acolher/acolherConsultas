@@ -62,25 +62,26 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                           var actualContext = context;
 
                           // Verifica a conectividade antes de tentar o cadastro
-                          var isConnected = await Connectivity().checkConnectivity();
-                          if (isConnected == ConnectivityResult.none) {
-                            Navigator.pop(actualContext);  // Fecha o diálogo de carregamento
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Erro',
-                                message: 'Sem conexão com a internet',
-                                contentType: ContentType.failure,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(actualContext)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                            return;  // Encerra o processo para evitar pop adicionais
-                          }
+                          await Connectivity().checkConnectivity().then((value) {
+                            if (value[0] == ConnectivityResult.none) {
+                              Navigator.pop(actualContext);  // Fecha o diálogo de carregamento
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Erro',
+                                  message: 'Sem conexão com a internet',
+                                  contentType: ContentType.failure,
+                                ),
+                                duration: const Duration(seconds: 10),
+                              );
+                              ScaffoldMessenger.of(actualContext)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(snackBar);
+                              return;  // Encerra o processo para evitar pop adicionais
+                            }
+                          });
 
                           // Tenta cadastrar o paciente
                           await PacientesController()
@@ -138,7 +139,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()
                               ..showSnackBar(snackBar);
-                            Future.delayed(Duration(seconds: 1), () {
+                            Future.delayed(const Duration(seconds: 1), () {
                               Navigator.pop(actualContext);  // Fecha a tela após sucesso
                             });
                           }

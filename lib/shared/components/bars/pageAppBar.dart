@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PageAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const PageAppBar({super.key, required this.titulo, required this.casaDeApoioSelecionada});
+  const PageAppBar({super.key, required this.titulo, required this.casaDeApoioSelecionada, this.leading});
 
   final String titulo;
+  final Widget? leading;
   final CasaDeApoio casaDeApoioSelecionada;
   
   @override
@@ -29,10 +30,10 @@ class _PageAppBarState extends State<PageAppBar> {
       backgroundColor: amareloNavbar,
       toolbarHeight: 60,
       centerTitle: true,
-      leading: usuario?.nivelAcesso==NivelAcesso.casaDeApoio ? IconButton(
+      leading: widget.leading ?? (usuario?.nivelAcesso==NivelAcesso.casaDeApoio ? IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black,),
         onPressed: () => Navigator.of(context).pop(),
-      ):null,
+      ):null),
       title: TextoColorido(palavra: widget.titulo),
       actions: [
         Padding(

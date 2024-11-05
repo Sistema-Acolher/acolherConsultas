@@ -13,10 +13,10 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
   final Consulta? relatorioPacienteConsulta;
 
   const ConsultaRelatorioInstituicao({
-    Key? key,
+    super.key,
     required this.dadosConsulta,
     this.relatorioPacienteConsulta,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
