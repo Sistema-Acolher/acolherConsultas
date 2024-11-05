@@ -99,6 +99,14 @@ class Consulta {
   bool? semenarca;
   DateTime? quandoSemenarca;
 
+  //para a casa
+  String? analiseGeralCasa;
+  String? exameFisicoCasa;
+  String? avaliacoesCasa;
+  String? oriParaCuidador;
+  String? oriParaPaciente;
+  String? oriParaCoordenacao;
+
   Consulta({
     // Dados somente crianças
     // Dados somente adolescentes
@@ -194,6 +202,12 @@ class Consulta {
     this.estagioTurnerMeninosPelosPubianos,
     this.semenarca,
     this.quandoSemenarca,
+    this.analiseGeralCasa,
+    this.exameFisicoCasa,
+    this.avaliacoesCasa,
+    this.oriParaCuidador,
+    this.oriParaPaciente,
+    this.oriParaCoordenacao
   });
 
   Consulta copyWith({
@@ -290,6 +304,12 @@ class Consulta {
     int? estagioTurnerMeninosPelosPubianos,
     bool? semenarca,
     DateTime? quandoSemenarca,
+    String? analiseGeralCasa,
+    String? exameFisicoCasa,
+    String? avaliacoesCasa,
+    String? oriParaCuidador,
+    String? oriParaPaciente,
+    String? oriParaCoordenacao
   }) {
     return Consulta(
       idade: idade ?? this.idade,
@@ -297,15 +317,20 @@ class Consulta {
       queixaPrincipal: queixaPrincipal ?? this.queixaPrincipal,
       descricao: descricao ?? this.descricao,
       observacoesPaciente: observacoesPaciente ?? this.observacoesPaciente,
-      refeicoesComTecnologia: refeicoesComTecnologia ?? this.refeicoesComTecnologia,
+      refeicoesComTecnologia:
+          refeicoesComTecnologia ?? this.refeicoesComTecnologia,
       refeicoesDuranteODia: refeicoesDuranteODia ?? this.refeicoesDuranteODia,
       consumiuFeijao: consumiuFeijao ?? this.consumiuFeijao,
       consumiuFrutas: consumiuFrutas ?? this.consumiuFrutas,
-      consumiuVerdurasLegumes: consumiuVerdurasLegumes ?? this.consumiuVerdurasLegumes,
+      consumiuVerdurasLegumes:
+          consumiuVerdurasLegumes ?? this.consumiuVerdurasLegumes,
       consumiuEmbutidos: consumiuEmbutidos ?? this.consumiuEmbutidos,
-      consumiuBebidasAdocicadas: consumiuBebidasAdocicadas ?? this.consumiuBebidasAdocicadas,
-      consumiuMacarraoInstantaneoSalgado: consumiuMacarraoInstantaneoSalgado ?? this.consumiuMacarraoInstantaneoSalgado,
-      consumiuBiscoitoRecheado: consumiuBiscoitoRecheado ?? this.consumiuBiscoitoRecheado,
+      consumiuBebidasAdocicadas:
+          consumiuBebidasAdocicadas ?? this.consumiuBebidasAdocicadas,
+      consumiuMacarraoInstantaneoSalgado: consumiuMacarraoInstantaneoSalgado ??
+          this.consumiuMacarraoInstantaneoSalgado,
+      consumiuBiscoitoRecheado:
+          consumiuBiscoitoRecheado ?? this.consumiuBiscoitoRecheado,
       ingestaoHidrica: ingestaoHidrica ?? this.ingestaoHidrica,
       suplementacao: suplementacao ?? this.suplementacao,
       diurese: diurese ?? this.diurese,
@@ -326,64 +351,91 @@ class Consulta {
       temperatura: temperatura ?? this.temperatura,
       otoscopia: otoscopia ?? this.otoscopia,
       orofaringe: orofaringe ?? this.orofaringe,
-      avaliacaoMuscoesqueletica: avaliacaoMuscoesqueletica ?? this.avaliacaoMuscoesqueletica,
+      avaliacaoMuscoesqueletica:
+          avaliacaoMuscoesqueletica ?? this.avaliacaoMuscoesqueletica,
       avaliacaoPele: avaliacaoPele ?? this.avaliacaoPele,
       marcosPresentes: marcosPresentes ?? this.marcosPresentes,
       marcosAusentes: marcosAusentes ?? this.marcosAusentes,
-      observacoesDesenvolvimento: observacoesDesenvolvimento ?? this.observacoesDesenvolvimento,
+      observacoesDesenvolvimento:
+          observacoesDesenvolvimento ?? this.observacoesDesenvolvimento,
       comoSeSenteHoje: comoSeSenteHoje ?? this.comoSeSenteHoje,
-      observacoesPsicoemocionais: observacoesPsicoemocionais ?? this.observacoesPsicoemocionais,
+      observacoesPsicoemocionais:
+          observacoesPsicoemocionais ?? this.observacoesPsicoemocionais,
       analiseGeral: analiseGeral ?? this.analiseGeral,
       avaliacoes: avaliacoes ?? this.avaliacoes,
       intervencoes: intervencoes ?? this.intervencoes,
       fontanelas: fontanelas ?? this.fontanelas,
       cotoUmbilical: cotoUmbilical ?? this.cotoUmbilical,
       genitalia: genitalia ?? this.genitalia,
-      frequenciaRespiratoria: frequenciaRespiratoria ?? this.frequenciaRespiratoria,
+      frequenciaRespiratoria:
+          frequenciaRespiratoria ?? this.frequenciaRespiratoria,
       bregmatica: bregmatica ?? this.bregmatica,
-      bregmaticaCalcificada: bregmaticaCalcificada ?? this.bregmaticaCalcificada,
+      bregmaticaCalcificada:
+          bregmaticaCalcificada ?? this.bregmaticaCalcificada,
       lambdoide: lambdoide ?? this.lambdoide,
       lambdoideCalcificada: lambdoideCalcificada ?? this.lambdoideCalcificada,
       avaliacaoLinguagem: avaliacaoLinguagem ?? this.avaliacaoLinguagem,
       reflexoBusca: reflexoBusca ?? this.reflexoBusca,
       reflexoSuccao: reflexoSuccao ?? this.reflexoSuccao,
-      reflexoPreensaoPalmar: reflexoPreensaoPalmar ?? this.reflexoPreensaoPalmar,
-      reflexoPreensaoPlantar: reflexoPreensaoPlantar ?? this.reflexoPreensaoPlantar,
+      reflexoPreensaoPalmar:
+          reflexoPreensaoPalmar ?? this.reflexoPreensaoPalmar,
+      reflexoPreensaoPlantar:
+          reflexoPreensaoPlantar ?? this.reflexoPreensaoPlantar,
       reflexoBabinski: reflexoBabinski ?? this.reflexoBabinski,
-      reflexoTonicoCervical: reflexoTonicoCervical ?? this.reflexoTonicoCervical,
+      reflexoTonicoCervical:
+          reflexoTonicoCervical ?? this.reflexoTonicoCervical,
       reflexoMoro: reflexoMoro ?? this.reflexoMoro,
       reflexoMarcha: reflexoMarcha ?? this.reflexoMarcha,
       reflexoPiscarOptico: reflexoPiscarOptico ?? this.reflexoPiscarOptico,
       reflexoBuscaESuccao: reflexoBuscaESuccao ?? this.reflexoBuscaESuccao,
-      movimentosSimetricosFaciais: movimentosSimetricosFaciais ?? this.movimentosSimetricosFaciais,
-      reflexoPiscarAcustico: reflexoPiscarAcustico ?? this.reflexoPiscarAcustico,
+      movimentosSimetricosFaciais:
+          movimentosSimetricosFaciais ?? this.movimentosSimetricosFaciais,
+      reflexoPiscarAcustico:
+          reflexoPiscarAcustico ?? this.reflexoPiscarAcustico,
       reflexoVomito: reflexoVomito ?? this.reflexoVomito,
       aperteNariz: aperteNariz ?? this.aperteNariz,
       atividadesLazer: atividadesLazer ?? this.atividadesLazer,
       identidadeGenero: identidadeGenero ?? this.identidadeGenero,
       sexualidade: sexualidade ?? this.sexualidade,
-      estagioTurnerMeninasMamas: estagioTurnerMeninasMamas ?? this.estagioTurnerMeninasMamas,
-      estagioTurnerMeninasPelosPubianos: estagioTurnerMeninasPelosPubianos ?? this.estagioTurnerMeninasPelosPubianos,
-      dataUltimaMenstruacao: dataUltimaMenstruacao ?? this.dataUltimaMenstruacao,
+      estagioTurnerMeninasMamas:
+          estagioTurnerMeninasMamas ?? this.estagioTurnerMeninasMamas,
+      estagioTurnerMeninasPelosPubianos: estagioTurnerMeninasPelosPubianos ??
+          this.estagioTurnerMeninasPelosPubianos,
+      dataUltimaMenstruacao:
+          dataUltimaMenstruacao ?? this.dataUltimaMenstruacao,
       fluxoMenstrual: fluxoMenstrual ?? this.fluxoMenstrual,
-      regularidadeMenstruacao: regularidadeMenstruacao ?? this.regularidadeMenstruacao,
+      regularidadeMenstruacao:
+          regularidadeMenstruacao ?? this.regularidadeMenstruacao,
       quaoIrregular: quaoIrregular ?? this.quaoIrregular,
       dimenorreia: dimenorreia ?? this.dimenorreia,
       usoAbsorvente: usoAbsorvente ?? this.usoAbsorvente,
       usaMedicamento: usaMedicamento ?? this.usaMedicamento,
       qualMedicamento: qualMedicamento ?? this.qualMedicamento,
-      observacoesSaudeSexualEReprodutivaMeninas: observacoesSaudeSexualEReprodutivaMeninas ?? this.observacoesSaudeSexualEReprodutivaMeninas,
+      observacoesSaudeSexualEReprodutivaMeninas:
+          observacoesSaudeSexualEReprodutivaMeninas ??
+              this.observacoesSaudeSexualEReprodutivaMeninas,
       vidaSexualAtiva: vidaSexualAtiva ?? this.vidaSexualAtiva,
-      usaMetodoContraceptivo: usaMetodoContraceptivo ?? this.usaMetodoContraceptivo,
-      qualMetodoContraceptivo: qualMetodoContraceptivo ?? this.qualMetodoContraceptivo,
+      usaMetodoContraceptivo:
+          usaMetodoContraceptivo ?? this.usaMetodoContraceptivo,
+      qualMetodoContraceptivo:
+          qualMetodoContraceptivo ?? this.qualMetodoContraceptivo,
       jaFezPreventivo: jaFezPreventivo ?? this.jaFezPreventivo,
       quandoFezPreventivo: quandoFezPreventivo ?? this.quandoFezPreventivo,
       seMasturba: seMasturba ?? this.seMasturba,
-      frequenciaMasturbacao: frequenciaMasturbacao ?? this.frequenciaMasturbacao,
-      estagioTurnerMeninosGenitalia: estagioTurnerMeninosGenitalia ?? this.estagioTurnerMeninosGenitalia,
-      estagioTurnerMeninosPelosPubianos: estagioTurnerMeninosPelosPubianos ?? this.estagioTurnerMeninosPelosPubianos,
+      frequenciaMasturbacao:
+          frequenciaMasturbacao ?? this.frequenciaMasturbacao,
+      estagioTurnerMeninosGenitalia:
+          estagioTurnerMeninosGenitalia ?? this.estagioTurnerMeninosGenitalia,
+      estagioTurnerMeninosPelosPubianos: estagioTurnerMeninosPelosPubianos ??
+          this.estagioTurnerMeninosPelosPubianos,
       semenarca: semenarca ?? this.semenarca,
       quandoSemenarca: quandoSemenarca ?? this.quandoSemenarca,
+      analiseGeralCasa: analiseGeralCasa ?? this.analiseGeralCasa,
+      exameFisicoCasa: exameFisicoCasa ?? this.exameFisicoCasa,
+      avaliacoesCasa: avaliacoesCasa ?? this.avaliacoesCasa,
+      oriParaCuidador: oriParaCuidador ?? this.oriParaCuidador,
+      oriParaPaciente: oriParaPaciente ?? this.oriParaPaciente,
+      oriParaCoordenacao: oriParaCoordenacao ?? this.oriParaCoordenacao
     );
   }
 
@@ -471,7 +523,8 @@ class Consulta {
       'usoAbsorvente': usoAbsorvente,
       'usaMedicamento': usaMedicamento,
       'qualMedicamento': qualMedicamento,
-      'observacoesSaudeSexualEReprodutivaMeninas': observacoesSaudeSexualEReprodutivaMeninas,
+      'observacoesSaudeSexualEReprodutivaMeninas':
+          observacoesSaudeSexualEReprodutivaMeninas,
       'vidaSexualAtiva': vidaSexualAtiva,
       'usaMetodoContraceptivo': usaMetodoContraceptivo,
       'qualMetodoContraceptivo': qualMetodoContraceptivo,
@@ -484,6 +537,12 @@ class Consulta {
       'semenarca': semenarca,
       'quandoSemenarca':
           quandoSemenarca != null ? Timestamp.fromDate(quandoSemenarca!) : null,
+      'analiseGeralCasa': analiseGeralCasa,
+      'exameFisicoCasa': exameFisicoCasa ,
+      'avaliacoesCasa': avaliacoesCasa,
+      'oriParaCuidador': oriParaCuidador,
+      'oriParaPaciente': oriParaPaciente, 
+      'oriParaCoordenacao': oriParaCoordenacao
     };
   }
 
@@ -493,7 +552,9 @@ class Consulta {
       cuidadorPrincipal: map['cuidadorPrincipal'] as String,
       queixaPrincipal: map['queixaPrincipal'] as String,
       descricao: map['descricao'] as String,
-      observacoesPaciente: map['observacoesPaciente'] != null ? map['observacoesPaciente'] as String : null,
+      observacoesPaciente: map['observacoesPaciente'] != null
+          ? map['observacoesPaciente'] as String
+          : null,
       refeicoesComTecnologia: map['refeicoesComTecnologia'] as int,
       refeicoesDuranteODia: map['refeicoesDuranteODia'] as String,
       consumiuFeijao: map['consumiuFeijao'] as int,
@@ -501,7 +562,8 @@ class Consulta {
       consumiuVerdurasLegumes: map['consumiuVerdurasLegumes'] as int,
       consumiuEmbutidos: map['consumiuEmbutidos'] as int,
       consumiuBebidasAdocicadas: map['consumiuBebidasAdocicadas'] as int,
-      consumiuMacarraoInstantaneoSalgado: map['consumiuMacarraoInstantaneoSalgado'] as int,
+      consumiuMacarraoInstantaneoSalgado:
+          map['consumiuMacarraoInstantaneoSalgado'] as int,
       consumiuBiscoitoRecheado: map['consumiuBiscoitoRecheado'] as int,
       ingestaoHidrica: map['ingestaoHidrica'] as String,
       suplementacao: map['suplementacao'] as String,
@@ -593,6 +655,12 @@ class Consulta {
       quandoSemenarca: map['quandoSemenarca'] != null
           ? (map['quandoSemenarca'] as Timestamp).toDate()
           : null,
+      analiseGeralCasa: map['analiseGeralCasa'] as String?,
+      exameFisicoCasa: map['exameFisicoCasa'] as String?,
+      avaliacoesCasa: map['avaliacoesCasa'] as String?,
+      oriParaCuidador: map['oriParaCuidador'] as String?,
+      oriParaPaciente: map['oriParaPaciente'] as String?,
+      oriParaCoordenacao: map['oriParaCooerdanacao'] as String?
     );
   }
 }
@@ -646,18 +714,20 @@ class ConsultaCadastro {
     };
   }
 
-factory ConsultaCadastro.fromMap(Map<String, dynamic> map) {
+  factory ConsultaCadastro.fromMap(Map<String, dynamic> map) {
     return ConsultaCadastro(
       id: map['id'] != null ? map['id'] as String : null,
       casaDeApoioId: map['casaDeApoioId'] as String,
-      pacienteNome: map['pacienteNome'] != null ? map['pacienteNome'] as String : null,
+      pacienteNome:
+          map['pacienteNome'] != null ? map['pacienteNome'] as String : null,
       pacienteId: map['pacienteId'] as String,
       dataHorario: (map['dataHorario'] as Timestamp).toDate(),
       estado: map['estado'] as String,
-      dadosConsulta: map['dadosConsulta'] != null ? Consulta.fromMap(map['dadosConsulta'] as Map<String,dynamic>) : null,
+      dadosConsulta: map['dadosConsulta'] != null
+          ? Consulta.fromMap(map['dadosConsulta'] as Map<String, dynamic>)
+          : null,
     );
   }
-
 
   @override
   bool operator ==(covariant ConsultaCadastro other) {

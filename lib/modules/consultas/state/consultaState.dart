@@ -100,7 +100,13 @@ class ConsultaState extends ChangeNotifier {
   final estagioTurnerMeninosPelosPubianos = TextEditingController();
   final semenarca = TextEditingController();
   final quandoSemenarca = TextEditingController();
-
+  //casa
+  final analiseGeralCasa = TextEditingController();
+  final exameFisicoCasa= TextEditingController();
+  final avaliacoesCasa= TextEditingController();
+  final oriParaCuidador= TextEditingController();
+  final oriParaPaciente= TextEditingController();
+  final oriParaCoordenacao= TextEditingController();
   // Método que retorna um objeto Consulta com os dados preenchidos nos campos.
   Consulta cadastro() {
     Consulta consulta = Consulta(
@@ -228,6 +234,12 @@ class ConsultaState extends ChangeNotifier {
       quandoSemenarca: quandoSemenarca.text.trim().isEmpty
           ? null
           : DateFormat('dd/MM/yyyy').parse(quandoSemenarca.text),
+      analiseGeralCasa: analiseGeralCasa.text.isEmpty? null : analiseGeralCasa.text,
+      exameFisicoCasa: exameFisicoCasa.text.isEmpty? null: exameFisicoCasa.text,
+      avaliacoesCasa: avaliacoesCasa.text.isEmpty? null: avaliacoesCasa.text,
+      oriParaCuidador: oriParaCuidador.text.isEmpty? null: oriParaCuidador.text,
+      oriParaPaciente: oriParaPaciente.text.isEmpty? null: oriParaPaciente.text,
+      oriParaCoordenacao: oriParaCoordenacao.text.isEmpty? null: oriParaCoordenacao.text
     );
 
     return consulta;
