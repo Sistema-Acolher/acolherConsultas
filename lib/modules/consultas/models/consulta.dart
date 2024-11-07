@@ -25,8 +25,8 @@ class Consulta {
   String sono;
   int comprimento;
   double peso;
-  int comprimentoPorIdade;
-  int imcPorIdade;
+  String comprimentoPorIdade;
+  String imcPorIdade;
   String frequenciaCardiaca;
   String saturacao;
   String auscultaCardiaca;
@@ -233,8 +233,8 @@ class Consulta {
     String? sono,
     int? comprimento,
     double? peso,
-    int? comprimentoPorIdade,
-    int? imcPorIdade,
+    String? comprimentoPorIdade,
+    String? imcPorIdade,
     String? frequenciaCardiaca,
     String? saturacao,
     String? auscultaCardiaca,
@@ -570,8 +570,8 @@ class Consulta {
       sono: map['sono'] as String,
       comprimento: map['comprimento'] as int,
       peso: map['peso'] as double,
-      comprimentoPorIdade: map['comprimentoPorIdade'] as int,
-      imcPorIdade: map['imcPorIdade'] as int,
+      comprimentoPorIdade: map['comprimentoPorIdade'] as String,
+      imcPorIdade: map['imcPorIdade'] as String,
       frequenciaCardiaca: map['frequenciaCardiaca'] as String,
       saturacao: map['saturacao'] as String,
       auscultaCardiaca: map['auscultaCardiaca'] as String,
