@@ -12,7 +12,7 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
     this.secondController,
     this.thirdController,
     required this.isChecked,
-    this.readOnly = false,
+    this.readOnly = false, // Modo de apenas leitura
   });
 
   final List<String> options;
@@ -21,7 +21,7 @@ class InputRadioButtonsCadastroPaciente extends StatefulWidget {
   final TextEditingController? secondController;
   final TextEditingController? thirdController;
   final ValueNotifier<bool> isChecked;
-  final bool readOnly;
+  final bool readOnly; // Variável de controle se o campo é apenas leitura
 
   @override
   State<InputRadioButtonsCadastroPaciente> createState() =>
@@ -53,39 +53,44 @@ class _InputRadioButtonsCadastroPacienteState
         ),
         Row(
           children: [
+            // Verificamos se o campo é apenas leitura (não interativo)
             ...List.generate(
               widget.options.length,
-              (index) => Expanded(
-                child: Opacity(
-                  opacity: widget.controller.text == widget.options[index]
-                      ? 1.0
-                      : 0.5,
-                  child: RadioListTile(
-                    activeColor: preto,
-                    title: AutoSizeText(
-                      maxLines: 1,
-                      widget.options[index],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      minFontSize: 8,
+              (index) {
+                // Se for apenas leitura, a seleção será feita com base no valor do controller
+                bool isSelected =
+                    widget.controller.text == widget.options[index];
+
+                return Expanded(
+                  child: Opacity(
+                    opacity: isSelected ? 1.0 : 0.5,
+                    child: RadioListTile(
+                      activeColor: preto,
+                      title: AutoSizeText(
+                        maxLines: 1,
+                        widget.options[index],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        minFontSize: 8,
+                      ),
+                      value: widget.options[index],
+                      contentPadding: const EdgeInsets.all(0),
+                      groupValue: widget.controller.text,
+                      visualDensity: const VisualDensity(horizontal: -4.0),
+                      dense: true,
+                      onChanged: widget.readOnly
+                          ? null // Se for somente leitura, não permite interação
+                          : (value) {
+                              setState(() {
+                                widget.controller.text = value as String;
+                                widget.isChecked.value = true;
+                                mostrarErro = false;
+                                showTextBox = value == 'Sim';
+                              });
+                            },
                     ),
-                    value: widget.options[index],
-                    contentPadding: const EdgeInsets.all(0),
-                    groupValue: widget.controller.text,
-                    visualDensity: const VisualDensity(horizontal: -4.0),
-                    dense: true,
-                    onChanged: widget.readOnly
-                        ? null
-                        : (value) {
-                            setState(() {
-                              widget.controller.text = value as String;
-                              widget.isChecked.value = true;
-                              mostrarErro = false;
-                              showTextBox = value == 'Sim';
-                            });
-                          },
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -103,7 +108,7 @@ class _InputRadioButtonsCadastroPacienteState
             children: [
               Expanded(
                 child: InputTextoAcolher(
-                  label:"Data: ",
+                  label: "Data: ",
                   controller: widget.secondController!,
                 ),
               ),
@@ -116,7 +121,6 @@ class _InputRadioButtonsCadastroPacienteState
               ),
             ],
           ),
-
       ],
     );
   }

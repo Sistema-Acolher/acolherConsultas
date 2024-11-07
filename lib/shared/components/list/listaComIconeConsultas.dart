@@ -132,7 +132,7 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ConsultaRelatorioInstituicao(
-                        dadosConsulta: item,
+                        consultaCadastro: item,
                       ),
                     ),
                   );
@@ -178,8 +178,8 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ConsultarScreen(
-                          dadosConsulta: consulta),
+                      builder: (context) =>
+                          ConsultarScreen(dadosConsulta: consulta),
                     ));
                   },
                 ),
@@ -195,7 +195,7 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ConsultaRelatorioInstituicao(
-                            dadosConsulta: consulta,
+                            consultaCadastro: consulta,
                           ),
                         ),
                       );

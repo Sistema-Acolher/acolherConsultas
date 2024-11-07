@@ -86,6 +86,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
 
   Future<void> _enviarConsulta() async {
     var consulta = (widget.dadosConsulta??consultaSelecionado);
+    // if((_formKey.currentState?.validate()??false) && consulta!=null) {
     if (consulta!=null) {
       await ConsultaController().realizarConsulta(consulta.id!, _consultaState.cadastro()).then((value) => {
         ScaffoldMessenger.of(context).showSnackBar(

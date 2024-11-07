@@ -9,13 +9,11 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 
 class ConsultaRelatorioInstituicao extends StatelessWidget {
-  final ConsultaCadastro dadosConsulta;
-  final Consulta? relatorioPacienteConsulta;
+  final ConsultaCadastro consultaCadastro;
 
   const ConsultaRelatorioInstituicao({
     super.key,
-    required this.dadosConsulta,
-    this.relatorioPacienteConsulta,
+    required this.consultaCadastro,
   });
 
   @override
@@ -39,7 +37,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputTextoAcolher(
                 label: "Nome da Criança",
                 controller: TextEditingController(
-                    text: dadosConsulta.pacienteNome ?? ''),
+                    text: consultaCadastro.pacienteNome ?? ''),
                 readOnly: true,
               ),
               const SizedBox(height: 16),
@@ -50,8 +48,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Horário",
                       controller: TextEditingController(
-                        text: TimeOfDay.fromDateTime(dadosConsulta.dataHorario)
-                            .format(context),
+                        text:
+                            TimeOfDay.fromDateTime(consultaCadastro.dataHorario)
+                                .format(context),
                       ),
                       readOnly: true,
                     ),
@@ -62,7 +61,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                       label: "Data",
                       controller: TextEditingController(
                         text: DateFormat('dd/MM/yyyy')
-                            .format(dadosConsulta.dataHorario),
+                            .format(consultaCadastro.dataHorario),
                       ),
                       readOnly: true,
                     ),
@@ -78,7 +77,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                       label: "Peso",
                       controller: TextEditingController(
                           text:
-                              relatorioPacienteConsulta?.peso.toString() ?? ''),
+                              consultaCadastro.dadosConsulta?.peso.toString() ??
+                                  ''),
                       readOnly: true,
                     ),
                   ),
@@ -87,7 +87,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Estatura",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta?.comprimentoPorIdade
+                        text: consultaCadastro
+                                .dadosConsulta?.comprimentoPorIdade
                                 .toString() ??
                             '',
                       ),
@@ -99,9 +100,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "IMC",
                       controller: TextEditingController(
-                        text:
-                            relatorioPacienteConsulta?.imcPorIdade.toString() ??
-                                '',
+                        text: consultaCadastro.dadosConsulta?.imcPorIdade
+                                .toString() ??
+                            '',
                       ),
                       readOnly: true,
                     ),
@@ -114,16 +115,12 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                 children: [
                   Expanded(
                     child: InputRadioButtonsCadastroPaciente(
-                      options: const ["Adequado", "Inadequado"],
                       label: "Condição Geral",
-                      controller: TextEditingController(
-                        text: relatorioPacienteConsulta
-                                ?.auscultaCardiaca //Falta o dado do adequado ou não
-                                .toString() ??
-                            '',
-                      ),
-                      isChecked: isChecked,
-                      readOnly: true,
+                      controller:
+                          TextEditingController(text: "Adequado"),
+                      options: const ["Adequado", "Inadequado"],
+                      isChecked: ValueNotifier(false),
+                      readOnly: true, 
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -131,8 +128,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Freq.cardíaca",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta
-                                ?.auscultaCardiaca //Falta o dado da frequencia cardiaca
+                        text: consultaCadastro.dadosConsulta?.frequenciaCardiaca
                                 .toString() ??
                             '',
                       ),
@@ -149,9 +145,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Temperatura",
                       controller: TextEditingController(
-                        text:
-                            relatorioPacienteConsulta?.temperatura.toString() ??
-                                '',
+                        text: consultaCadastro.dadosConsulta?.temperatura
+                                .toString() ??
+                            '',
                       ),
                       readOnly: true,
                     ),
@@ -161,7 +157,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Saturação",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta?.saturacao.toString() ??
+                        text: consultaCadastro.dadosConsulta?.saturacao
+                                .toString() ??
                             '',
                       ),
                       readOnly: true,
@@ -172,8 +169,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Pressão arterial",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta?.saturacao.toString() ??
-                            '', //Falta o dado da pressão arterial
+                        text: consultaCadastro.dadosConsulta?.pressaoArterial
+                                .toString() ??
+                            '',
                       ),
                       readOnly: true,
                     ),
@@ -187,7 +185,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Ausculta pulmonar",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta?.auscultaPulmonar
+                        text: consultaCadastro.dadosConsulta?.auscultaPulmonar
                                 .toString() ??
                             '',
                       ),
@@ -199,7 +197,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Ausculta cardíaca",
                       controller: TextEditingController(
-                        text: relatorioPacienteConsulta?.auscultaCardiaca
+                        text: consultaCadastro.dadosConsulta?.auscultaCardiaca
                                 .toString() ??
                             '',
                       ),
@@ -211,9 +209,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputTextoAcolher(
                       label: "Orofaringe",
                       controller: TextEditingController(
-                        text:
-                            relatorioPacienteConsulta?.orofaringe.toString() ??
-                                '',
+                        text: consultaCadastro.dadosConsulta?.orofaringe
+                                .toString() ??
+                            '',
                       ),
                       readOnly: true,
                     ),
@@ -225,7 +223,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                 label: 'Análise Geral',
                 controller: TextEditingController(
                   text:
-                      relatorioPacienteConsulta?.analiseGeral.toString() ?? '',
+                      consultaCadastro.dadosConsulta?.analiseGeral.toString() ??
+                          '',
                 ),
                 editable: false,
               ),
@@ -233,8 +232,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputCaixaDeTexto(
                 label: 'Exame físico',
                 controller: TextEditingController(
-                  text: relatorioPacienteConsulta?.analiseGeral.toString() ??
-                      '', //Falta o dado do exame fisico
+                  text: consultaCadastro.dadosConsulta?.exameFisicoCasa
+                          .toString() ??
+                      '',
                 ),
                 editable: false,
               ),
@@ -242,7 +242,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputCaixaDeTexto(
                 label: 'Avaliações',
                 controller: TextEditingController(
-                  text: relatorioPacienteConsulta?.avaliacoes.toString() ?? '',
+                  text: consultaCadastro.dadosConsulta?.avaliacoes.toString() ??
+                      '',
                 ),
                 editable: false,
               ),
@@ -250,9 +251,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputCaixaDeTexto(
                 label: 'Orientações - Cuidador',
                 controller: TextEditingController(
-                  text:
-                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
-                          '', //Falta o dado da orientação
+                  text: consultaCadastro.dadosConsulta?.oriParaCuidador
+                          .toString() ??
+                      '',
                 ),
                 editable: false,
               ),
@@ -260,9 +261,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputCaixaDeTexto(
                 label: 'Orientações - Crianças/Adolescntes',
                 controller: TextEditingController(
-                  text:
-                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
-                          '', //Falta o dado da orientação
+                  text: consultaCadastro.dadosConsulta?.oriParaPaciente
+                          .toString() ??
+                      '',
                 ),
                 editable: false,
               ),
@@ -270,9 +271,9 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputCaixaDeTexto(
                 label: 'Orientações - Coordenação da casa',
                 controller: TextEditingController(
-                  text:
-                      relatorioPacienteConsulta?.cuidadorPrincipal.toString() ??
-                          '', //Falta o dado da orientação
+                  text: consultaCadastro.dadosConsulta?.oriParaCoordenacao
+                          .toString() ??
+                      '',
                 ),
                 editable: false,
               ),
@@ -280,8 +281,8 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
               InputTextoAcolher(
                 label: "Assinatura",
                 controller: TextEditingController(
-                  text: dadosConsulta.pacienteNome
-                      .toString(), //falta a assinatura
+                  text: consultaCadastro.dadosConsulta?.cuidadorPrincipal
+                      .toString(),
                 ),
                 readOnly: true,
               ),

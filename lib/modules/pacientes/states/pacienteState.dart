@@ -16,7 +16,7 @@ class CadastroPacienteState extends ChangeNotifier {
   final cidadeOrigem = TextEditingController();
   final motivoAcolhimento = TextEditingController();
   bool acolhimentoAnterior = false;
-    final localAcolhimentoAnterior = TextEditingController();
+  final localAcolhimentoAnterior = TextEditingController();
   final dataAcolhimentoAnterior = TextEditingController();
   final nomeEscola = TextEditingController();
   final serieTurnoEscola = TextEditingController();
@@ -61,13 +61,13 @@ class CadastroPacienteState extends ChangeNotifier {
           : dificuldadesEscolares.text.trim(),
       aulasEspecializadas: aulasEspecializadas.text.trim(),
       medicamentosUsados: medicamentosUsados.text.trim(),
-      acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude.text.trim().isEmpty
-          ? null
-          : acompanhamentoProfissionalDeSaude.text.trim(),
+      acompanhamentoProfissionalDeSaude:
+          acompanhamentoProfissionalDeSaude.text.trim().isEmpty
+              ? null
+              : acompanhamentoProfissionalDeSaude.text.trim(),
       vacinasFaltando: vacinasFaltando.text.trim(),
-      observacoes: observacoes.text.trim().isEmpty
-          ? null
-          : observacoes.text.trim(),
+      observacoes:
+          observacoes.text.trim().isEmpty ? null : observacoes.text.trim(),
       historiaPregressa: historiaPregressa.cadastro(),
       casaDeApoioId: '', // Atualize conforme necessário
     );

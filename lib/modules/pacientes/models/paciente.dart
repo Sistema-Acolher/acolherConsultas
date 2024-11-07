@@ -99,14 +99,18 @@ class Paciente {
       cidadeOrigem: cidadeOrigem ?? this.cidadeOrigem,
       motivoAcolhimento: motivoAcolhimento ?? this.motivoAcolhimento,
       acolhimentoAnterior: acolhimentoAnterior ?? this.acolhimentoAnterior,
-      localAcolhimentoAnterior: localAcolhimentoAnterior ?? this.localAcolhimentoAnterior,
-      dataAcolhimentoAnterior: dataAcolhimentoAnterior ?? this.dataAcolhimentoAnterior,
+      localAcolhimentoAnterior:
+          localAcolhimentoAnterior ?? this.localAcolhimentoAnterior,
+      dataAcolhimentoAnterior:
+          dataAcolhimentoAnterior ?? this.dataAcolhimentoAnterior,
       nomeEscola: nomeEscola ?? this.nomeEscola,
       serieTurnoEscola: serieTurnoEscola ?? this.serieTurnoEscola,
-      dificuldadesEscolares: dificuldadesEscolares ?? this.dificuldadesEscolares,
+      dificuldadesEscolares:
+          dificuldadesEscolares ?? this.dificuldadesEscolares,
       aulasEspecializadas: aulasEspecializadas ?? this.aulasEspecializadas,
       medicamentosUsados: medicamentosUsados ?? this.medicamentosUsados,
-      acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude ?? this.acompanhamentoProfissionalDeSaude,
+      acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude ??
+          this.acompanhamentoProfissionalDeSaude,
       vacinasFaltando: vacinasFaltando ?? this.vacinasFaltando,
       observacoes: observacoes ?? this.observacoes,
       historiaPregressa: historiaPregressa ?? this.historiaPregressa,
@@ -157,35 +161,44 @@ class Paciente {
       cidadeOrigem: map['cidadeOrigem'] as String,
       motivoAcolhimento: map['motivoAcolhimento'] as String,
       acolhimentoAnterior: map['acolhimentoAnterior'] as bool,
-      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null ? map['localAcolhimentoAnterior'] as String : null,
-      dataAcolhimentoAnterior: map['dataAcolhimentoAnterior'] != null ? map['dataAcolhimentoAnterior'] as String : null,
+      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null
+          ? map['localAcolhimentoAnterior'] as String
+          : null,
+      dataAcolhimentoAnterior: map['dataAcolhimentoAnterior'] != null
+          ? map['dataAcolhimentoAnterior'] as String
+          : null,
       nomeEscola: map['nomeEscola'] as String,
       serieTurnoEscola: map['serieTurnoEscola'] != null ? map['serieTurnoEscola'] as String : null,
       dificuldadesEscolares: map['dificuldadesEscolares'] != null ? map['dificuldadesEscolares'] as String : null,
       aulasEspecializadas: map['aulasEspecializadas'] as String,
       medicamentosUsados: map['medicamentosUsados'] as String,
-      acompanhamentoProfissionalDeSaude: map['acompanhamentoProfissionalDeSaude'] != null ? map['acompanhamentoProfissionalDeSaude'] as String : null,
+      acompanhamentoProfissionalDeSaude:
+          map['acompanhamentoProfissionalDeSaude'] != null
+              ? map['acompanhamentoProfissionalDeSaude'] as String
+              : null,
       vacinasFaltando: map['vacinasFaltando'] as String,
-      observacoes: map['observacoes'] != null ? map['observacoes'] as String : null,
-      historiaPregressa: map['historiaPregressa'] != null ? HistoriaPregressa.fromMap(map['historiaPregressa'] as Map<String,dynamic>) : null,
+      observacoes:
+          map['observacoes'] != null ? map['observacoes'] as String : null,
+      historiaPregressa: map['historiaPregressa'] != null
+          ? HistoriaPregressa.fromMap(
+              map['historiaPregressa'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   @override
   bool operator ==(covariant Paciente other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.casaDeApoioId == casaDeApoioId &&
-      other.cpf == cpf &&
-      other.rg == rg;
+
+    return other.id == id &&
+        other.casaDeApoioId == casaDeApoioId &&
+        other.cpf == cpf &&
+        other.rg == rg;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      casaDeApoioId.hashCode;
+    return id.hashCode ^ casaDeApoioId.hashCode;
   }
 }
 
@@ -231,15 +244,15 @@ class AulasEspecializadas {
   @override
   bool operator ==(covariant AulasEspecializadas other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.nomeAula == nomeAula &&
-      other.localAula == localAula &&
-      other.horarioAula == horarioAula;
+
+    return other.nomeAula == nomeAula &&
+        other.localAula == localAula &&
+        other.horarioAula == horarioAula;
   }
 
   @override
-  int get hashCode => nomeAula.hashCode ^ localAula.hashCode ^ horarioAula.hashCode;
+  int get hashCode =>
+      nomeAula.hashCode ^ localAula.hashCode ^ horarioAula.hashCode;
 }
 
 class CadastroPaciente {
@@ -252,7 +265,7 @@ class CadastroPaciente {
     required this.dataCadastro,
     required this.dataAtualizacao,
   });
-  
+
   CadastroPaciente copyWith({
     Paciente? paciente,
     DateTime? dataCadastro,
@@ -275,7 +288,8 @@ class CadastroPaciente {
 
   factory CadastroPaciente.fromMap(Map<String, dynamic> map) {
     return CadastroPaciente(
-      paciente: Paciente.fromMap(map['paciente'] as Map<String,dynamic>,id: map['id'] as String),
+      paciente: Paciente.fromMap(map['paciente'] as Map<String, dynamic>,
+          id: map['id'] as String),
       dataCadastro: (map['dataCadastro'] as Timestamp).toDate(),
       dataAtualizacao: (map['dataAtualizacao'] as Timestamp).toDate(),
     );
@@ -284,17 +298,14 @@ class CadastroPaciente {
   @override
   bool operator ==(covariant CadastroPaciente other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.paciente == paciente &&
-      other.dataCadastro == dataCadastro &&
-      other.dataAtualizacao == dataAtualizacao;
+
+    return other.paciente == paciente &&
+        other.dataCadastro == dataCadastro &&
+        other.dataAtualizacao == dataAtualizacao;
   }
 
   @override
   int get hashCode {
-    return paciente.hashCode ^
-      dataCadastro.hashCode ^
-      dataAtualizacao.hashCode;
+    return paciente.hashCode ^ dataCadastro.hashCode ^ dataAtualizacao.hashCode;
   }
 }
