@@ -116,11 +116,14 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                   Expanded(
                     child: InputRadioButtonsCadastroPaciente(
                       label: "Condição Geral",
-                      controller:
-                          TextEditingController(text: "Adequado"),
+                      controller: TextEditingController(
+                        text: consultaCadastro.dadosConsulta?.imcPorIdade == 0
+                            ? "Adequado"
+                            : "Inadequado",
+                      ),
                       options: const ["Adequado", "Inadequado"],
-                      isChecked: ValueNotifier(false),
-                      readOnly: true, 
+                      isChecked: isChecked,
+                      readOnly: true,
                     ),
                   ),
                   const SizedBox(width: 16),
