@@ -31,13 +31,7 @@ class CadastroPacienteState extends ChangeNotifier {
   final historiaPregressa = HistoriaPregressaState();
 
   // Listas e dados adicionais
-  List<AulasEspecializadas> aulasEspecializadas = [];
-  // Adicionar uma nova aula especializada
-  void adicionarAulaEspecializada(AulasEspecializadas aula) {
-    aulasEspecializadas.add(aula);
-    notifyListeners();
-  }
-
+  final aulasEspecializadas = TextEditingController();
   // Método para criar CadastroPaciente com os dados atuais
   CadastroPaciente cadastro() {
     Paciente paciente = Paciente(
@@ -65,7 +59,7 @@ class CadastroPacienteState extends ChangeNotifier {
       dificuldadesEscolares: dificuldadesEscolares.text.trim().isEmpty
           ? null
           : dificuldadesEscolares.text.trim(),
-      aulasEspecializadas: aulasEspecializadas,
+      aulasEspecializadas: aulasEspecializadas.text.trim(),
       medicamentosUsados: medicamentosUsados.text.trim(),
       acompanhamentoProfissionalDeSaude: acompanhamentoProfissionalDeSaude.text.trim().isEmpty
           ? null

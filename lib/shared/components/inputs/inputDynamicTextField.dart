@@ -1,40 +1,66 @@
 import 'package:flutter/material.dart';
 
-class InputDynamicTextField extends StatefulWidget {
-  final String label; // Single label for the first field
-  final List<String> inputValues; // List to store values for each field
-  final TextEditingController controller; // Controller to show combined text
+// Define the AulaEspecializada class
+class AulaEspecializada {
+  String name;
+  String location;
+  String hour;
 
-  const InputDynamicTextField({
-    super.key,
+  AulaEspecializada({this.name = '', this.location = '', this.hour = ''});
+}
+
+class InputDynamicTextField extends StatefulWidget {
+  final String label;
+  final List<dynamic> inputValues; // List can contain String or AulaEspecializada
+  final TextEditingController? controller;
+  final bool isDualField;
+
+  InputDynamicTextField({
+    Key? key,
     required this.label,
     required this.inputValues,
-    required this.controller,
-  });
+    this.controller,
+    this.isDualField = false,
+  }) : super(key: key);
 
   @override
-  State<InputDynamicTextField> createState() => _InputDynamicTextFieldState();
+  _InputDynamicTextFieldState createState() => _InputDynamicTextFieldState();
 }
 
 class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
   @override
   void initState() {
     super.initState();
-    // Do not initialize with any fields
+    _updateController(); // Initialize controller with empty text
   }
 
   void _updateController() {
-    // Join all input values into a single string
-    widget.controller.text = widget.inputValues.join(', ');
+    if (widget.controller != null) {
+      widget.controller!.text = widget.inputValues.map((input) {
+        if (input is String) {
+          return input; // Simple String entry
+        } else if (input is AulaEspecializada) {
+          // Format for AulaEspecializada
+          return widget.isDualField
+              ? '${input.name} - ${input.location} - ${input.hour}'
+              : input.name;
+        }
+        return '';
+      }).join(' | '); // Use ' | ' as a separator between entries
+    }
+  }
+
+  void _addNewField() {
+    setState(() {
+      widget.inputValues.add(widget.isDualField ? AulaEspecializada() : ''); // Add either String or AulaEspecializada
+      _updateController();
+    });
   }
 
   void _removeField(int index) {
     setState(() {
-      widget.inputValues.removeAt(index); // Remove the specific input
-      if (widget.inputValues.isEmpty) {
-        widget.inputValues.add(''); // Ensure at least one field remains
-      }
-      _updateController(); // Update the controller value
+      widget.inputValues.removeAt(index); // Remove at specified index
+      _updateController();
     });
   }
 
@@ -43,51 +69,111 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Always display the label
         Padding(
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Text(
             widget.label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),
-        // Display each TextField with a delete button
+        // Render each entry in inputValues if it exists
         ...widget.inputValues.asMap().entries.map((entry) {
           int index = entry.key;
+          var value = entry.value;
+
           return Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: Row(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      widget.inputValues[index] = value; // Update specific input
-                      _updateController(); // Update the combined controller value
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
+                if (value is String)
+                  Row(
+                    children: [
+                      // Render single String input
+                      Expanded(
+                        child: TextField(
+                          onChanged: (val) {
+                            widget.inputValues[index] = val;
+                            _updateController();
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => _removeField(index),
+                        icon: Icon(Icons.remove),
+                      ),
+                    ],
                   ),
-                ),
-                IconButton(
-                  onPressed: () => _removeField(index), // Remove field on press
-                  icon: const Icon(Icons.remove), // Use "-" symbol
-                ),
+                if (value is AulaEspecializada)
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          // Name field for AulaEspecializada
+                          Expanded(
+                            child: TextField(                              
+                              onChanged: (val) {
+                                value.name = val;
+                                _updateController();
+                              },
+                              decoration: InputDecoration(    
+                                labelText: 'Nome',                            
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => _removeField(index),
+                            icon: Icon(Icons.remove),
+                          ),
+                        ],
+                      ),
+                      if (widget.isDualField) ...[
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                onChanged: (val) {
+                                  value.location = val;
+                                  _updateController();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Local',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (val) {
+                                  value.hour = val;
+                                  _updateController();
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Horário',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
               ],
             ),
           );
-        }),
-        // Only show the "+" button when there are no fields
-        if (widget.inputValues.isEmpty || widget.inputValues.last.isNotEmpty)
-          IconButton(
-            onPressed: () {
-              setState(() {
-                widget.inputValues.add(''); // Add a new empty field
-                _updateController(); // Update the controller value
-              });
-            },
-            icon: const Icon(Icons.add), // Use "+" symbol
-          ),
+        }).toList(),
+        // "+" button to add a new entry
+        IconButton(
+          onPressed: _addNewField,
+          icon: Icon(Icons.add),
+        ),
       ],
     );
   }

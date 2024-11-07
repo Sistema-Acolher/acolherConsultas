@@ -26,7 +26,7 @@ class Paciente {
   String nomeEscola;
   String? serieTurnoEscola;
   String? dificuldadesEscolares;
-  List<AulasEspecializadas> aulasEspecializadas;
+  String? aulasEspecializadas;
   String? medicamentosUsados;
   String? acompanhamentoProfissionalDeSaude;
   String? vacinasFaltando;
@@ -51,7 +51,7 @@ class Paciente {
     required this.nomeEscola,
     this.serieTurnoEscola,
     this.dificuldadesEscolares,
-    this.aulasEspecializadas = const [],
+    this.aulasEspecializadas,
     this.medicamentosUsados,
     this.acompanhamentoProfissionalDeSaude,
     this.vacinasFaltando,
@@ -78,7 +78,7 @@ class Paciente {
     String? nomeEscola,
     String? serieTurnoEscola,
     String? dificuldadesEscolares,
-    List<AulasEspecializadas>? aulasEspecializadas,
+    String? aulasEspecializadas,
     String? medicamentosUsados,
     String? acompanhamentoProfissionalDeSaude,
     String? vacinasFaltando,
@@ -133,7 +133,7 @@ class Paciente {
       'nomeEscola': nomeEscola,
       'serieTurnoEscola': serieTurnoEscola,
       'dificuldadesEscolares': dificuldadesEscolares,
-      'aulasEspecializadas': aulasEspecializadas.map((x) => x.toMap()).toList(),
+      'aulasEspecializadas': aulasEspecializadas,
       'medicamentosUsados': medicamentosUsados,
       'acompanhamentoProfissionalDeSaude': acompanhamentoProfissionalDeSaude,
       'vacinasFaltando': vacinasFaltando,
@@ -162,7 +162,7 @@ class Paciente {
       nomeEscola: map['nomeEscola'] as String,
       serieTurnoEscola: map['serieTurnoEscola'] != null ? map['serieTurnoEscola'] as String : null,
       dificuldadesEscolares: map['dificuldadesEscolares'] != null ? map['dificuldadesEscolares'] as String : null,
-      aulasEspecializadas: List<AulasEspecializadas>.from((map['aulasEspecializadas'] as List<dynamic>).map<AulasEspecializadas>((x) => AulasEspecializadas.fromMap(x as Map<String,dynamic>),),),
+      aulasEspecializadas: map['aulasEspecializadas'] as String,
       medicamentosUsados: map['medicamentosUsados'] as String,
       acompanhamentoProfissionalDeSaude: map['acompanhamentoProfissionalDeSaude'] != null ? map['acompanhamentoProfissionalDeSaude'] as String : null,
       vacinasFaltando: map['vacinasFaltando'] as String,

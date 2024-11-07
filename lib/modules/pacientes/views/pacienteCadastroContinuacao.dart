@@ -31,6 +31,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
   final List<String> listaDeDificuldadesEscolares = [];
   final List<String> listaDeAcompanhamentosProfissionais = [];
   final List<String> listaDeVacinasFaltantes = [];
+  final List<dynamic> listaDeAulasECursos = [];
   
   @override
   Widget build(BuildContext context) {
@@ -189,13 +190,15 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                       inputValues: listaDeDificuldadesEscolares,
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 5.0),
-                  //   child: InputDynamicTextField(
-                  //     label: "Aulas especializadas ou cursos:",
-                  //     controller: widget.cadastroPacienteState.aulasEspecializadas,
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: InputDynamicTextField(
+                      label: "Aulas especializadas ou cursos:",
+                      controller: widget.cadastroPacienteState.aulasEspecializadas,
+                      inputValues: listaDeAulasECursos,    
+                      isDualField: true,                  
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: InputDynamicTextField(
