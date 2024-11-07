@@ -109,136 +109,119 @@ class ConsultaState extends ChangeNotifier {
   final oriParaCoordenacao= TextEditingController();
   // Método que retorna um objeto Consulta com os dados preenchidos nos campos.
   Consulta cadastro() {
-    Consulta consulta = Consulta(
-      cuidadorPrincipal: cuidadorPrincipal.text.trim(),
-      queixaPrincipal: queixaPrincipal.text.trim(),
-      descricao: descricao.text.trim(),
-      observacoesPaciente: observacoesPaciente.text.trim().isEmpty
-          ? null
-          : observacoesPaciente.text.trim(),
-      refeicoesComTecnologia: int.tryParse(refeicoesComTecnologia.text) ?? 0,
-      refeicoesDuranteODia: refeicoesDuranteODia.text.trim(),
-      consumiuFeijao: int.tryParse(consumiuFeijao.text) ?? 0,
-      consumiuFrutas: int.tryParse(consumiuFrutas.text) ?? 0,
-      consumiuVerdurasLegumes: int.tryParse(consumiuVerdurasLegumes.text) ?? 0,
-      consumiuEmbutidos: int.tryParse(consumiuEmbutidos.text) ?? 0,
-      consumiuBebidasAdocicadas:
-          int.tryParse(consumiuBebidasAdocicadas.text) ?? 0,
-      consumiuMacarraoInstantaneoSalgado:
-          int.tryParse(consumiuMacarraoInstantaneoSalgado.text) ?? 0,
-      consumiuBiscoitoRecheado:
-          int.tryParse(consumiuBiscoitoRecheado.text) ?? 0,
-      ingestaoHidrica: ingestaoHidrica.text.trim(),
-      suplementacao: suplementacao.text.trim(),
-      diurese: diurese.text.trim(),
-      evacuacoes: evacuacoes.text.trim(),
-      itensHigiene: itensHigiene.text.trim(),
-      higieneCorporal: higieneCorporal.text.trim(),
-      higieneBucal: higieneBucal.text.trim(),
-      sono: sono.text.trim(),
-      comprimento: int.tryParse(comprimento.text) ?? 0,
-      peso: double.tryParse(peso.text) ?? 0.0,
-      comprimentoPorIdade: int.tryParse(comprimentoPorIdade.text) ?? 0,
-      imcPorIdade: int.tryParse(imcPorIdade.text) ?? 0,
-      frequenciaCardiaca: frequenciaCardiaca.text.trim(),
-      saturacao: saturacao.text.trim(),
-      auscultaCardiaca: auscultaCardiaca.text.trim(),
-      auscultaPulmonar: auscultaPulmonar.text.trim(),
-      pressaoArterial: pressaoArterial.text.trim(),
-      temperatura: double.tryParse(temperatura.text) ?? 0.0,
-      otoscopia: otoscopia.text.trim(),
-      orofaringe: orofaringe.text.trim(),
-      avaliacaoMuscoesqueletica: avaliacaoMuscoesqueletica.text.trim(),
-      avaliacaoPele: avaliacaoPele.text.trim(),
-      marcosPresentes: marcosPresentes.text.trim(),
-      marcosAusentes: marcosAusentes.text.trim(),
-      observacoesDesenvolvimento: observacoesDesenvolvimento.text.trim(),
-      comoSeSenteHoje: comoSeSenteHoje.text.trim(),
-      observacoesPsicoemocionais: observacoesPsicoemocionais.text.trim(),
-      analiseGeral: analiseGeral.text.trim(),
-      avaliacoes: avaliacoes.text.trim(),
-      intervencoes: intervencoes.text.trim(),
+  Consulta consulta = Consulta(
+    cuidadorPrincipal: cuidadorPrincipal.text.trim(),
+    queixaPrincipal: queixaPrincipal.text.trim(),
+    descricao: descricao.text.trim(),
+    observacoesPaciente: observacoesPaciente.text.trim().isEmpty
+        ? " "
+        : observacoesPaciente.text.trim(),
+    refeicoesComTecnologia: refeicoesComTecnologia.text.trim(),
+    refeicoesDuranteODia: refeicoesDuranteODia.text.trim(),
+    consumiuFeijao: consumiuFeijao.text.trim(),
+    consumiuFrutas: consumiuFrutas.text.trim(),
+    consumiuVerdurasLegumes: consumiuVerdurasLegumes.text.trim(),
+    consumiuEmbutidos: consumiuEmbutidos.text.trim(),
+    consumiuBebidasAdocicadas: consumiuBebidasAdocicadas.text.trim(),
+    consumiuMacarraoInstantaneoSalgado: consumiuMacarraoInstantaneoSalgado.text.trim(),
+    consumiuBiscoitoRecheado: consumiuBiscoitoRecheado.text.trim(),
+    ingestaoHidrica: ingestaoHidrica.text.trim(),
+    suplementacao: suplementacao.text.trim(),
+    diurese: diurese.text.trim(),
+    evacuacoes: evacuacoes.text.trim(),
+    itensHigiene: itensHigiene.text.trim(),
+    higieneCorporal: higieneCorporal.text.trim(),
+    higieneBucal: higieneBucal.text.trim(),
+    sono: sono.text.trim(),
+    comprimento: int.tryParse(comprimento.text) ?? 0,
+    peso: double.tryParse(peso.text) ?? 0.0,
+    comprimentoPorIdade: int.tryParse(comprimentoPorIdade.text) ?? 0,
+    imcPorIdade: int.tryParse(imcPorIdade.text) ?? 0,
+    frequenciaCardiaca: frequenciaCardiaca.text.trim(),
+    saturacao: saturacao.text.trim(),
+    auscultaCardiaca: auscultaCardiaca.text.trim(),
+    auscultaPulmonar: auscultaPulmonar.text.trim(),
+    pressaoArterial: pressaoArterial.text.trim(),
+    temperatura: double.tryParse(temperatura.text) ?? 0.0,
+    otoscopia: otoscopia.text.trim(),
+    orofaringe: orofaringe.text.trim(),
+    avaliacaoMuscoesqueletica: avaliacaoMuscoesqueletica.text.trim(),
+    avaliacaoPele: avaliacaoPele.text.trim(),
+    marcosPresentes: marcosPresentes.text.trim(),
+    marcosAusentes: marcosAusentes.text.trim(),
+    observacoesDesenvolvimento: observacoesDesenvolvimento.text.trim(),
+    comoSeSenteHoje: comoSeSenteHoje.text.trim(),
+    observacoesPsicoemocionais: observacoesPsicoemocionais.text.trim(),
+    analiseGeral: analiseGeral.text.trim(),
+    avaliacoes: avaliacoes.text.trim(),
+    intervencoes: intervencoes.text.trim(),
 
-      // Campos somente crianças
-      fontanelas: fontanelas.text.isEmpty ? null: fontanelas.text,
-      cotoUmbilical: cotoUmbilical.text.isEmpty ? null: cotoUmbilical.text,
-      genitalia: genitalia.text.isEmpty ? null: genitalia.text,
-      frequenciaRespiratoria: frequenciaRespiratoria.text.isEmpty ? null : frequenciaRespiratoria.text,
-      bregmatica: int.tryParse(bregmatica.text),
-      bregmaticaCalcificada: bregmaticaCalcificada.text.toLowerCase() == 'true',
-      lambdoide: int.tryParse(lambdoide.text),
-      lambdoideCalcificada: lambdoideCalcificada.text.toLowerCase() == 'true',
-      avaliacaoLinguagem:
-          avaliacaoLinguagem.text.isEmpty ? null : avaliacaoLinguagem.text,
-      reflexoBusca: int.tryParse(reflexoBusca.text),
-      reflexoSuccao: int.tryParse(reflexoSuccao.text),
-      reflexoPreensaoPalmar: int.tryParse(reflexoPreensaoPalmar.text),
-      reflexoPreensaoPlantar: int.tryParse(reflexoPreensaoPlantar.text),
-      reflexoBabinski: int.tryParse(reflexoBabinski.text),
-      reflexoTonicoCervical: int.tryParse(reflexoTonicoCervical.text),
-      reflexoMoro: int.tryParse(reflexoMoro.text),
-      reflexoMarcha: int.tryParse(reflexoMarcha.text),
-      reflexoPiscarOptico: int.tryParse(reflexoPiscarOptico.text),
-      reflexoBuscaESuccao: int.tryParse(reflexoBuscaESuccao.text),
-      movimentosSimetricosFaciais:
-          int.tryParse(movimentosSimetricosFaciais.text),
-      reflexoPiscarAcustico: int.tryParse(reflexoPiscarAcustico.text),
-      reflexoVomito: int.tryParse(reflexoVomito.text),
-      aperteNariz: int.tryParse(aperteNariz.text),
+    // Campos somente crianças
+    fontanelas: fontanelas.text.isEmpty ? " " : fontanelas.text,
+    cotoUmbilical: cotoUmbilical.text.isEmpty ? " " : cotoUmbilical.text,
+    genitalia: genitalia.text.isEmpty ? " " : genitalia.text,
+    frequenciaRespiratoria: frequenciaRespiratoria.text.isEmpty ? " " : frequenciaRespiratoria.text,
+    bregmatica: int.tryParse(bregmatica.text) ?? 0,
+    bregmaticaCalcificada: bregmaticaCalcificada.text.toLowerCase() == 'true',
+    lambdoide: int.tryParse(lambdoide.text) ?? 0,
+    lambdoideCalcificada: lambdoideCalcificada.text.toLowerCase() == 'true',
+    avaliacaoLinguagem: avaliacaoLinguagem.text.isEmpty ? " " : avaliacaoLinguagem.text,
+    reflexoBusca: reflexoBusca.text.isEmpty ? " ": reflexoBusca.text,
+    reflexoSuccao: reflexoSuccao.text.isEmpty ? " ":reflexoSuccao.text,
+    reflexoPreensaoPalmar: reflexoPreensaoPalmar.text.isEmpty ? " ":reflexoPreensaoPalmar.text,
+    reflexoPreensaoPlantar: reflexoPreensaoPlantar.text.isEmpty ? " ": reflexoPreensaoPlantar.text,
+    reflexoBabinski: reflexoBabinski.text.isEmpty ? " ":reflexoBabinski.text,
+    reflexoTonicoCervical: reflexoTonicoCervical.text.isEmpty ? " ": reflexoTonicoCervical.text,
+    reflexoMoro: reflexoMoro.text.isEmpty ? " ": reflexoMoro.text,
+    reflexoMarcha: reflexoMarcha.text.isEmpty ? " ": reflexoMarcha.text,
+    reflexoPiscarOptico: reflexoPiscarOptico.text.isEmpty ? " ": reflexoPiscarOptico.text,
+    reflexoBuscaESuccao: reflexoBuscaESuccao.text.isEmpty ? " ": reflexoBuscaESuccao.text,
+    movimentosSimetricosFaciais: movimentosSimetricosFaciais.text.isEmpty ? " ": movimentosSimetricosFaciais.text,
+    reflexoPiscarAcustico: reflexoPiscarAcustico.text.isEmpty ? " ": reflexoPiscarAcustico.text,
+    reflexoVomito: reflexoVomito.text.isEmpty ? " ": reflexoVomito.text,
+    aperteNariz: aperteNariz.text.isEmpty ? " ":aperteNariz.text,
 
-      // Campos somente adolescentes
-      atividadesLazer:
-          atividadesLazer.text.isEmpty ? null : atividadesLazer.text,
-      identidadeGenero: int.tryParse(identidadeGenero.text),
-      sexualidade: int.tryParse(sexualidade.text),
-      estagioTurnerMeninasMamas: int.tryParse(estagioTurnerMeninasMamas.text),
-      estagioTurnerMeninasPelosPubianos:
-          int.tryParse(estagioTurnerMeninasPelosPubianos.text),
-      dataUltimaMenstruacao: dataUltimaMenstruacao.text.trim().isEmpty
-          ? null
-          : DateFormat('dd/MM/yyyy').parse(dataUltimaMenstruacao.text),
-      fluxoMenstrual: int.tryParse(fluxoMenstrual.text),
-      regularidadeMenstruacao: int.tryParse(regularidadeMenstruacao.text),
-      quaoIrregular: quaoIrregular.text.isEmpty ? null : quaoIrregular.text,
-      dimenorreia: dimenorreia.text.toLowerCase() == 'true',
-      usoAbsorvente: usoAbsorvente.text.trim(),
-      usaMedicamento: usaMedicamento.text.toLowerCase() == 'true',
-      qualMedicamento:
-          qualMedicamento.text.isEmpty ? null : qualMedicamento.text,
-      observacoesSaudeSexualEReprodutivaMeninas:
-          observacoesSaudeSexualEReprodutivaMeninas.text.isEmpty
-              ? null
-              : observacoesSaudeSexualEReprodutivaMeninas.text,
-      vidaSexualAtiva: vidaSexualAtiva.text.toLowerCase() == 'true',
-      usaMetodoContraceptivo:
-          usaMetodoContraceptivo.text.toLowerCase() == 'true',
-      qualMetodoContraceptivo: qualMetodoContraceptivo.text.isEmpty
-          ? null
-          : qualMetodoContraceptivo.text,
-      jaFezPreventivo: jaFezPreventivo.text.toLowerCase() == 'true',
-      quandoFezPreventivo: quandoFezPreventivo.text.trim().isEmpty
-          ? null
-          : DateFormat('dd/MM/yyyy').parse(quandoFezPreventivo.text),
-      seMasturba: seMasturba.text.toLowerCase() == 'true',
-      frequenciaMasturbacao: frequenciaMasturbacao.text.isEmpty
-          ? null
-          : frequenciaMasturbacao.text,
-      estagioTurnerMeninosGenitalia:
-          int.tryParse(estagioTurnerMeninosGenitalia.text),
-      estagioTurnerMeninosPelosPubianos:
-          int.tryParse(estagioTurnerMeninosPelosPubianos.text),
-      semenarca: semenarca.text.toLowerCase() == 'true',
-      quandoSemenarca: quandoSemenarca.text.trim().isEmpty
-          ? null
-          : DateFormat('dd/MM/yyyy').parse(quandoSemenarca.text),
-      analiseGeralCasa: analiseGeralCasa.text.isEmpty? null : analiseGeralCasa.text,
-      exameFisicoCasa: exameFisicoCasa.text.isEmpty? null: exameFisicoCasa.text,
-      avaliacoesCasa: avaliacoesCasa.text.isEmpty? null: avaliacoesCasa.text,
-      oriParaCuidador: oriParaCuidador.text.isEmpty? null: oriParaCuidador.text,
-      oriParaPaciente: oriParaPaciente.text.isEmpty? null: oriParaPaciente.text,
-      oriParaCoordenacao: oriParaCoordenacao.text.isEmpty? null: oriParaCoordenacao.text
-    );
+    // Campos somente adolescentes
+    atividadesLazer: atividadesLazer.text.isEmpty ? " " : atividadesLazer.text,
+    identidadeGenero: identidadeGenero.text.isEmpty ? " " : identidadeGenero.text.trim(),
+    sexualidade: sexualidade.text.isEmpty ? " " : sexualidade.text.trim(),
+    estagioTurnerMeninasMamas: estagioTurnerMeninasMamas.text.isEmpty ? " " : estagioTurnerMeninasMamas.text.trim(),
+    estagioTurnerMeninasPelosPubianos: estagioTurnerMeninasPelosPubianos.text.isEmpty ? " " : estagioTurnerMeninasPelosPubianos.text.trim(),
+    dataUltimaMenstruacao: dataUltimaMenstruacao.text.trim().isEmpty
+        ? DateTime(1900, 1, 1)
+        : DateFormat('dd/MM/yyyy').parse(dataUltimaMenstruacao.text),
+    fluxoMenstrual: fluxoMenstrual.text.isEmpty ? " " : fluxoMenstrual.text.trim(),
+    regularidadeMenstruacao: regularidadeMenstruacao.text.isEmpty ? " " : regularidadeMenstruacao.text.trim(),
+    quaoIrregular: quaoIrregular.text.isEmpty ? " " : quaoIrregular.text,
+    dimenorreia: dimenorreia.text.isEmpty ? " " : dimenorreia.text,
+    usoAbsorvente: usoAbsorvente.text.trim(),
+    usaMedicamento: usaMedicamento.text.isEmpty ? " " : usaMedicamento.text,
+    qualMedicamento: qualMedicamento.text.isEmpty ? " " : qualMedicamento.text,
+    observacoesSaudeSexualEReprodutivaMeninas:
+        observacoesSaudeSexualEReprodutivaMeninas.text.isEmpty ? " " : observacoesSaudeSexualEReprodutivaMeninas.text,
+    vidaSexualAtiva: vidaSexualAtiva.text.isEmpty ? " " : vidaSexualAtiva.text,
+    usaMetodoContraceptivo: usaMetodoContraceptivo.text.isEmpty ? " " : usaMetodoContraceptivo.text,
+    qualMetodoContraceptivo: qualMetodoContraceptivo.text.isEmpty ? " " : qualMetodoContraceptivo.text,
+    jaFezPreventivo: jaFezPreventivo.text.isEmpty ? " " : jaFezPreventivo.text,
+    quandoFezPreventivo: quandoFezPreventivo.text.trim().isEmpty
+        ? DateTime(1900, 1, 1)
+        : DateFormat('dd/MM/yyyy').parse(quandoFezPreventivo.text),
+    seMasturba: seMasturba.text.isEmpty ? " " : seMasturba.text,
+    frequenciaMasturbacao: frequenciaMasturbacao.text.isEmpty ? " " : frequenciaMasturbacao.text,
+    estagioTurnerMeninosGenitalia: estagioTurnerMeninosGenitalia.text.isEmpty ? " " : estagioTurnerMeninosGenitalia.text.trim(),
+    estagioTurnerMeninosPelosPubianos: estagioTurnerMeninosPelosPubianos.text.isEmpty ? " " : estagioTurnerMeninosPelosPubianos.text.trim(),
+    semenarca: semenarca.text.isEmpty ? " " : semenarca.text,
+    quandoSemenarca: quandoSemenarca.text.trim().isEmpty
+        ? DateTime(1900, 1, 1)
+        : DateFormat('dd/MM/yyyy').parse(quandoSemenarca.text),
+    analiseGeralCasa: analiseGeralCasa.text.isEmpty ? " " : analiseGeralCasa.text,
+    exameFisicoCasa: exameFisicoCasa.text.isEmpty ? " " : exameFisicoCasa.text,
+    avaliacoesCasa: avaliacoesCasa.text.isEmpty ? " " : avaliacoesCasa.text,
+    oriParaCuidador: oriParaCuidador.text.isEmpty ? " " : oriParaCuidador.text,
+    oriParaPaciente: oriParaPaciente.text.isEmpty ? " " : oriParaPaciente.text,
+    oriParaCoordenacao: oriParaCoordenacao.text.isEmpty ? " " : oriParaCoordenacao.text,
+  );
+  return consulta;
+}
 
-    return consulta;
-  }
 }

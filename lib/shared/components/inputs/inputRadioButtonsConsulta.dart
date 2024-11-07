@@ -103,11 +103,20 @@ class _InputRadioButtonsConsultaState
             children: [
               const SizedBox(width: 16),
               Expanded(
-                child: InputTextoAcolher(
-                  label: "Obs: ",
-                  controller: widget.thirdController!,
-                ),
-              ),
+              child: widget.label == "Já fez preventivo"
+                  ? InputTextoAcolher(
+                      label: "Quando fez preventivo",
+                      placeHolder: "    /    /",
+                      controller: widget.thirdController!,
+                      keyboardType: TextInputType.datetime,
+                      icone: Icons.date_range_outlined,
+                      readOnly: true,
+                    )
+                  : InputTextoAcolher(
+                      label: "Obs: ",
+                      controller: widget.thirdController!,
+                    ),
+            ),
             ],
           ),
 

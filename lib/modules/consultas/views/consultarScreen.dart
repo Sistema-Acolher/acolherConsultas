@@ -28,45 +28,63 @@ class ConsultarScreen extends StatefulWidget {
 class _ConsultarScreenState extends State<ConsultarScreen> {
   final _formKey = GlobalKey<FormState>();
   final ConsultaState _consultaState = ConsultaState();
-  ValueNotifier<bool> refeicoesComTecnologiaNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> refeicoesComTecnologiaNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> consumiuFeijaoNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> consumiuFrutasNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> consumiuVerdurasLegumesNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuVerdurasLegumesNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> consumiuEmbutidosNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> consumiuBebidasAdocicadasNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> consumiuMacarraoInstantaneoSalgadoNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> consumiuBiscoitoRecheadoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuBebidasAdocicadasNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuMacarraoInstantaneoSalgadoNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> consumiuBiscoitoRecheadoNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> radiobuttonNotifierEstatura = ValueNotifier<bool>(false);
   ValueNotifier<bool> radiobuttonNotifierIMC = ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoBuscaNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoSuccaoNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> reflexoPreensaoPalmarNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> reflexoPreensaoPlantarNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoPreensaoPalmarNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoPreensaoPlantarNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoBabinskiNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> reflexoTonicoCervicalNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> reflexoTonicoCervicalNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoMoroNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoMarchaNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> reflexoPiscarOpticoNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> radiobuttonPiscarOpticoNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> radiobuttonBuscaESuccaoNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> movimentosSimetricosFaciaisNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> radiobuttonPiscarAcusticoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonPiscarOpticoNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonBuscaESuccaoNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> movimentosSimetricosFaciaisNotifier =
+      ValueNotifier<bool>(false);
+  ValueNotifier<bool> radiobuttonPiscarAcusticoNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> radiobuttonVomitoNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> aperteNarizNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> radiobuttonNotifierG = ValueNotifier<bool>(false);
   ValueNotifier<bool> radiobuttonNotifierS = ValueNotifier<bool>(false);
   ValueNotifier<bool> vidaSexualAtivaNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> usaMetodoContraceptivoNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> usaMetodoContraceptivoNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> seMasturbaNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> semenarcaNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> fluxoMenstrualNotifier = ValueNotifier<bool>(false);
-  ValueNotifier<bool> regularidadeMenstrualNotifier = ValueNotifier<bool>(false);
+  ValueNotifier<bool> regularidadeMenstrualNotifier =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> dismenorreiaNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> usaMedicamentoNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> vidaSexualAtivaNotifierW = ValueNotifier<bool>(false);
-  ValueNotifier<bool> usaMetodoContraceptivoNotifierW = ValueNotifier<bool>(false);
+  ValueNotifier<bool> usaMetodoContraceptivoNotifierW =
+      ValueNotifier<bool>(false);
   ValueNotifier<bool> jaFezPreventivoNotifier = ValueNotifier<bool>(false);
   ValueNotifier<bool> seMasturbaNotifierW = ValueNotifier<bool>(false);
+  ValueNotifier<bool> genitalia = ValueNotifier<bool>(false);
+  ValueNotifier<bool> mamas = ValueNotifier<bool>(false);
+  ValueNotifier<bool> pelosPubianos = ValueNotifier<bool>(false);
 
   ConsultaCadastro? consultaSelecionado;
   late List<ConsultaCadastro> consultasDia;
@@ -84,16 +102,41 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
         .toList();
   }
 
-  Future<void> _enviarConsulta() async {
+  /*Future<void> _enviarConsulta() async {
     var consulta = (widget.dadosConsulta??consultaSelecionado);
-    // if((_formKey.currentState?.validate()??false) && consulta!=null) {
-    if (consulta!=null) {
+    if((_formKey.currentState?.validate()??false) && consulta!=null) {
       await ConsultaController().realizarConsulta(consulta.id!, _consultaState.cadastro()).then((value) => {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(value)),
         )
       });
     }
+  }*/
+
+  Future<void> _enviarConsulta() async {
+    var consulta = widget.dadosConsulta ?? consultaSelecionado;
+
+    // Verifique se consulta é nula
+    if (consulta == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Nenhuma consulta selecionada")),
+      );
+      return;
+    }
+
+    // Verifique se os campos obrigatórios estão preenchidos
+    if (_formKey.currentState?.validate() == false) {
+      return; // Não envie a consulta se a validação falhar
+    }
+
+    // Continue com o envio da consulta
+    await ConsultaController()
+        .realizarConsulta(consulta.id!, _consultaState.cadastro())
+        .then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(value)),
+      );
+    });
   }
 
   @override
@@ -103,19 +146,29 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: widget.dadosConsulta != null
-              ? PacienteAppbar(paciente: Provider.of<List<CadastroPaciente>>(context).where((paciente) => paciente.paciente.id==widget.dadosConsulta?.pacienteId).firstOrNull?.paciente)
-              : consultaSelecionado != null 
-              ? PageAppBar(
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black,),
-                    onPressed: () => setState(() {
-                      consultaSelecionado=null;
-                    })),
-                  titulo: consultaSelecionado?.pacienteNome??"",
-                  casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context))
-              : PageAppBar(
-                  titulo: "Consultar",
-                  casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context)),
+              ? PacienteAppbar(
+                  paciente: Provider.of<List<CadastroPaciente>>(context)
+                      .where((paciente) =>
+                          paciente.paciente.id ==
+                          widget.dadosConsulta?.pacienteId)
+                      .firstOrNull
+                      ?.paciente)
+              : consultaSelecionado != null
+                  ? PageAppBar(
+                      leading: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                          ),
+                          onPressed: () => setState(() {
+                                consultaSelecionado = null;
+                              })),
+                      titulo: consultaSelecionado?.pacienteNome ?? "",
+                      casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context))
+                  : PageAppBar(
+                      titulo: "Consultar",
+                      casaDeApoioSelecionada:
+                          Provider.of<CasaDeApoio>(context)),
         ),
         floatingActionButtonLocation:
             widget.dadosConsulta != null || consultaSelecionado != null
@@ -136,12 +189,20 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                   key: _formKey,
                   child: Builder(
                     builder: (context) {
-                      ConsultaCadastro consulta = (widget.dadosConsulta ?? consultaSelecionado)!;
-                      Paciente? paciente = Provider.of<List<CadastroPaciente>>(context).where((paciente) => paciente.paciente.id==consulta.pacienteId).firstOrNull?.paciente;
-                      if(paciente!=null){
-                        String? idadeS = PacientesController.calcularIdade(paciente.dataNasc);
+                      ConsultaCadastro consulta =
+                          (widget.dadosConsulta ?? consultaSelecionado)!;
+                      Paciente? paciente =
+                          Provider.of<List<CadastroPaciente>>(context)
+                              .where((paciente) =>
+                                  paciente.paciente.id == consulta.pacienteId)
+                              .firstOrNull
+                              ?.paciente;
+                      if (paciente != null) {
+                        String? idadeS = PacientesController.calcularIdade(
+                            paciente.dataNasc);
                         final match = RegExp(r'^(\d+)a').firstMatch(idadeS);
-                        int idade = match != null ? int.parse(match.group(1)!) : 0;
+                        int idade =
+                            match != null ? int.parse(match.group(1)!) : 0;
                         String? sexo = paciente.sexo;
 
                         List<String> pageTitles = [];
@@ -164,35 +225,45 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                           pageWidgets = [
                             InformacoesBasicas(state: _consultaState),
                             MarcosDeConsumoAlimentar(
-                              state: _consultaState,
-                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
-                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
-                              consumiuFrutasNotifier: consumiuFrutasNotifier,
-                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
-                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
-                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
-                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
-                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                                state: _consultaState,
+                                refeicoesComTecnologiaNotifier:
+                                    refeicoesComTecnologiaNotifier,
+                                consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                                consumiuFrutasNotifier: consumiuFrutasNotifier,
+                                consumiuVerdurasLegumesNotifier:
+                                    consumiuVerdurasLegumesNotifier,
+                                consumiuEmbutidosNotifier:
+                                    consumiuEmbutidosNotifier,
+                                consumiuBebidasAdocicadasNotifier:
+                                    consumiuBebidasAdocicadasNotifier,
+                                consumiuMacarraoInstantaneoSalgadoNotifier:
+                                    consumiuMacarraoInstantaneoSalgadoNotifier,
+                                consumiuBiscoitoRecheadoNotifier:
+                                    consumiuBiscoitoRecheadoNotifier),
                             Eliminacoes(state: _consultaState),
                             Higiente(state: _consultaState),
                             Sono(state: _consultaState),
                             ExameFisico(
-                              state: _consultaState,
-                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
-                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                                state: _consultaState,
+                                radiobuttonNotifierEstatura:
+                                    radiobuttonNotifierEstatura,
+                                radiobuttonNotifierIMC: radiobuttonNotifierIMC),
                             IdentidadeGenero(
-                              state: _consultaState,
-                              radiobuttonNotifierG: radiobuttonNotifierG,
-                              radiobuttonNotifierS: radiobuttonNotifierS),
-                            EstagioDeTurnerMeninas(state: _consultaState),
+                                state: _consultaState,
+                                radiobuttonNotifierG: radiobuttonNotifierG,
+                                radiobuttonNotifierS: radiobuttonNotifierS),
+                            EstagioDeTurnerMeninas(state: _consultaState,mamas: mamas,pelosPubianos: pelosPubianos),
                             SaudeSexualReprodutivaMeninas(
                               state: _consultaState,
                               fluxoMenstrualNotifier: fluxoMenstrualNotifier,
-                              regularidadeMenstrualNotifier: regularidadeMenstrualNotifier,
+                              regularidadeMenstrualNotifier:
+                                  regularidadeMenstrualNotifier,
                               dismenorreiaNotifier: dismenorreiaNotifier,
                               usaMedicamentoNotifier: usaMedicamentoNotifier,
-                              vidaSexualAtivaNotifierW: vidaSexualAtivaNotifierW,
-                              usaMetodoContraceptivoNotifierW: usaMetodoContraceptivoNotifierW,
+                              vidaSexualAtivaNotifierW:
+                                  vidaSexualAtivaNotifierW,
+                              usaMetodoContraceptivoNotifierW:
+                                  usaMetodoContraceptivoNotifierW,
                               jaFezPreventivoNotifier: jaFezPreventivoNotifier,
                               seMasturbaNotifierW: seMasturbaNotifierW,
                             ),
@@ -200,8 +271,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                             ObservacoesFinais(state: _consultaState),
                             ParaCasa(state: _consultaState),
                           ];
-                        } 
-                        else if (idade > 12 && sexo == 'Masculino') {
+                        } else if (idade > 12 && sexo == 'Masculino') {
                           pageTitles = [
                             "Informações Básicas",
                             "Consumo Alimentar",
@@ -219,31 +289,39 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                           pageWidgets = [
                             InformacoesBasicas(state: _consultaState),
                             MarcosDeConsumoAlimentar(
-                              state: _consultaState,
-                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
-                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
-                              consumiuFrutasNotifier: consumiuFrutasNotifier,
-                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
-                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
-                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
-                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
-                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                                state: _consultaState,
+                                refeicoesComTecnologiaNotifier:
+                                    refeicoesComTecnologiaNotifier,
+                                consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                                consumiuFrutasNotifier: consumiuFrutasNotifier,
+                                consumiuVerdurasLegumesNotifier:
+                                    consumiuVerdurasLegumesNotifier,
+                                consumiuEmbutidosNotifier:
+                                    consumiuEmbutidosNotifier,
+                                consumiuBebidasAdocicadasNotifier:
+                                    consumiuBebidasAdocicadasNotifier,
+                                consumiuMacarraoInstantaneoSalgadoNotifier:
+                                    consumiuMacarraoInstantaneoSalgadoNotifier,
+                                consumiuBiscoitoRecheadoNotifier:
+                                    consumiuBiscoitoRecheadoNotifier),
                             Eliminacoes(state: _consultaState),
                             Higiente(state: _consultaState),
                             Sono(state: _consultaState),
                             ExameFisico(
-                              state: _consultaState,
-                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
-                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                                state: _consultaState,
+                                radiobuttonNotifierEstatura:
+                                    radiobuttonNotifierEstatura,
+                                radiobuttonNotifierIMC: radiobuttonNotifierIMC),
                             IdentidadeGenero(
-                              state: _consultaState,
-                              radiobuttonNotifierG: radiobuttonNotifierG,
-                              radiobuttonNotifierS: radiobuttonNotifierS),
-                            EstagioDeTurnerMeninos(state: _consultaState),
+                                state: _consultaState,
+                                radiobuttonNotifierG: radiobuttonNotifierG,
+                                radiobuttonNotifierS: radiobuttonNotifierS),
+                            EstagioDeTurnerMeninos(state: _consultaState,genitalia: genitalia,),
                             SaudeSexualReprodutivaMeninos(
                               state: _consultaState,
                               vidaSexualAtivaNotifier: vidaSexualAtivaNotifier,
-                              usaMetodoContraceptivoNotifier: usaMetodoContraceptivoNotifier,
+                              usaMetodoContraceptivoNotifier:
+                                  usaMetodoContraceptivoNotifier,
                               seMasturbaNotifier: seMasturbaNotifier,
                               semenarcaNotifier: semenarcaNotifier,
                             ),
@@ -251,8 +329,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                             ObservacoesFinais(state: _consultaState),
                             ParaCasa(state: _consultaState)
                           ];
-                        } 
-                        else {
+                        } else {
                           pageTitles = [
                             "Informações Básicas",
                             "Consumo Alimentar",
@@ -268,40 +345,55 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                           pageWidgets = [
                             InformacoesBasicas(state: _consultaState),
                             MarcosDeConsumoAlimentar(
-                              state: _consultaState,
-                              refeicoesComTecnologiaNotifier: refeicoesComTecnologiaNotifier,
-                              consumiuFeijaoNotifier: consumiuFeijaoNotifier,
-                              consumiuFrutasNotifier: consumiuFrutasNotifier,
-                              consumiuVerdurasLegumesNotifier: consumiuVerdurasLegumesNotifier,
-                              consumiuEmbutidosNotifier: consumiuEmbutidosNotifier,
-                              consumiuBebidasAdocicadasNotifier: consumiuBebidasAdocicadasNotifier,
-                              consumiuMacarraoInstantaneoSalgadoNotifier: consumiuMacarraoInstantaneoSalgadoNotifier,
-                              consumiuBiscoitoRecheadoNotifier: consumiuBiscoitoRecheadoNotifier),
+                                state: _consultaState,
+                                refeicoesComTecnologiaNotifier:
+                                    refeicoesComTecnologiaNotifier,
+                                consumiuFeijaoNotifier: consumiuFeijaoNotifier,
+                                consumiuFrutasNotifier: consumiuFrutasNotifier,
+                                consumiuVerdurasLegumesNotifier:
+                                    consumiuVerdurasLegumesNotifier,
+                                consumiuEmbutidosNotifier:
+                                    consumiuEmbutidosNotifier,
+                                consumiuBebidasAdocicadasNotifier:
+                                    consumiuBebidasAdocicadasNotifier,
+                                consumiuMacarraoInstantaneoSalgadoNotifier:
+                                    consumiuMacarraoInstantaneoSalgadoNotifier,
+                                consumiuBiscoitoRecheadoNotifier:
+                                    consumiuBiscoitoRecheadoNotifier),
                             Eliminacoes(state: _consultaState),
                             Higiente(state: _consultaState),
                             Sono(state: _consultaState),
                             ExameFisicoCrianca(
-                              state: _consultaState,
-                              radiobuttonNotifierEstatura: radiobuttonNotifierEstatura,
-                              radiobuttonNotifierIMC: radiobuttonNotifierIMC),
+                                state: _consultaState,
+                                radiobuttonNotifierEstatura:
+                                    radiobuttonNotifierEstatura,
+                                radiobuttonNotifierIMC: radiobuttonNotifierIMC),
                             AvaliacaoReflexos(
                               state: _consultaState,
                               reflexoBuscaNotifier: reflexoBuscaNotifier,
                               reflexoSuccaoNotifier: reflexoSuccaoNotifier,
-                              reflexoPreensaoPalmarNotifier: reflexoPreensaoPalmarNotifier,
-                              reflexoPreensaoPlantarNotifier: reflexoPreensaoPlantarNotifier,
+                              reflexoPreensaoPalmarNotifier:
+                                  reflexoPreensaoPalmarNotifier,
+                              reflexoPreensaoPlantarNotifier:
+                                  reflexoPreensaoPlantarNotifier,
                               reflexoBabinskiNotifier: reflexoBabinskiNotifier,
-                              reflexoTonicoCervicalNotifier: reflexoTonicoCervicalNotifier,
+                              reflexoTonicoCervicalNotifier:
+                                  reflexoTonicoCervicalNotifier,
                               reflexoMoroNotifier: reflexoMoroNotifier,
                               reflexoMarchaNotifier: reflexoMarchaNotifier,
-                              reflexoPiscarOpticoNotifier: reflexoPiscarOpticoNotifier,
+                              reflexoPiscarOpticoNotifier:
+                                  reflexoPiscarOpticoNotifier,
                             ),
                             AvaliacaoNervos(
                               state: _consultaState,
-                              reflexoPiscarOpticoNotifier: radiobuttonPiscarOpticoNotifier,
-                              reflexoBuscaESuccaoNotifier: radiobuttonBuscaESuccaoNotifier,
-                              movimentosSimetricosFaciaisNotifier: movimentosSimetricosFaciaisNotifier,
-                              reflexoPiscarAcusticoNotifier: radiobuttonPiscarAcusticoNotifier,
+                              reflexoPiscarOpticoNotifier:
+                                  radiobuttonPiscarOpticoNotifier,
+                              reflexoBuscaESuccaoNotifier:
+                                  radiobuttonBuscaESuccaoNotifier,
+                              movimentosSimetricosFaciaisNotifier:
+                                  movimentosSimetricosFaciaisNotifier,
+                              reflexoPiscarAcusticoNotifier:
+                                  radiobuttonPiscarAcusticoNotifier,
                               reflexoVomitoNotifier: radiobuttonVomitoNotifier,
                               aperteNarizNotifier: aperteNarizNotifier,
                             ),
@@ -313,8 +405,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                           pageTitles: pageTitles,
                           pageWidgets: pageWidgets,
                         );
-                      }
-                      else{
+                      } else {
                         return const LoadingLogo();
                       }
                     },
@@ -322,8 +413,8 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                 ),
               )
             : Padding(
-              padding: const EdgeInsets.only(bottom: 60,left: 30,right: 30),
-              child: Column(
+                padding: const EdgeInsets.only(bottom: 60, left: 30, right: 30),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
@@ -349,7 +440,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                     ),
                   ],
                 ),
-            ));
+              ));
   }
 }
 
@@ -369,6 +460,7 @@ class AvaliacaoPsicoemocional extends StatelessWidget {
             controller: state.comoSeSenteHoje,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Observações psicoemocionais",
             controller: state.observacoesPsicoemocionais,
@@ -412,16 +504,19 @@ class ObservacoesFinais extends StatelessWidget {
             controller: state.observacoesDesenvolvimento,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Análise geral",
             controller: state.analiseGeral,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Avaliações",
             controller: state.avaliacoes,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Intervenções",
             controller: state.intervencoes,
@@ -465,6 +560,7 @@ class InformacoesBasicas extends StatelessWidget {
             controller: state.descricao,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Observações",
             controller: state.observacoesPaciente,
@@ -600,12 +696,20 @@ class Eliminacoes extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Image.asset(
+            'src/images/Diurese.jpg',
+            height: 300, // Ajuste o tamanho conforme necessário
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
                 label: "Diurese: coloração, odor/dor, frequência",
                 controller: state.diurese,
                 emptyMessage: "Informe a diurese"),
+          ),
+          Image.asset(
+            'src/images/Evacuação.jpg',
+            height: 300, // Ajuste o tamanho conforme necessário
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
@@ -807,6 +911,7 @@ class ExameFisico extends StatelessWidget {
             controller: state.avaliacaoMuscoesqueletica,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label:
                 "Avaliação da Pele (eritemas, palidez, manchas, alterações hormonais, umidade, turgor)",
@@ -943,12 +1048,14 @@ class ExameFisicoCrianca extends StatelessWidget {
             controller: state.avaliacaoMuscoesqueletica,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label:
                 "Avaliação da Pele (eritemas, palidez, manchas, alterações hormonais, umidade, turgor)",
             controller: state.avaliacaoPele,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
             child: InputTextoAcolher(
@@ -1214,7 +1321,13 @@ class IdentidadeGenero extends StatelessWidget {
 
 class EstagioDeTurnerMeninas extends StatelessWidget {
   final ConsultaState state;
-  const EstagioDeTurnerMeninas({super.key, required this.state});
+  final ValueNotifier<bool> pelosPubianos;
+  final ValueNotifier<bool> mamas;
+  const EstagioDeTurnerMeninas(
+      {super.key,
+      required this.state,
+      required this.mamas,
+      required this.pelosPubianos});
 
   @override
   Widget build(BuildContext context) {
@@ -1223,15 +1336,26 @@ class EstagioDeTurnerMeninas extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputCaixaDeTexto(
+          Image.asset(
+            'src/images/EstagioTurnerMeninasSuperior.jpg',
+            height: 500, // Ajuste o tamanho conforme necessário
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["M1", "M2", "M3", "M4", "M5"],
             label: "ESTÁGIOS DE TURNER MAMAS",
             controller: state.estagioTurnerMeninasMamas,
-            isCadastro: true,
+            isChecked: mamas,
           ),
-          InputCaixaDeTexto(
+          const SizedBox(height: 10.0),
+          Image.asset(
+            'src/images/EstagioTurnerMeninasInferior.jpg',
+            height: 500, // Ajuste o tamanho conforme necessário
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["P1", "P2", "P3", "P4", "P5"],
             label: "ESTÁGIOS DE TURNER PELOS PUBIANOS",
             controller: state.estagioTurnerMeninasPelosPubianos,
-            isCadastro: true,
+            isChecked: pelosPubianos,
           ),
         ],
       ),
@@ -1333,7 +1457,7 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
           ),
           InputRadioButtonsConsulta(
             options: const ["Sim", "Não"],
-            label: "Ja fez preventivo",
+            label: "Já fez preventivo",
             controller: _controllerRadio,
             secondController: state.jaFezPreventivo,
             thirdController: state.quandoFezPreventivo,
@@ -1360,7 +1484,10 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
 
 class EstagioDeTurnerMeninos extends StatelessWidget {
   final ConsultaState state;
-  const EstagioDeTurnerMeninos({super.key, required this.state});
+  final ValueNotifier<bool> genitalia;
+
+  const EstagioDeTurnerMeninos(
+      {super.key, required this.state, required this.genitalia});
 
   @override
   Widget build(BuildContext context) {
@@ -1369,11 +1496,17 @@ class EstagioDeTurnerMeninos extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InputCaixaDeTexto(
+          Image.asset(
+            'src/images/EstagioTurnerMeninos.jpg',
+            height: 150, // Ajuste o tamanho conforme necessário
+          ),
+          InputRadioButtonsConsulta(
+            options: const ["G1", "G2", "G3", "G4", "G5"],
             label: "ESTÁGIOS DE TURNER GENITALIA",
             controller: state.estagioTurnerMeninosGenitalia,
-            isCadastro: true,
+            isChecked: genitalia,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "ESTÁGIOS DE TURNER PELOS PUBIANOS",
             controller: state.estagioTurnerMeninosPelosPubianos,
@@ -1439,6 +1572,7 @@ class SaudeSexualReprodutivaMeninos extends StatelessWidget {
             controller: state.observacoesSaudeSexualEReprodutivaMeninas,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputRadioButtonsConsulta(
             options: const ["Sim", "Não"],
             label: "Semanarca",
@@ -1469,26 +1603,31 @@ class ParaCasa extends StatelessWidget {
             controller: state.analiseGeralCasa,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Exame Físico",
             controller: state.exameFisicoCasa,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Avaliações",
             controller: state.avaliacoesCasa,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Orientação para o cuidador",
             controller: state.oriParaCuidador,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Orientação para criança ou adolescente",
             controller: state.oriParaPaciente,
             isCadastro: true,
           ),
+          const SizedBox(height: 10.0),
           InputCaixaDeTexto(
             label: "Orientação para coordenação da casa",
             controller: state.oriParaCoordenacao,
@@ -1507,7 +1646,8 @@ class InputCaixaLambdoide extends StatelessWidget {
   final TextEditingController?
       optionalController; // Adicionando o optionalController
 
-  const InputCaixaLambdoide({super.key, 
+  const InputCaixaLambdoide({
+    super.key,
     required this.label,
     required this.controller,
     required this.isCadastro,
@@ -1771,7 +1911,8 @@ class InputCaixaBregmatica extends StatelessWidget {
   final TextEditingController?
       optionalController; // Adicionando o optionalController
 
-  const InputCaixaBregmatica({super.key, 
+  const InputCaixaBregmatica({
+    super.key,
     required this.label,
     required this.controller,
     required this.isCadastro,
@@ -1820,7 +1961,8 @@ class ExibirConsulta extends StatefulWidget {
   final List<String> pageTitles;
   final List<Widget> pageWidgets;
 
-  const ExibirConsulta({super.key, required this.pageTitles, required this.pageWidgets});
+  const ExibirConsulta(
+      {super.key, required this.pageTitles, required this.pageWidgets});
 
   @override
   State<ExibirConsulta> createState() => _ExibirConsultaState();
@@ -1856,34 +1998,35 @@ class _ExibirConsultaState extends State<ExibirConsulta> {
 
     String? prevTitle = prevIndex >= 0 ? pageTitles[prevIndex] : null;
     String currentTitle = pageTitles[currentPageIndex];
-    String? nextTitle = nextIndex < pageTitles.length ? pageTitles[nextIndex] : null;
-    if(nextTitle != null){
+    String? nextTitle =
+        nextIndex < pageTitles.length ? pageTitles[nextIndex] : null;
+    if (nextTitle != null) {
       List<String> parts = nextTitle.split(' ');
-      if (parts.length > 2 && parts[1].length==2) {
-        nextTitle = '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
-      }
-      else if(parts.length >= 2){
-        nextTitle = '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
-      }
-      else if (parts.length > 1) {
+      if (parts.length > 2 && parts[1].length == 2) {
+        nextTitle =
+            '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
+      } else if (parts.length >= 2) {
+        nextTitle =
+            '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
+      } else if (parts.length > 1) {
         nextTitle = parts[0];
       }
     }
-    if(prevTitle != null){
+    if (prevTitle != null) {
       List<String> parts = prevTitle.split(' ');
-      if (parts.length > 2 && parts[1].length==2) {
-        prevTitle = '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
-      }
-      else if(parts.length >= 2){
-        prevTitle = '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
-      }
-      else if (parts.length > 1) {
+      if (parts.length > 2 && parts[1].length == 2) {
+        prevTitle =
+            '${parts[0]} ${parts[2].length > 3 ? '${parts[2].substring(0, 3)}.' : parts[2]}';
+      } else if (parts.length >= 2) {
+        prevTitle =
+            '${parts[0]} ${parts[1].length > 3 ? '${parts[1].substring(0, 3)}.' : parts[1]}';
+      } else if (parts.length > 1) {
         prevTitle = parts[0];
       }
     }
 
     return PreferredSize(
-      preferredSize: const Size.fromHeight(80.0), // Adjust height as needed
+      preferredSize: const Size.fromHeight(60.0), // Adjust height as needed
       child: AppBar(
         title: Row(
           children: [
@@ -1930,23 +2073,23 @@ class _ExibirConsultaState extends State<ExibirConsulta> {
             Flexible(
               flex: 1,
               child: nextTitle != null
-                ? GestureDetector(
-                    onTap: () => _navigateToPage(nextIndex),
-                    child: Center(
-                      child: FittedBox(
-                        child: Text(
-                          nextTitle,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color.fromARGB(179, 0, 0, 0),
-                            fontSize: 10,
+                  ? GestureDetector(
+                      onTap: () => _navigateToPage(nextIndex),
+                      child: Center(
+                        child: FittedBox(
+                          child: Text(
+                            nextTitle,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color.fromARGB(179, 0, 0, 0),
+                              fontSize: 10,
+                            ),
+                            softWrap: true,
                           ),
-                          softWrap: true,
                         ),
                       ),
-                    ),
-                  )
-                : Container(), // Empty container when no next page
+                    )
+                  : Container(), // Empty container when no next page
             ),
           ],
         ),
