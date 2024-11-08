@@ -176,7 +176,7 @@ class ConsultaController extends ChangeNotifier {
 
       // Criar nova consulta com dados de criança
       consulta.dadosConsulta = consultaDados;
-      consulta.estado="concluida";
+      consulta.estado = "concluida";
 
       await atualizarConsulta(consulta, consultaId);
       return "Consulta realizada com sucesso";

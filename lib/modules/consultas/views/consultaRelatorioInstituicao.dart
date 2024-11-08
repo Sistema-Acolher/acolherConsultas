@@ -10,10 +10,12 @@ import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 
 class ConsultaRelatorioInstituicao extends StatelessWidget {
   final ConsultaCadastro consultaCadastro;
+  final bool eInstituicao;
 
   const ConsultaRelatorioInstituicao({
     super.key,
     required this.consultaCadastro,
+    required this.eInstituicao,
   });
 
   @override
@@ -38,7 +40,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                 label: "Nome da Criança",
                 controller: TextEditingController(
                     text: consultaCadastro.pacienteNome ?? ''),
-                readOnly: true,
+                readOnly: eInstituicao,
               ),
               const SizedBox(height: 16),
               Row(
@@ -52,7 +54,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                             TimeOfDay.fromDateTime(consultaCadastro.dataHorario)
                                 .format(context),
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -63,7 +65,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                         text: DateFormat('dd/MM/yyyy')
                             .format(consultaCadastro.dataHorario),
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                 ],
@@ -79,7 +81,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                           text:
                               consultaCadastro.dadosConsulta?.peso.toString() ??
                                   ''),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -92,7 +94,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -104,7 +106,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                 ],
@@ -117,13 +119,14 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                     child: InputRadioButtonsCadastroPaciente(
                       label: "Condição Geral",
                       controller: TextEditingController(
-                        text: consultaCadastro.dadosConsulta?.imcPorIdade == 0
+                        text: consultaCadastro.dadosConsulta?.imcPorIdade !=
+                                'Eutrofia'
                             ? "Adequado"
                             : "Inadequado",
                       ),
                       options: const ["Adequado", "Inadequado"],
                       isChecked: isChecked,
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -135,7 +138,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                 ],
@@ -152,7 +155,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -164,7 +167,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -176,7 +179,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                 ],
@@ -192,7 +195,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -204,7 +207,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -216,7 +219,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                                 .toString() ??
                             '',
                       ),
-                      readOnly: true,
+                      readOnly: eInstituicao,
                     ),
                   ),
                 ],
@@ -287,7 +290,7 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
                   text: consultaCadastro.dadosConsulta?.cuidadorPrincipal
                       .toString(),
                 ),
-                readOnly: true,
+                readOnly: eInstituicao,
               ),
             ],
           ),

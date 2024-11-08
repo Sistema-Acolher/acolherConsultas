@@ -9,7 +9,12 @@ import 'package:provider/provider.dart';
 
 class PacienteObservacoes extends StatefulWidget {
   final Paciente paciente;
-  const PacienteObservacoes({super.key, required this.paciente});
+  final bool? eInstituicao;
+  const PacienteObservacoes({
+    super.key,
+    required this.paciente,
+    this.eInstituicao,
+  });
 
   @override
   State<PacienteObservacoes> createState() => _ConsultaListaState();
@@ -39,12 +44,12 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
                 ConsultaDropdown(
                   text: "Consultas realizadas",
                   child: ListaComIconeConsultas(
-                    label: "Prévias",
+                    label: "Realizadas",
                     paciente: widget.paciente,
                     listaConsulta: consultasPaciente
                         .where((element) => element.estado == "concluida")
                         .toList(),
-                    eInstituicao: true,
+                    eInstituicao: widget.eInstituicao,
                   ),
                 ),
               ],

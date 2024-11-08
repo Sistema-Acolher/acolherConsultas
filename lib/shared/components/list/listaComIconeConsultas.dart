@@ -128,15 +128,14 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
             ),
             onPressed: () {
               if (item.estado == "concluida") {
-                if (widget.eInstituicao == true) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => ConsultaRelatorioInstituicao(
-                        consultaCadastro: item,
-                      ),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ConsultaRelatorioInstituicao(
+                      consultaCadastro: item,
+                      eInstituicao: widget.eInstituicao ?? false,
                     ),
-                  );
-                }
+                  ),
+                );
               } else if (item.estado == "agendada" ||
                   item.estado == "atrasada") {
                 _optionsDialogBuilder(context, item);
@@ -196,6 +195,7 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                         MaterialPageRoute(
                           builder: (context) => ConsultaRelatorioInstituicao(
                             consultaCadastro: consulta,
+                            eInstituicao: widget.eInstituicao ?? false,
                           ),
                         ),
                       );

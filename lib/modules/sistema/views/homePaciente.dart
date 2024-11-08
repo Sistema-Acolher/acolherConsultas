@@ -28,7 +28,7 @@ class HomePaciente extends StatelessWidget {
       inactiveIconColors: const [ verdeIcon,              vermelhoIcon,           amareloEscuro,  azulIcon,         cinzaIcon],
       screens:            [ 
         OpcaoGenograma      (paciente: paciente),
-        PacienteObservacoes (paciente: paciente),  
+        PacienteObservacoes (paciente: paciente, eInstituicao: true),  
         PacienteScreen      (paciente: paciente),      
         ConsultaLista       (paciente: paciente),  
         ConsultaAgendar     (paciente: paciente)], 
