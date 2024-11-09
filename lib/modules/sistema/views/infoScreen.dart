@@ -242,9 +242,31 @@ class _InfoScreenState extends State<InfoScreen> {
               ),
             ],
           ),
-          SizedBox(
-            height: size.height * 0.075,
+          // row com as logos das instituições
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image(
+                image: const AssetImage('src/images/logoCefet.png'),
+                width: size.width * 0.2,
+              ),
+              Image(
+                image: const AssetImage('src/images/logoUFSJ.png'),
+                width: size.width * 0.2,
+              ),
+              // Image(
+              //   image: const AssetImage('src/images/logoUFSJ1.png'),
+              //   width: size.width * 0.15,
+              // ),
+              // Image(
+              //   image: const AssetImage('src/images/logoUFSJ2.png'),
+              //   width: size.width * 0.15,
+              // ),
+            ],
           ),
+          // SizedBox(
+          //   height: size.height * 0.005,
+          // ),
           Hero(
             tag: "gradienteBaixo",
             child: Container(
