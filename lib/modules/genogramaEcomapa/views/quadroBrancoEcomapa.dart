@@ -169,62 +169,65 @@ class QuadroBrancoEcomapa extends HookWidget {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Altere o Texto:'),
-                    content: TextFormField(
-                      onChanged: (value) => textoCirculo.value = value,
-                      initialValue: textoCirculo.value,
-                      maxLines: tipoDesenho.value == TipoDesenho.texto ? 5 : 1,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      keyboardType: TextInputType.multiline,
-                      textCapitalization: TextCapitalization.sentences,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),
-                      cursorColor: preto,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        hintText: 'Alteração',
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+                    child: AlertDialog(
+                      title: const Text('Altere o Texto:'),
+                      content: TextFormField(
+                        onChanged: (value) => textoCirculo.value = value,
+                        initialValue: textoCirculo.value,
+                        maxLines: tipoDesenho.value == TipoDesenho.texto ? 5 : 1,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        style: const TextStyle(
                           fontSize: 13,
+                          color: Colors.black,
+                        ),
+                        cursorColor: preto,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Alteração',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 13,
+                          ),
                         ),
                       ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => {Navigator.of(context).pop()},
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            desenhoEditado.value =
+                                MapEntry(ElementosDesenho(id: 0, pontos: [], tipo: TipoDesenho.semDesenho, tamanho: 5), Operacoes.edicao);
+                            final newEcomapa = ecomapa.value.copyWith(
+                                elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0]));
+                            ecomapa.value = newEcomapa;
+                            desenhoAtual.value = ElementosDesenho(
+                              id: elementoEncontrado.id,
+                              pontos: elementoEncontrado.pontos,
+                              cor: elementoEncontrado.cor,
+                              tipo: elementoEncontrado.tipo,
+                              tamanho: elementoEncontrado.tamanho,
+                              texto: textoCirculo.value,
+                              ligacao: ligacao?.value,
+                              energiaGastaPaciente: energiaGastaPaciente?.value,
+                              energiaGastaParte: energiaGastaParte?.value,
+                            );
+                            desenhoEditado.value = MapEntry(elementoEncontrado, Operacoes.edicao);
+                            ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
+                            desenhoAtivo.value = false;
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Confirmar'),
+                        ),
+                      ],
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => {Navigator.of(context).pop()},
-                        child: const Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          desenhoEditado.value =
-                              MapEntry(ElementosDesenho(id: 0, pontos: [], tipo: TipoDesenho.semDesenho, tamanho: 5), Operacoes.edicao);
-                          final newEcomapa = ecomapa.value.copyWith(
-                              elementos: ecomapa.value.removeDesenho(elementoEncontrado.pontos[0]));
-                          ecomapa.value = newEcomapa;
-                          desenhoAtual.value = ElementosDesenho(
-                            id: elementoEncontrado.id,
-                            pontos: elementoEncontrado.pontos,
-                            cor: elementoEncontrado.cor,
-                            tipo: elementoEncontrado.tipo,
-                            tamanho: elementoEncontrado.tamanho,
-                            texto: textoCirculo.value,
-                            ligacao: ligacao?.value,
-                            energiaGastaPaciente: energiaGastaPaciente?.value,
-                            energiaGastaParte: energiaGastaParte?.value,
-                          );
-                          desenhoEditado.value = MapEntry(elementoEncontrado, Operacoes.edicao);
-                          ecomapa.value = ecomapa.value.addDesenho(desenhoAtual.value);
-                          desenhoAtivo.value = false;
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Confirmar'),
-                      ),
-                    ],
                   );
                 });
           } else {

@@ -6,11 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class ListaGenogramaEcomapa extends StatefulWidget {
-  const ListaGenogramaEcomapa({super.key, required this.elementos, required this.isGenograma, this.paciente});
+  const ListaGenogramaEcomapa({super.key, required this.elementos, required this.isGenograma, this.paciente, this.refreshFunction});
 
   final List<dynamic> elementos;
   final Paciente? paciente;
   final bool isGenograma;
+  final Function? refreshFunction;
 
   @override
   State<ListaGenogramaEcomapa> createState() => _ListaGenogramaEcomapaState();
@@ -44,15 +45,17 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                 ],
               ),
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => widget.isGenograma ? 
-                      GenogramaScreen(genogramaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: false) : 
-                      EcomapaScreen(ecomapaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: false)
+                      GenogramaScreen(genogramaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: true) : 
+                      EcomapaScreen(ecomapaVelho: widget.elementos[index], paciente: widget.paciente, isEditable: true)
                     )
                   );
+
+                  widget.refreshFunction?.call();
                 },
                 child: Row(
                     children: [

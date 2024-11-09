@@ -172,7 +172,7 @@ class EcomapaScreen extends HookWidget {
           appBar: AppBarAnimada(
             title: "Ecomapa",
             showAppBar: showAppBar,
-            sair: (ecomapa.value.elementos.length == 1 || salvou.value) || !isEditable,
+            sair: ecomapaVelho == ecomapa.value || ecomapa.value.elementos.length == 1 || salvou.value || !isEditable,
           ),
           body: Stack(
             children: [
@@ -288,7 +288,7 @@ class EcomapaScreen extends HookWidget {
                 child: Row(
                   children: [
                     Visibility(
-                      visible: ecomapa.value.elementos.length > 1,
+                      visible: (ecomapaVelho != ecomapa.value  && ecomapa.value.elementos.length > 1),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: FloatingActionButton(
@@ -408,181 +408,184 @@ class EcomapaScreen extends HookWidget {
                         return ValueListenableBuilder(
                           valueListenable: combinedNotifier,
                           builder: ((context, value, child) {
-                            return AlertDialog(
-                            scrollable: true,
-                            title: const Text("Adicionar Relacionamento"),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0))
-                            ),
-                            content: Builder(
-                              builder: (context) {
-                                return Form(
-                                  key: globalKey,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            TextFormField(
-                                              decoration: const InputDecoration(
-                                                hintText: "Título da Relação"
-                                              ),
-                                              controller: tituloController.value,
-                                              validator: (value) {
-                                                if(value == null || value.isEmpty){
-                                                  return "Título não pode ser vazio";
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                            const SizedBox(height: 30),
-                                            const Text(
-                                              "Força da relação",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const Text("Fraca"),
-                                                Radio(
-                                                  value: "fraca",
-                                                  groupValue: ligacao.value,
-                                                  onChanged: (value) {
-                                                    ligacao.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Média"),
-                                                Radio(
-                                                  value: "media",
-                                                  groupValue: ligacao.value,
-                                                  onChanged: (value) {
-                                                    ligacao.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Forte"),
-                                                Radio(
-                                                  value: "forte",
-                                                  groupValue: ligacao.value,
-                                                  onChanged: (value) {
-                                                    ligacao.value = value!;
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 30),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              "Energia gasta pelo paciente",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const Text("Fraca"),
-                                                Radio(
-                                                  value: "fraca",
-                                                  groupValue: energiaGastaPaciente.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaPaciente.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Média"),
-                                                Radio(
-                                                  value: "media",
-                                                  groupValue: energiaGastaPaciente.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaPaciente.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Forte"),
-                                                Radio(
-                                                  value: "forte",
-                                                  groupValue: energiaGastaPaciente.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaPaciente.value = value!;
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8),
-                                            const Text(
-                                              "Energia gasta pela parte",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                const Text("Fraca"),
-                                                Radio(
-                                                  value: "fraca",
-                                                  groupValue: energiaGastaParte.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaParte.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Média"),
-                                                Radio(
-                                                  value: "media",
-                                                  groupValue: energiaGastaParte.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaParte.value = value!;
-                                                  },
-                                                ),
-                                                const Text("Forte"),
-                                                Radio(
-                                                  value: "forte",
-                                                  groupValue: energiaGastaParte.value,
-                                                  onChanged: (value) {
-                                                    energiaGastaParte.value = value!;
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                }, 
-                                child: const Text("Cancelar")
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+                              child: AlertDialog(
+                              scrollable: true,
+                              title: const Text("Adicionar Relacionamento"),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0))
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  if(globalKey.currentState!.validate()){
+                              content: Builder(
+                                builder: (context) {
+                                  return Form(
+                                    key: globalKey,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              TextFormField(
+                                                decoration: const InputDecoration(
+                                                  hintText: "Título da Relação"
+                                                ),
+                                                controller: tituloController.value,
+                                                validator: (value) {
+                                                  if(value == null || value.isEmpty){
+                                                    return "Título não pode ser vazio";
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(height: 30),
+                                              const Text(
+                                                "Força da relação",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("Fraca"),
+                                                  Radio(
+                                                    value: "fraca",
+                                                    groupValue: ligacao.value,
+                                                    onChanged: (value) {
+                                                      ligacao.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Média"),
+                                                  Radio(
+                                                    value: "media",
+                                                    groupValue: ligacao.value,
+                                                    onChanged: (value) {
+                                                      ligacao.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Forte"),
+                                                  Radio(
+                                                    value: "forte",
+                                                    groupValue: ligacao.value,
+                                                    onChanged: (value) {
+                                                      ligacao.value = value!;
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 30),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                "Energia gasta pelo paciente",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("Fraca"),
+                                                  Radio(
+                                                    value: "fraca",
+                                                    groupValue: energiaGastaPaciente.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaPaciente.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Média"),
+                                                  Radio(
+                                                    value: "media",
+                                                    groupValue: energiaGastaPaciente.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaPaciente.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Forte"),
+                                                  Radio(
+                                                    value: "forte",
+                                                    groupValue: energiaGastaPaciente.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaPaciente.value = value!;
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              const Text(
+                                                "Energia gasta pela parte",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text("Fraca"),
+                                                  Radio(
+                                                    value: "fraca",
+                                                    groupValue: energiaGastaParte.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaParte.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Média"),
+                                                  Radio(
+                                                    value: "media",
+                                                    groupValue: energiaGastaParte.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaParte.value = value!;
+                                                    },
+                                                  ),
+                                                  const Text("Forte"),
+                                                  Radio(
+                                                    value: "forte",
+                                                    groupValue: energiaGastaParte.value,
+                                                    onChanged: (value) {
+                                                      energiaGastaParte.value = value!;
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
                                     Navigator.of(context).pop();
-                                    opcaoSelecionada(Icons.circle_outlined, TipoDesenho.circuloEcomapa, tituloController.value.text);
-                                  }
-                                }, 
-                                child: const Text("Adicionar")
-                              ),
-                            ],
-                          );
+                                  }, 
+                                  child: const Text("Cancelar")
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    if(globalKey.currentState!.validate()){
+                                      Navigator.of(context).pop();
+                                      opcaoSelecionada(Icons.circle_outlined, TipoDesenho.circuloEcomapa, tituloController.value.text);
+                                    }
+                                  }, 
+                                  child: const Text("Adicionar")
+                                ),
+                              ],
+                                                        ),
+                            );
                           })
                         );
                       }
@@ -606,49 +609,52 @@ class EcomapaScreen extends HookWidget {
                   labelBackgroundColor: verde,
                   child: const Icon(Icons.text_fields),
                   onTap: () {
+                        TextEditingController textController = TextEditingController();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        TextEditingController textController = TextEditingController();
-                        return AlertDialog(
-                      title: const Text('Digite o Texto da sua Anotação'),
-                      content:TextFormField(
-                        controller: textController,
-                        maxLines: 5,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        cursorColor: preto,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                        return MediaQuery(
+                          data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+                          child: AlertDialog(
+                            title: const Text('Digite o Texto da sua Anotação'),
+                            content:TextFormField(
+                              controller: textController,
+                              maxLines: 5,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              keyboardType: TextInputType.multiline,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black,
+                              ),
+                              cursorColor: preto,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'Anotação',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[400],
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Adicionar'),
+                                onPressed: () {
+                                  opcaoSelecionada(Icons.text_fields, TipoDesenho.texto, textController.text);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
                           ),
-                          hintText: 'Anotação',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancelar'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Adicionar'),
-                          onPressed: () {
-                            opcaoSelecionada(Icons.text_fields, TipoDesenho.texto, textController.text);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
                         );
                       },
                     );

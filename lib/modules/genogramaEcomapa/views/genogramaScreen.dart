@@ -158,169 +158,172 @@ class GenogramaScreen extends HookWidget {
             return ValueListenableBuilder(
               valueListenable: estadoPessoa,
               builder: ((context, value, child) {
-                return AlertDialog(
-                scrollable: true,
-                title: Text("Adicionar Pessoa do Sexo $sexo"),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))
-                ),
-                content: Builder(
-                  builder: (context) {
-                    return Form(
-                      key: globalKey,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: "Nome da Pessoa",
-                                  ),
-                                  controller: nomeController,
-                                ),
-                                const SizedBox(height: 30),
-                                TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: "Idade da Pessoa",
-                                  ),
-                                  controller: idadeController,
-                                  keyboardType: TextInputType.number,
-                                  // only numbers are allowed
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  // max 100 and min 0
-                                  validator: (value) {
-                                    if (value!.isNotEmpty && (int.parse(value) > 100 || int.parse(value) < 0)) {
-                                      return 'Idade inválida';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 30),
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Qual o Estado?",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Radio(
-                                      value: "viva",
-                                      groupValue: estadoPessoa.value,
-                                      onChanged: (value) {
-                                        estadoPessoa.value = value!;
-                                      },
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+                  child: AlertDialog(
+                  scrollable: true,
+                  title: Text("Adicionar Pessoa do Sexo $sexo"),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+                  ),
+                  content: Builder(
+                    builder: (context) {
+                      return Form(
+                        key: globalKey,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: "Nome da Pessoa",
                                     ),
-                                    const Text("Viva"),
-                                    Radio(
-                                      value: "falecida",
-                                      groupValue: estadoPessoa.value,
-                                      onChanged: (value) {
-                                        estadoPessoa.value = value!;
-                                      },
+                                    controller: nomeController,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: "Idade da Pessoa",
                                     ),
-                                    const Text("Falecida"),
-                                    Radio(
-                                      value: "desconhecida",
-                                      groupValue: estadoPessoa.value,
-                                      onChanged: (value) {
-                                        estadoPessoa.value = value!;
-                                      },
-                                    ),
-                                    const Text("Desconhecida"),
-                                  ],
-                                ),
-                                estadoPessoa.value == "falecida" ?
-                                  // motivo do falecimento
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Qual o Motivo do Falecimento?",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      TextFormField(
-                                        decoration: const InputDecoration(
-                                          hintText: "Motivo do Falecimento",
-                                        ),
-                                        controller: motivoFalecimentoController,
-                                      )
+                                    controller: idadeController,
+                                    keyboardType: TextInputType.number,
+                                    // only numbers are allowed
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
                                     ],
-                                  ) : const SizedBox()
-                              ],
+                                    // max 100 and min 0
+                                    validator: (value) {
+                                      if (value!.isNotEmpty && (int.parse(value) > 100 || int.parse(value) < 0)) {
+                                        return 'Idade inválida';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    );
-                  }
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }, 
-                    child: const Text("Cancelar")
+                            const SizedBox(width: 30),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Qual o Estado?",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Radio(
+                                        value: "viva",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Viva"),
+                                      Radio(
+                                        value: "falecida",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Falecida"),
+                                      Radio(
+                                        value: "desconhecida",
+                                        groupValue: estadoPessoa.value,
+                                        onChanged: (value) {
+                                          estadoPessoa.value = value!;
+                                        },
+                                      ),
+                                      const Text("Desconhecida"),
+                                    ],
+                                  ),
+                                  estadoPessoa.value == "falecida" ?
+                                    // motivo do falecimento
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Qual o Motivo do Falecimento?",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          decoration: const InputDecoration(
+                                            hintText: "Motivo do Falecimento",
+                                          ),
+                                          controller: motivoFalecimentoController,
+                                        )
+                                      ],
+                                    ) : const SizedBox()
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
                   ),
-                  TextButton(
-                    onPressed: () {
-                      if(globalKey.currentState!.validate()){
+                  actions: [
+                    TextButton(
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        TipoDesenho desenho = TipoDesenho.semDesenho;
-                        if(sexo == "Masculino") {
-                          desenho = estadoPessoa.value == "viva" ? TipoDesenho.quadrado : estadoPessoa.value == "falecida" ? TipoDesenho.quadradoFalecido : TipoDesenho.quadradoDesconhecido;
+                      }, 
+                      child: const Text("Cancelar")
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if(globalKey.currentState!.validate()){
+                          Navigator.of(context).pop();
+                          TipoDesenho desenho = TipoDesenho.semDesenho;
+                          if(sexo == "Masculino") {
+                            desenho = estadoPessoa.value == "viva" ? TipoDesenho.quadrado : estadoPessoa.value == "falecida" ? TipoDesenho.quadradoFalecido : TipoDesenho.quadradoDesconhecido;
+                          }
+                          if(sexo == "Feminino") {
+                            desenho = estadoPessoa.value == "viva" ? TipoDesenho.circulo : estadoPessoa.value == "falecida" ? TipoDesenho.circuloFalecido : TipoDesenho.circuloDesconhecido;
+                          }
+                          String texto = "";
+                          if(nomeController.value.text.isNotEmpty){
+                            texto = "${nomeController.value.text.trim()[0]}, ";
+                          } else {
+                            texto = "?, ";
+                          }
+                              
+                          if(idadeController.value.text.isNotEmpty){
+                            texto += idadeController.value.text.trim();
+                          } else {
+                            texto += "?";
+                          }
+                              
+                          texto = texto == "?, ?" ? "?" : texto;
+                              
+                          if(motivoFalecimentoController.value.text.isNotEmpty){
+                            texto += "\n${motivoFalecimentoController.value.text.trim()}";
+                          }
+                              
+                          opcaoSelecionada(sexo == "Masculino" ? Icons.square_outlined : Icons.circle_outlined, desenho, preto, texto);
                         }
-                        if(sexo == "Feminino") {
-                          desenho = estadoPessoa.value == "viva" ? TipoDesenho.circulo : estadoPessoa.value == "falecida" ? TipoDesenho.circuloFalecido : TipoDesenho.circuloDesconhecido;
-                        }
-                        String texto = "";
-                        if(nomeController.value.text.isNotEmpty){
-                          texto = "${nomeController.value.text.trim()[0]}, ";
-                        } else {
-                          texto = "?, ";
-                        }
-
-                        if(idadeController.value.text.isNotEmpty){
-                          texto += idadeController.value.text.trim();
-                        } else {
-                          texto += "?";
-                        }
-
-                        texto = texto == "?, ?" ? "?" : texto;
-
-                        if(motivoFalecimentoController.value.text.isNotEmpty){
-                          texto += "\n${motivoFalecimentoController.value.text.trim()}";
-                        }
-
-                        opcaoSelecionada(sexo == "Masculino" ? Icons.square_outlined : Icons.circle_outlined, desenho, preto, texto);
-                      }
-                    }, 
-                    child: const Text("Adicionar")
-                  ),
-                ],
-              );
+                      }, 
+                      child: const Text("Adicionar")
+                    ),
+                  ],
+                                ),
+                );
               })
             );
           }
@@ -672,49 +675,51 @@ class GenogramaScreen extends HookWidget {
                   labelBackgroundColor: verde,
                   child: const Icon(Icons.text_fields),
                   onTap: () {
+                    TextEditingController textController = TextEditingController();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        TextEditingController textController = TextEditingController();
-                        return AlertDialog(
-                      title: const Text('Digite o Texto da sua Anotação'),
-                      content:TextFormField(
-                        controller: textController,
-                        maxLines: 5,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        cursorColor: preto,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: 'Anotação',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[400],
+                        return MediaQuery(
+                          data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+                          child: AlertDialog(
+                                                title: const Text('Digite o Texto da sua Anotação'),
+                                                content:TextFormField(
+                          controller: textController,
+                          maxLines: 5,
+                          keyboardType: TextInputType.multiline,
+                          // textCapitalization: TextCapitalization.sentences,
+                          style: const TextStyle(
                             fontSize: 13,
+                            color: Colors.black,
                           ),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancelar'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Adicionar'),
-                          onPressed: () {
-                            opcaoSelecionada(Icons.text_fields, TipoDesenho.texto, preto, textController.text);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
+                          cursorColor: preto,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            hintText: 'Anotação',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 13,
+                            ),
+                          ),
+                                                ),
+                                                actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancelar'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Adicionar'),
+                            onPressed: () {
+                              opcaoSelecionada(Icons.text_fields, TipoDesenho.texto, preto, textController.text);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                                                ],
+                          ),
                         );
                       },
                     );

@@ -56,6 +56,7 @@ class _PacienteGenogramaState extends State<PacienteGenograma> {
               elementos: snapshot.data ?? [],
               paciente: widget.paciente,
               isGenograma: true,
+              refreshFunction: _refreshGenogramas,
             );
           }
         },

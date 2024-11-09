@@ -54,6 +54,7 @@ class _PacienteEcomapaState extends State<PacienteEcomapa> {
                 elementos: snapshot.data ?? [],
                 paciente: widget.paciente,
                 isGenograma: false,
+                refreshFunction: _refreshEcomapas,
               );
             }
           }
