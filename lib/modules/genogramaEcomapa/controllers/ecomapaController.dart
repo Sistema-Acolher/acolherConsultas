@@ -12,6 +12,16 @@ class PacienteEcomapaController extends ChangeNotifier {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       Map<String, dynamic> ecomapaMap = ecomapa.toMap();
       ecomapaMap['idPaciente'] = pacienteId;
+
+      if(ecomapaMap['id'] != null){
+        String id = ecomapaMap['id'];
+        ecomapaMap.remove('id');
+
+        await firestore.collection("ecomapa").doc(id).update(ecomapaMap);
+        return "Ecomapa atualizado com sucesso!";
+      }
+      ecomapaMap.remove('id');
+      
       await firestore.collection("ecomapa").add(ecomapaMap);
       return "Ecomapa cadastrado com sucesso!";
     }catch(e){
@@ -26,6 +36,7 @@ class PacienteEcomapaController extends ChangeNotifier {
 
     for (var element in querySnapshot.docs) {
       var ecomapaMap = element.data() as Map<String, dynamic>;
+      ecomapaMap['id'] = element.id;
 
       listEcomapas.add(Ecomapa.fromMap(ecomapaMap));
     }

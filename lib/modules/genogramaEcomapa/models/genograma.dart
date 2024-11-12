@@ -10,18 +10,12 @@ import 'package:flutter/material.dart';
 class Genograma {
   final List<ElementosDesenho> elementos;
   final String? id;
-  final double height;
-  final double width;
-  final double scale;
   final Map<String, dynamic> pacienteRaiz;
   DateTime dataCriacao;
 
   Genograma({
     required this.elementos,
     this.id,
-    required this.height,
-    required this.width,
-    required this.scale,
     required this.pacienteRaiz,
     required this.dataCriacao,
   });
@@ -143,9 +137,6 @@ class Genograma {
     return Genograma(
       elementos: elementos ?? this.elementos,
       id: id ?? this.id,
-      height: height ?? this.height,
-      width: width ?? this.width,
-      scale: scale ?? this.scale,
       pacienteRaiz: pacienteRaiz ?? this.pacienteRaiz,
       dataCriacao: dataCriacao ?? this.dataCriacao,
     );
@@ -155,9 +146,6 @@ class Genograma {
     return <String, dynamic>{
       'elementos': elementos.map((x) => x.toMap()).toList(),
       'id': id,
-      'height': height,
-      'width': width,
-      'scale': scale,
       'pacienteRaiz': pacienteRaiz,
       'dataCriacao': dataCriacao,
     };
@@ -167,9 +155,6 @@ class Genograma {
     return Genograma(
       elementos: List<ElementosDesenho>.from((map['elementos']).map<ElementosDesenho>((x) => ElementosDesenho.fromMap(x as Map<String,dynamic>),),),
       id: map['id'] as String,
-      height: map['height'] as double,
-      width: map['width'] as double,
-      scale: map['scale'] as double,
       pacienteRaiz: map['pacienteRaiz'] as Map<String, dynamic>,
       dataCriacao: (map['dataCriacao'] as Timestamp).toDate(),
     );
@@ -181,7 +166,7 @@ class Genograma {
 
   @override
   String toString() {
-    return 'Genograma(elementos: $elementos, id: $id, height: $height, width: $width, scale: $scale, pacienteRaiz: $pacienteRaiz, dataCriacao: $dataCriacao)';
+    return 'Genograma(elementos: $elementos, id: $id, pacienteRaiz: $pacienteRaiz, dataCriacao: $dataCriacao)';
   }
 
   @override
@@ -191,9 +176,6 @@ class Genograma {
     return 
       listEquals(other.elementos, elementos) &&
       other.id == id &&
-      other.height == height &&
-      other.width == width &&
-      other.scale == scale &&
       other.pacienteRaiz == pacienteRaiz &&
       other.dataCriacao == dataCriacao;
   }
@@ -202,9 +184,6 @@ class Genograma {
   int get hashCode {
     return elementos.hashCode ^
       id.hashCode ^
-      height.hashCode ^
-      width.hashCode ^
-      scale.hashCode ^
       pacienteRaiz.hashCode ^
       dataCriacao.hashCode;
   }

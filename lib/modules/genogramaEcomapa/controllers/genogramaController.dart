@@ -12,6 +12,16 @@ class PacienteGenogramaController extends ChangeNotifier {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       Map<String, dynamic> genogramaMap = genograma.toMap();
       genogramaMap['idPaciente'] = pacienteId;
+      
+      if(genogramaMap['id'] != null){
+        String id = genogramaMap['id'];
+        genogramaMap.remove('id');
+
+        await firestore.collection("genograma").doc(id).update(genogramaMap);
+        return "Genograma atualizado com sucesso!";
+      }
+      genogramaMap.remove('id');
+      
       await firestore.collection("genograma").add(genogramaMap);
       return "Genograma cadastrado com sucesso!";
     }catch(e){
@@ -26,6 +36,7 @@ class PacienteGenogramaController extends ChangeNotifier {
 
     for (var element in querySnapshot.docs) {
       var genogramaMap = element.data() as Map<String, dynamic>;
+      genogramaMap['id'] = element.id;
 
       listGenogramas.add(Genograma.fromMap(genogramaMap));
     }

@@ -60,10 +60,6 @@ class GenogramaScreen extends HookWidget {
     final ValueNotifier<Genograma> genograma = useState( genogramaVelho ??
       Genograma(
         elementos: [],
-        id: '1',
-        height: 1000.0,
-        width: 1000.0,
-        scale: 1.0,
         dataCriacao: DateTime.now(),
         pacienteRaiz: {
           'nome': paciente?.nome ?? 'Paciente',
