@@ -28,6 +28,23 @@ class PacienteEcomapaController extends ChangeNotifier {
       return "Erro ao cadastrar ecomapa!";
     }
   }
+
+  // salva um novo ecomapa no banco de dados
+  Future<String> saveNewEcomapa(Ecomapa ecomapa, String pacienteId) async{
+    try{
+      ecomapa.dataCriacao = DateTime.now();
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      Map<String, dynamic> ecomapaMap = ecomapa.toMap();
+      ecomapaMap['idPaciente'] = pacienteId;
+
+      ecomapaMap.remove('id');
+      
+      await firestore.collection("ecomapa").add(ecomapaMap);
+      return "Ecomapa cadastrado com sucesso!";
+    }catch(e){
+      return "Erro ao cadastrar ecomapa!";
+    }
+  }
   
   // retorna todos os ecomapas do paciente em questão
   Future<List<Ecomapa>> getEcomapasPaciente(String idPaciente) async{

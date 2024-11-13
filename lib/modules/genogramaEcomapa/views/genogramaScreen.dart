@@ -519,15 +519,26 @@ class GenogramaScreen extends HookWidget {
                                           }, 
                                           child: const Text("Cancelar")
                                         ),
+                                        if(genogramaVelho != null)
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              genograma.value.dataCriacao = DateTime.now();
+                                              PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
+                                              salvou.value = true;
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text("Salvar")
+                                          ),
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                             genograma.value.dataCriacao = DateTime.now();
-                                            PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
+                                            PacienteGenogramaController().saveNewGenograma(genograma.value, paciente?.id ?? '');
                                             salvou.value = true;
                                             Navigator.of(context).pop();
                                           }, 
-                                          child: const Text("Salvar")
+                                          child: const Text("Salvar novo")
                                         ),
                                       ],
                                     );

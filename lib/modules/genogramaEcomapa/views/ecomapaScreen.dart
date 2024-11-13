@@ -305,15 +305,26 @@ class EcomapaScreen extends HookWidget {
                                       }, 
                                       child: const Text("Cancelar")
                                     ),
+                                    if(ecomapaVelho != null)
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          ecomapa.value.dataCriacao = DateTime.now();
+                                          PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
+                                          salvou.value = true;
+                                          Navigator.of(context).pop();
+                                        }, 
+                                        child: const Text("Salvar")
+                                      ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         ecomapa.value.dataCriacao = DateTime.now();
-                                        PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
+                                        PacienteEcomapaController().saveNewEcomapa(ecomapa.value, paciente?.id ?? '');
                                         salvou.value = true;
                                         Navigator.of(context).pop();
                                       }, 
-                                      child: const Text("Salvar")
+                                      child: const Text("Salvar novo")
                                     ),
                                   ],
                                 );

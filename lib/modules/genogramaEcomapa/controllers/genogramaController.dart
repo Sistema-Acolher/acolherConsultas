@@ -13,13 +13,24 @@ class PacienteGenogramaController extends ChangeNotifier {
       Map<String, dynamic> genogramaMap = genograma.toMap();
       genogramaMap['idPaciente'] = pacienteId;
       
-      if(genogramaMap['id'] != null){
-        String id = genogramaMap['id'];
-        genogramaMap.remove('id');
+      String id = genogramaMap['id'];
+      genogramaMap.remove('id');
 
-        await firestore.collection("genograma").doc(id).update(genogramaMap);
-        return "Genograma atualizado com sucesso!";
-      }
+      await firestore.collection("genograma").doc(id).update(genogramaMap);
+      return "Genograma atualizado com sucesso!";
+    }catch(e){
+      return "Erro ao cadastrar genograma!";
+    }
+  }
+
+  //salva um novo genograma no banco de dados
+  Future<String> saveNewGenograma(Genograma genograma, String pacienteId) async{
+    try{
+      genograma.dataCriacao = DateTime.now();
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      Map<String, dynamic> genogramaMap = genograma.toMap();
+      genogramaMap['idPaciente'] = pacienteId;
+
       genogramaMap.remove('id');
       
       await firestore.collection("genograma").add(genogramaMap);
