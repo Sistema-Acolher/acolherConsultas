@@ -43,4 +43,14 @@ class PacienteGenogramaController extends ChangeNotifier {
 
     return listGenogramas;
   }
+
+  // remove um genograma do banco de dados
+  Future<String> removeGenograma(String idGenograma) async{
+    try{
+      await firestore.collection("genograma").doc(idGenograma).delete();
+      return "Genograma removido com sucesso!";
+    }catch(e){
+      return "Erro ao remover genograma!";
+    }
+  }
 }

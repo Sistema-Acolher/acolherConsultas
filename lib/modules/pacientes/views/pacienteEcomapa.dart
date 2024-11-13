@@ -17,6 +17,7 @@ class PacienteEcomapa extends StatefulWidget {
 
 class _PacienteEcomapaState extends State<PacienteEcomapa> {
   final PacienteEcomapaController controller = PacienteEcomapaController();
+  final ValueNotifier<bool> isRemovingNotifier = ValueNotifier(false);
 
   late Future<List<Ecomapa>> futureEcomapas;
 
@@ -31,6 +32,7 @@ class _PacienteEcomapaState extends State<PacienteEcomapa> {
   }
 
   Future<void> _refreshEcomapas() async {
+    isRemovingNotifier.value = false;
     setState(() {
       _loadEcomapas();
     });
@@ -39,35 +41,67 @@ class _PacienteEcomapaState extends State<PacienteEcomapa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PacienteAppbar(paciente: widget.paciente,),
+      appBar: PacienteAppbar(
+        paciente: widget.paciente,
+      ),
       body: RefreshIndicator(
         onRefresh: _refreshEcomapas,
         child: FutureBuilder(
-          future: futureEcomapas, 
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if(snapshot.hasError) {
-              return const Center(child: Text('Erro ao carregar ecomapas'));
-            } else {
-              return ListaGenogramaEcomapa(
-                elementos: snapshot.data ?? [],
-                paciente: widget.paciente,
-                isGenograma: false,
-                refreshFunction: _refreshEcomapas,
-              );
-            }
-          }
-        ),
+            future: futureEcomapas,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Erro ao carregar ecomapas'));
+              } else {
+                return ValueListenableBuilder(
+                  valueListenable: isRemovingNotifier,
+                  builder: (context, bool isRemoving, _) {
+                    return Stack(
+                      children: [
+                        ListaGenogramaEcomapa(
+                          isRemoving: isRemovingNotifier.value,
+                          elementos: snapshot.data ?? [],
+                          paciente: widget.paciente,
+                          isGenograma: false,
+                          refreshFunction: _refreshEcomapas,
+                        ),
+                        snapshot.data != null && snapshot.data!.isNotEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: FloatingActionButton(
+                                      heroTag: null,
+                                      child: Icon(isRemovingNotifier.value
+                                          ? Icons.close
+                                          : Icons.delete_outlined),
+                                      onPressed: () {
+                                        isRemovingNotifier.value =
+                                            !isRemovingNotifier.value;
+                                      },
+                                    )),
+                              )
+                            : Container(),
+                      ],
+                    );
+                  },
+                );
+              }
+            }),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.push(context, MaterialPageRoute(builder: (context) => EcomapaScreen(paciente: widget.paciente, isEditable: true)));
+          heroTag: null,
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EcomapaScreen(
+                        paciente: widget.paciente, isEditable: true)));
 
-          _refreshEcomapas();
-        }
-      ),
+            _refreshEcomapas();
+          }),
     );
   }
 }

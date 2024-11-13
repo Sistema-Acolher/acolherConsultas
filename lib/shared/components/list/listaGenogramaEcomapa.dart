@@ -1,16 +1,20 @@
+import 'package:acolherconsultas/modules/genogramaEcomapa/controllers/ecomapaController.dart';
+import 'package:acolherconsultas/modules/genogramaEcomapa/controllers/genogramaController.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/ecomapaScreen.dart';
 import 'package:acolherconsultas/modules/genogramaEcomapa/views/genogramaScreen.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class ListaGenogramaEcomapa extends StatefulWidget {
-  const ListaGenogramaEcomapa({super.key, required this.elementos, required this.isGenograma, this.paciente, this.refreshFunction});
+  const ListaGenogramaEcomapa({super.key, required this.elementos, required this.isGenograma, this.paciente, this.refreshFunction, required this.isRemoving});
 
   final List<dynamic> elementos;
   final Paciente? paciente;
   final bool isGenograma;
+  final bool isRemoving;
   final Function? refreshFunction;
 
   @override
@@ -46,6 +50,74 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
               ),
               child: InkWell(
                 onTap: () async {
+                  
+                  if(widget.isRemoving) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Remover"),
+                          content: Text(
+                            widget.isGenograma ?
+                            "Deseja realmente remover este Genograma?" :
+                            "Deseja realmente remover este Ecomapa?"
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Cancelar"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                if(widget.isGenograma) {
+                                  await PacienteGenogramaController().removeGenograma(widget.elementos[index].id).then((value) {
+                                    final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'Sucesso',
+                                          message: 'Genograma removido com sucesso!',
+                                          contentType: ContentType.success,
+                                        ),
+                                        duration: const Duration(seconds: 10),
+                                      );
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(snackBar);
+                                  });
+                                } else {
+                                  await PacienteEcomapaController().removeEcomapa(widget.elementos[index].id).then((value) {
+                                    final snackBar = SnackBar(
+                                        elevation: 0,
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.transparent,
+                                        content: AwesomeSnackbarContent(
+                                          title: 'Sucesso',
+                                          message: 'Ecomapa removido com sucesso!',
+                                          contentType: ContentType.success,
+                                        ),
+                                        duration: const Duration(seconds: 10),
+                                      );
+                                    ScaffoldMessenger.of(context)
+                                      ..hideCurrentSnackBar()
+                                      ..showSnackBar(snackBar);
+                                  });
+                                }
+
+                                widget.refreshFunction?.call();
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Remover"),
+                            ),
+                          ],
+                        );
+                      }
+                    );
+                    return;
+                  }
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -72,8 +144,10 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                       ),
                       // Icone
                       Icon(
+                        widget.isRemoving ? Icons.delete :
                         widget.isGenograma ? Symbols.family_history : Symbols.network_node,
                         size: 30,
+                        color: widget.isRemoving ? Colors.red : Colors.black,
                       ),
                     ],
                   ),

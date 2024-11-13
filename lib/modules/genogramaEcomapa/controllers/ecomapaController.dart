@@ -43,4 +43,14 @@ class PacienteEcomapaController extends ChangeNotifier {
 
     return listEcomapas;
   }
+
+  // remove um ecomapa do banco de dados
+  Future<String> removeEcomapa(String idEcomapa) async{
+    try{
+      await firestore.collection("ecomapa").doc(idEcomapa).delete();
+      return "Ecomapa removido com sucesso!";
+    }catch(e){
+      return "Erro ao remover ecomapa!";
+    }
+  }
 }
