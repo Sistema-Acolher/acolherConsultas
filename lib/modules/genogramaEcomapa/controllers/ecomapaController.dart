@@ -13,17 +13,11 @@ class PacienteEcomapaController extends ChangeNotifier {
       Map<String, dynamic> ecomapaMap = ecomapa.toMap();
       ecomapaMap['idPaciente'] = pacienteId;
 
-      if(ecomapaMap['id'] != null){
-        String id = ecomapaMap['id'];
-        ecomapaMap.remove('id');
-
-        await firestore.collection("ecomapa").doc(id).update(ecomapaMap);
-        return "Ecomapa atualizado com sucesso!";
-      }
+      String id = ecomapaMap['id'];
       ecomapaMap.remove('id');
-      
-      await firestore.collection("ecomapa").add(ecomapaMap);
-      return "Ecomapa cadastrado com sucesso!";
+
+      await firestore.collection("ecomapa").doc(id).update(ecomapaMap);
+      return "Ecomapa atualizado com sucesso!";
     }catch(e){
       return "Erro ao cadastrar ecomapa!";
     }
