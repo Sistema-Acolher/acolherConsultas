@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class ConsultaDropdown extends StatefulWidget {
@@ -51,12 +52,14 @@ class _ConsultaDropdownState extends State<ConsultaDropdown> with SingleTickerPr
           onTap: _toggleDropdown,
           child: Row(
             children: [
-              Text(
+              AutoSizeText(
                 widget.text,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 22
+                  // fontSize: 22
                 ),
+                maxLines: 1,
+                minFontSize: 18,
               ),
               RotationTransition(
                 turns: _arrowAnimation,

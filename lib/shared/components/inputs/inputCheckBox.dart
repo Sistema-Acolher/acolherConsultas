@@ -1,3 +1,4 @@
+import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -8,12 +9,14 @@ class InputCheckBoxAcolher extends StatefulWidget {
     required this.options,
     this.label,
     required this.controller,
+    required this.isChecked
   });
 
   // Atributos do componente.
-  final List<String> options;
+  final List<CasaDeApoio> options;
   final String? label;
   final TextEditingController controller;
+  final ValueNotifier<bool> isChecked;
 
   @override
   State<InputCheckBoxAcolher> createState() => _InputCheckBoxAcolherState();
@@ -21,26 +24,13 @@ class InputCheckBoxAcolher extends StatefulWidget {
 
 class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
   bool checkboxValue = false;
-  bool _isValid = true; // Campo para controlar a validação
+  // bool _isValid = true; // Campo para controlar a validação
 
   // Método para validar se pelo menos um checkbox está marcado
   void validate() {
     setState(() {
-      _isValid = widget.controller.text.isNotEmpty;
+        widget.isChecked.value = true;
     });
-  }
-
-  Color checkboxColor(String casa){
-    if (casa == "Maria Paola") {
-      return const Color.fromRGBO(255, 0, 0, 100);
-    }
-    if (casa == "Servos") {
-      return const Color.fromRGBO(34, 119, 174, 100);
-    }
-    if (casa == "Santa Isabel") {
-      return const Color.fromRGBO(120, 177, 88, 100);
-    }
-    return Colors.black;
   }
 
   @override
@@ -63,15 +53,15 @@ class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
           children: [
             Checkbox(
               activeColor: preto,
-              value: widget.controller.text.contains(widget.options[index]),
+              value: widget.controller.text.contains(widget.options[index].id ?? ""),
               onChanged: (value) {
                 setState(() {
                   // Adiciona ou remove o valor selecionado ao controller de texto.
                   if (value == true) {
-                    widget.controller.text += "${widget.options[index]},";
+                    widget.controller.text += "${widget.options[index].id},";
                   } else {
                     widget.controller.text =
-                        widget.controller.text.replaceAll("${widget.options[index]},", "");
+                        widget.controller.text.replaceAll("${widget.options[index].id},", "");
                   }
                   validate(); // Chama o método de validação quando o valor muda
                 });
@@ -81,7 +71,7 @@ class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.options[index],
+                  widget.options[index].nome ?? "Sem Nome",
                   style: const TextStyle(
                     fontFamily: 'BobbyJonesSoft',
                     fontSize: 20,
@@ -91,14 +81,14 @@ class _InputCheckBoxAcolherState extends State<InputCheckBoxAcolher> {
                 Icon(
                   size: 30,
                   Icons.cottage_outlined,
-                  color: checkboxColor(widget.options[index]),
+                  color: Color(widget.options[index].cor ?? 0),
                 )
               ],
             ),
           ],
         ),
       ),
-      if (!_isValid)
+      if (widget.isChecked.value && widget.controller.text.isEmpty)
         const Text(
           'Selecione pelo menos uma opção.',
           style: TextStyle(

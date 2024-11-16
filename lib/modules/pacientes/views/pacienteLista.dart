@@ -33,9 +33,9 @@ class _PacienteListaState extends State<PacienteLista> {
 
   // Carrega os pacientes do banco, busca todos os pacientes e os filtra de acordo com o campo _busca
   void _filtrarPacientes() {
-    List<CadastroPaciente> todosPacientes = Provider.of<List<CadastroPaciente>>(context)
+    List<CadastroPaciente> todosPacientes = Provider.of<List<CadastroPaciente>>(context, listen: false)
       .where((element) => 
-        element.paciente.casaDeApoioId==Provider.of<CasaDeApoio>(context).id
+        element.paciente.casaDeApoioId==Provider.of<CasaDeApoio>(context, listen: false).id
       ).toList();
     String query = _busca.text.toLowerCase();
 

@@ -4,6 +4,7 @@ const vermelhoEscuro = Color.fromARGB(255, 202, 8, 8);
 const vermelho = Color(0xFFE53935);
 const vermelhoIcon = Color.fromARGB(255, 251, 94, 91);
 const verdeEscuro = Color.fromARGB(255, 24, 117, 60);
+const verdeBotoes = Color(0xFF24964F);
 const verde = Color(0xFF7ED957);
 const verdeIcon = Color.fromARGB(255, 114, 187, 82);
 const azulEscuro = Color(0xFF004AAD);

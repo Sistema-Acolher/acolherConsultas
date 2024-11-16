@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class StandartRoundButton extends StatelessWidget {
   final IconData? icon;
+  final Color color;
   final String text;
   final double horizontalPaddingFactor;
   final double verticalPaddingFactor;
@@ -19,6 +20,7 @@ class StandartRoundButton extends StatelessWidget {
     this.verticalPaddingFactor = 1,
     this.fontSizeFactor = 1,
     this.iconSizeFactor = 1,
+    this.color = verde,
   });
 
   @override
@@ -31,7 +33,7 @@ class StandartRoundButton extends StatelessWidget {
             if (states.contains(MaterialState.disabled)) {
               return Colors.grey;
             }
-            return verde;
+            return color;
           }
         ),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(

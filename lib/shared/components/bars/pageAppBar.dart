@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PageAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const PageAppBar({super.key, required this.titulo, required this.casaDeApoioSelecionada, this.leading});
+  const PageAppBar({super.key, required this.titulo, this.casaDeApoioSelecionada, this.leading});
 
   final String titulo;
   final Widget? leading;
-  final CasaDeApoio casaDeApoioSelecionada;
+  final CasaDeApoio? casaDeApoioSelecionada;
   
   @override
   State<PageAppBar> createState() => _PageAppBarState();
@@ -38,7 +38,7 @@ class _PageAppBarState extends State<PageAppBar> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
-          child: Column(
+          child: widget.casaDeApoioSelecionada !=null ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -46,15 +46,15 @@ class _PageAppBarState extends State<PageAppBar> {
                 height: 28,
                 child: Icon(
                   Icons.cottage_outlined, 
-                  color: Color(widget.casaDeApoioSelecionada.cor ?? 0xFF000000),
+                  color: Color(widget.casaDeApoioSelecionada!.cor ?? 0xFF000000),
                   size: 35,
                 ),
               ),
               Text(
-                widget.casaDeApoioSelecionada.nome != null
-                ? (widget.casaDeApoioSelecionada.nome!.split(" ").length > 1
-                    ? "${widget.casaDeApoioSelecionada.nome!.split(" ")[0]} ${widget.casaDeApoioSelecionada.nome!.split(" ")[1][0]}."
-                    : widget.casaDeApoioSelecionada.nome!)
+                widget.casaDeApoioSelecionada!.nome != null
+                ? (widget.casaDeApoioSelecionada!.nome!.split(" ").length > 1
+                    ? "${widget.casaDeApoioSelecionada!.nome!.split(" ")[0]} ${widget.casaDeApoioSelecionada!.nome!.split(" ")[1][0]}."
+                    : widget.casaDeApoioSelecionada!.nome!)
                 : "",
                 style: const TextStyle(
                   fontFamily: "BobbyJonesSoft",
@@ -62,7 +62,7 @@ class _PageAppBarState extends State<PageAppBar> {
                 ),
               )
             ]
-          )
+          ) : const SizedBox(),
         ),
       ],
     );

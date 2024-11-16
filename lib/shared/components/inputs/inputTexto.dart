@@ -19,6 +19,8 @@ class InputTextoAcolher extends StatefulWidget {
     this.emptyMessage,
     this.checkEdit,
     this.defaultValue,
+    this.firstDate,
+    this.lastDate,
   });
 
   final String label;
@@ -33,6 +35,8 @@ class InputTextoAcolher extends StatefulWidget {
   final String? emptyMessage;
   final Function? checkEdit;
   final String? defaultValue;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   @override
   State<InputTextoAcolher> createState() => _InputTextoAcolherState();
@@ -231,9 +235,9 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
       locale: const Locale('pt', "BR"),
       initialDate: widget.controller.text.isNotEmpty
           ? DateFormat('dd/MM/yyyy').parse(widget.controller.text)
-          : DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+          : widget.lastDate ?? DateTime.now(),
+      firstDate: widget.firstDate ?? DateTime(2000),
+      lastDate: widget.lastDate ?? DateTime.now(),
     );
 
     if (data != null) {
