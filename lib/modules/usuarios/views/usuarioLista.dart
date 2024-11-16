@@ -22,7 +22,7 @@ class _UsuarioListaState extends State<UsuarioLista> {
 
   }
 
-  void _filtrarPacientes() {
+  void _buscarUsuarios() {
     todosUsuarios.value = Provider.of<List<Usuario>>(context)
       .toList();
 
@@ -31,7 +31,7 @@ class _UsuarioListaState extends State<UsuarioLista> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _filtrarPacientes();
+    _buscarUsuarios();
   }
 
   @override

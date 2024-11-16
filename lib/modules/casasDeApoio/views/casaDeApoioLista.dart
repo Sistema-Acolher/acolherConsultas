@@ -21,14 +21,14 @@ class _CasaDeApoioListaState extends State<CasaDeApoioLista> {
     todosCasaDeApoios = ValueNotifier<List<CasaDeApoio>>([]);
   }
 
-  void _filtrarPacientes() {
+  void _buscarCasasDeApoio() {
     todosCasaDeApoios.value = Provider.of<List<CasaDeApoio>>(context)
       .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    _filtrarPacientes();
+    _buscarCasasDeApoio();
     
     return SingleChildScrollView(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 50),
