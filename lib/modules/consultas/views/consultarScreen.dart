@@ -207,7 +207,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
 
                         List<String> pageTitles = [];
                         List<Widget> pageWidgets = [];
-                        if (idade > 12 || sexo == 'Feminino') {
+                        if (idade > 12 && sexo == 'Feminino') {
                           pageTitles = [
                             "Informações Básicas",
                             "Consumo Alimentar",
@@ -340,7 +340,8 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                             "Avaliação Reflexos",
                             "Avaliação Nervos",
                             "Avaliação Psicoemocional",
-                            "Conclusões"
+                            "Conclusões",
+                            "Casa de Apoio"
                           ];
                           pageWidgets = [
                             InformacoesBasicas(state: _consultaState),
@@ -399,6 +400,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                             ),
                             AvaliacaoPsicoemocional(state: _consultaState),
                             ObservacoesFinais(state: _consultaState),
+                            ParaCasa(state: _consultaState)
                           ];
                         }
                         return ExibirConsulta(
