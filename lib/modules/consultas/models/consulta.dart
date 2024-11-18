@@ -525,7 +525,7 @@ class Consulta {
       'usaMetodoContraceptivo': usaMetodoContraceptivo,
       'qualMetodoContraceptivo': qualMetodoContraceptivo,
       'jaFezPreventivo': jaFezPreventivo,
-      'quandoFezPreventivo': quandoFezPreventivo?.millisecondsSinceEpoch,
+      'quandoFezPreventivo': quandoFezPreventivo != null ? Timestamp.fromDate(quandoFezPreventivo!) : null,
       'seMasturba': seMasturba,
       'frequenciaMasturbacao': frequenciaMasturbacao,
       'estagioTurnerMeninosGenitalia': estagioTurnerMeninosGenitalia,

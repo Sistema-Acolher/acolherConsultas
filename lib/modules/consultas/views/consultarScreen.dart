@@ -1064,7 +1064,7 @@ class ExameFisicoCrianca extends StatelessWidget {
                 label: "Fontanelas:",
                 controller: state.fontanelas,
                 validation: (value) => Mask.validations
-                    .generic(value, error: "Nao sei oq inválido", min: 3)),
+                    .generic(value, error: " ", min: 0)),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 5.0),
@@ -1072,7 +1072,7 @@ class ExameFisicoCrianca extends StatelessWidget {
               label: "Coto umbilical:",
               controller: state.cotoUmbilical,
               validation: (value) => Mask.validations
-                  .generic(value, error: "Nao sei oq inválido", min: 3),
+                  .generic(value, error: " ", min: 0),
             ),
           ),
           Padding(
@@ -1432,7 +1432,7 @@ class SaudeSexualReprodutivaMeninas extends StatelessWidget {
               label: "Uso de absorvente (trocas/higienização):",
               controller: state.usoAbsorvente,
               validation: (value) => Mask.validations
-                  .generic(value, error: "Nao sei oq inválido", min: 3),
+                  .generic(value, error: "", min: 0),
             ),
           ),
           InputRadioButtonsConsulta(
