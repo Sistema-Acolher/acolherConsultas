@@ -435,7 +435,9 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                         child: ListaHorario(
                           consultasDoDia: consultasDia,
                           onSelect: (p) => setState(() {
-                            consultaSelecionado = p;
+                            if(p.estado!="concluida") {
+                              consultaSelecionado = p;
+                            }
                           }),
                         ),
                       ),

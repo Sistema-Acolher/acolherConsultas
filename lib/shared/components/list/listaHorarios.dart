@@ -64,8 +64,8 @@ class _ListaHorarioState extends State<ListaHorario> {
                     }
                   },
                   child: Text(
-                    p?.pacienteNome ?? "Vago",
-                    style: TextStyle(color: p==null?const Color(0xFF0AEC57):Colors.black,fontFamily: "MontSerrat",fontSize: 20)
+                    p==null?"Vago":p.estado=="concluida"?"${p.pacienteNome!} (Feita)":p.pacienteNome!,
+                    style: TextStyle(color: p==null?const Color(0xFF0AEC57):p.estado=="concluida"?Colors.blue:Colors.black,fontFamily: "MontSerrat",fontSize: 20)
                   ),
                 ),
                 Text(
