@@ -119,7 +119,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
     // Verifique se consulta é nula
     if (consulta == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Nenhuma consulta selecionada")),
+        const SnackBar(content: Text("Nenhuma consulta selecionada")),
       );
       return;
     }

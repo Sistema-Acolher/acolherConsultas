@@ -1,6 +1,8 @@
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InfoScreen extends StatefulWidget {
   const InfoScreen({super.key});
@@ -17,9 +19,9 @@ class _InfoScreenState extends State<InfoScreen> {
   List<String> titulos = ["Quem Somos", "Objetivo", "Como nos encontrar"];
 
   List<String> textos = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "Somos um programa da UFSJ, coordenado pela Professora Elaine Franco, que tem como inspiração ACOLHER e PROTEGER crianças e adolescentes institucionalizados e desenvolver suas potencialidades.",
+    "O ACOLHER, um programa da UFSJ criado em 2016, tem como objetivo assistir três casas de acolhimento em Divinópolis, por meio da realização de consultas de enfermagem, as quais fornecem às crianças e adolescentes condições para um desenvolvimento saudável, levando em consideração não só fatores biológicos, como também sociais e emocionais. Além disso, são realizadas oficinas que reafirmam a identidade e individualidade dos institucionalizados.",
+    "Acompanhe nossas atividades pelo nosso instagram: @programacolher",
   ];
 
   //list of controllers for the scrollbars
@@ -55,6 +57,16 @@ class _InfoScreenState extends State<InfoScreen> {
 
   // Paradas do "gradiente"
   final listaParadas = [0.25, 0.25, 0.5, 0.5, 0.75, 0.75];
+
+  Future<void> _launchUrl(String url) async {
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Não foi possível conectar ao instagram")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,11 +188,27 @@ class _InfoScreenState extends State<InfoScreen> {
                                   controller: _scrollControllers[index],
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 12, right: 12, top: 22),
-                                    child: Text(
-                                      textos[index],
-                                      style: const TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 14
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: textos[index].split('@programacolher')[0], // Texto antes do hyperlink
+                                        style: const TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 14,
+                                          color: Colors.black, // Certifique-se de usar cores apropriadas
+                                        ),
+                                        children: textos[index].split('@programacolher').length>1?
+                                        [TextSpan(
+                                          text: '@programacolher',
+                                          style: const TextStyle(
+                                            color: Colors.blue,
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              _launchUrl('https://www.instagram.com/programacolher/');
+                                            },
+                                        )]
+                                        :[]
                                       ),
                                       textAlign: TextAlign.justify,
                                     ),
@@ -247,7 +275,7 @@ class _InfoScreenState extends State<InfoScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image(
-                image: const AssetImage('src/images/logoCefet.png'),
+                image: const AssetImage('src/images/LogoACOLHER.jpeg'),
                 width: size.width * 0.2,
               ),
               Image(
