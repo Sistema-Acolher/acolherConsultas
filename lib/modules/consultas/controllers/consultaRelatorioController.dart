@@ -31,8 +31,9 @@ class ConsultaRelatorioController extends ChangeNotifier {
       return 
         consulta.dataHorario.isAfter(relatorio.periodoInicial) &&
         consulta.dataHorario.isBefore(relatorio.periodoFinal) &&
-        relatorio.casas.contains(consulta.casaDeApoioId) &&
-        consulta.estado == "concluida";
+        consulta.estado == "concluida" &&
+        consulta.dadosConsulta != null &&
+        relatorio.casas.contains(consulta.casaDeApoioId);
     }).toList();
     
     consultasFiltradas.sort((a, b) => a.dataHorario.compareTo(b.dataHorario));

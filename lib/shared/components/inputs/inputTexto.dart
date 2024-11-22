@@ -21,7 +21,8 @@ class InputTextoAcolher extends StatefulWidget {
     this.defaultValue,
     this.firstDate,
     this.lastDate,
-  });
+    this.enabled = true,
+  }) : assert(readOnly == null || enabled, 'Se readOnly for true, enabled deve ser true');
 
   final String label;
   final String? placeHolder;
@@ -37,6 +38,7 @@ class InputTextoAcolher extends StatefulWidget {
   final String? defaultValue;
   final DateTime? firstDate;
   final DateTime? lastDate;
+  final bool enabled;
 
   @override
   State<InputTextoAcolher> createState() => _InputTextoAcolherState();
@@ -90,7 +92,8 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
             padding: const EdgeInsets.only(bottom: 5),
             child: TextFormField(
               initialValue: widget.defaultValue,
-              enabled: !calculateReadOnly(),
+              readOnly: calculateReadOnly(),
+              enabled: widget.enabled,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               style: TextStyle(
                 fontFamily: "Montserrat",
