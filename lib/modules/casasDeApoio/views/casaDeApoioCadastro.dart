@@ -89,7 +89,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                   validation: (value) => Mask.validations
                       .generic(value, error: "Nome inválido", min: 3),
                   inputFormatter: [
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F' ]")),
                     LengthLimitingTextInputFormatter(50),
                   ],
                   emptyMessage: "Informe o nome",
@@ -126,7 +126,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                       .generic(value, error: "Rua inválida", min: 1),
                   inputFormatter: [
                     // permite apenas letras, espaços e números
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9 ]")),
+                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F' 0-9]")),
                     LengthLimitingTextInputFormatter(50),
                   ],
                   emptyMessage: "Informe a rua",
@@ -164,7 +164,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                       .generic(value, error: "Bairro inválido", min: 1),
                   inputFormatter: [
                     // permite apenas letras, espaços e números
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9 ]")),
+                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F' 0-9]")),
                     LengthLimitingTextInputFormatter(50),
                   ],
                   emptyMessage: "Informe o bairro",
@@ -183,7 +183,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                       .generic(value, error: "Cidade inválida", min: 3),
                   inputFormatter: [
                     // permite apenas letras e espaços
-                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                    FilteringTextInputFormatter.allow(RegExp("[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F' ]")),
                     LengthLimitingTextInputFormatter(60),
                   ],
                   emptyMessage: "Informe a cidade",

@@ -169,7 +169,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                       controller: widget.cadastroPacienteState.nomeEscola,
                       keyboardType: TextInputType.name,
                       inputFormatter: [
-                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")),
+                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F' 0-9]")),
                         LengthLimitingTextInputFormatter(50),
                       ],
                       emptyMessage: "Informe a escola:",
