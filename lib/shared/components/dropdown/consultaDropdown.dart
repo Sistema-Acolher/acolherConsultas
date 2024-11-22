@@ -48,27 +48,30 @@ class _ConsultaDropdownState extends State<ConsultaDropdown> with SingleTickerPr
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: _toggleDropdown,
-          child: Row(
-            children: [
-              AutoSizeText(
-                widget.text,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  // fontSize: 22
+        Padding(
+          padding: const EdgeInsets.only(left: 2.0),
+          child: GestureDetector(
+            onTap: _toggleDropdown,
+            child: Row(
+              children: [
+                AutoSizeText(
+                  widget.text,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline
+                  ),
+                  maxLines: 1,
+                  minFontSize: 18,
                 ),
-                maxLines: 1,
-                minFontSize: 18,
-              ),
-              RotationTransition(
-                turns: _arrowAnimation,
-                child: const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  size: 35,
+                RotationTransition(
+                  turns: _arrowAnimation,
+                  child: const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    size: 30,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         SizeTransition(

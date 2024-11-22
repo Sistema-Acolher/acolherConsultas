@@ -15,16 +15,16 @@ class InputDynamicTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool isDualField;
 
-  InputDynamicTextField({
-    Key? key,
+  const InputDynamicTextField({
+    super.key,
     required this.label,
     required this.inputValues,
     this.controller,
     this.isDualField = false,
-  }) : super(key: key);
+  });
 
   @override
-  _InputDynamicTextFieldState createState() => _InputDynamicTextFieldState();
+  State<InputDynamicTextField> createState() => _InputDynamicTextFieldState();
 }
 
 class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
@@ -73,7 +73,7 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Text(
             widget.label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),
         // Render each entry in inputValues if it exists
@@ -96,14 +96,14 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                             widget.inputValues[index] = val;
                             _updateController();
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
                         ),
                       ),
                       IconButton(
                         onPressed: () => _removeField(index),
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                       ),
                     ],
                   ),
@@ -119,7 +119,7 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                                 value.name = val;
                                 _updateController();
                               },
-                              decoration: InputDecoration(    
+                              decoration: const InputDecoration(    
                                 labelText: 'Nome',                            
                                 border: OutlineInputBorder(),
                               ),
@@ -127,12 +127,12 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                           ),
                           IconButton(
                             onPressed: () => _removeField(index),
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                           ),
                         ],
                       ),
                       if (widget.isDualField) ...[
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
                             Expanded(
@@ -141,20 +141,20 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
                                   value.location = val;
                                   _updateController();
                                 },
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Local',
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: TextField(
                                 onChanged: (val) {
                                   value.hour = val;
                                   _updateController();
                                 },
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Horário',
                                   border: OutlineInputBorder(),
                                 ),
@@ -168,11 +168,11 @@ class _InputDynamicTextFieldState extends State<InputDynamicTextField> {
               ],
             ),
           );
-        }).toList(),
+        }),
         // "+" button to add a new entry
         IconButton(
           onPressed: _addNewField,
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
         ),
       ],
     );

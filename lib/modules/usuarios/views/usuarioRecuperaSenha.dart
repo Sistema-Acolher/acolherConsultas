@@ -224,7 +224,7 @@ class _UsuarioRecuperaSenhaScreenState
       await context.read<UsuarioController>().auth.sendPasswordResetEmail(email: _usuarioLoginController.email.text).then(
         (value) {
           Navigator.pop(context, true);
-          final snackBar = SnackBar(
+          const snackBar = SnackBar(
             elevation: 0,
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.transparent,
@@ -234,7 +234,7 @@ class _UsuarioRecuperaSenhaScreenState
                   'Um link de recuperação foi enviado para o e-mail indicado.',
               contentType: ContentType.help,
             ),
-            duration: const Duration(seconds: 10),
+            duration: Duration(seconds: 10),
           );
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()

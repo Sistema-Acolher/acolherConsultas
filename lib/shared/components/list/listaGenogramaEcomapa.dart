@@ -73,7 +73,7 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                               onPressed: () async {
                                 if(widget.isGenograma) {
                                   await PacienteGenogramaController().removeGenograma(widget.elementos[index].id).then((value) {
-                                    final snackBar = SnackBar(
+                                    const snackBar = SnackBar(
                                         elevation: 0,
                                         behavior: SnackBarBehavior.floating,
                                         backgroundColor: Colors.transparent,
@@ -82,7 +82,7 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                                           message: 'Genograma removido com sucesso!',
                                           contentType: ContentType.success,
                                         ),
-                                        duration: const Duration(seconds: 10),
+                                        duration: Duration(seconds: 10),
                                       );
                                     ScaffoldMessenger.of(context)
                                       ..hideCurrentSnackBar()
@@ -90,7 +90,7 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                                   });
                                 } else {
                                   await PacienteEcomapaController().removeEcomapa(widget.elementos[index].id).then((value) {
-                                    final snackBar = SnackBar(
+                                    const snackBar = SnackBar(
                                         elevation: 0,
                                         behavior: SnackBarBehavior.floating,
                                         backgroundColor: Colors.transparent,
@@ -99,7 +99,7 @@ class _ListaGenogramaEcomapaState extends State<ListaGenogramaEcomapa> {
                                           message: 'Ecomapa removido com sucesso!',
                                           contentType: ContentType.success,
                                         ),
-                                        duration: const Duration(seconds: 10),
+                                        duration: Duration(seconds: 10),
                                       );
                                     ScaffoldMessenger.of(context)
                                       ..hideCurrentSnackBar()

@@ -240,7 +240,7 @@ class _UsuarioLoginScreenState extends State<UsuarioLoginScreen> with TickerProv
                                 iconSize: 34,
                                 onPressed: () {
                                   Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => InfoScreen()
+                                    MaterialPageRoute(builder: (context) => const InfoScreen()
                                   ));
                                 }, 
                                 icon: const Icon(Icons.info_outlined, color: preto,)

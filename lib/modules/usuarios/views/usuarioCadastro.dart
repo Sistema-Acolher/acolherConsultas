@@ -372,7 +372,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           // Snackbar informando que um email de verificação foi enviado
-          final snackBar = SnackBar(
+          const snackBar = SnackBar(
                   elevation: 0,
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.transparent,
@@ -382,7 +382,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                         'Um e-mail de verificação foi enviado para o e-mail cadastrado.',
                     contentType: ContentType.help,
                   ),
-                  duration: const Duration(seconds: 10),
+                  duration: Duration(seconds: 10),
                 );
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -425,7 +425,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
 
-          final snackBar = SnackBar(
+          const snackBar = SnackBar(
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
@@ -435,7 +435,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                       'Usuário atualizado com sucesso!',
                   contentType: ContentType.success,
                 ),
-                duration: const Duration(seconds: 10),
+                duration: Duration(seconds: 10),
               );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()

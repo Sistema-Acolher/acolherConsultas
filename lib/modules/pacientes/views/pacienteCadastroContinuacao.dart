@@ -66,7 +66,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                           await Connectivity().checkConnectivity().then((value) {
                             if (value[0] == ConnectivityResult.none) {
                               Navigator.pop(actualContext);  // Fecha o diálogo de carregamento
-                              final snackBar = SnackBar(
+                              const snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
@@ -75,7 +75,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                                   message: 'Sem conexão com a internet',
                                   contentType: ContentType.failure,
                                 ),
-                                duration: const Duration(seconds: 10),
+                                duration: Duration(seconds: 10),
                               );
                               ScaffoldMessenger.of(actualContext)
                                 ..hideCurrentSnackBar()
@@ -126,7 +126,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
 
                           // Confirma o sucesso da operação (sem erro e com conexão)
                           if (!erro) {
-                            final snackBar = SnackBar(
+                            const snackBar = SnackBar(
                               elevation: 0,
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: Colors.transparent,
@@ -135,7 +135,7 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                                 message: 'Paciente Cadastrado',
                                 contentType: ContentType.success,
                               ),
-                              duration: const Duration(seconds: 10),
+                              duration: Duration(seconds: 10),
                             );
                             ScaffoldMessenger.of(context)
                               ..hideCurrentSnackBar()

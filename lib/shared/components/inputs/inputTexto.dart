@@ -90,7 +90,7 @@ class _InputTextoAcolherState extends State<InputTextoAcolher> {
             padding: const EdgeInsets.only(bottom: 5),
             child: TextFormField(
               initialValue: widget.defaultValue,
-              readOnly: calculateReadOnly(),
+              enabled: !calculateReadOnly(),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               style: TextStyle(
                 fontFamily: "Montserrat",

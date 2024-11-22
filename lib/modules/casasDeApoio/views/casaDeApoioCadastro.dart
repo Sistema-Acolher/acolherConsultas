@@ -332,7 +332,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
 
-        final snackBar = SnackBar(
+        const snackBar = SnackBar(
                 elevation: 0,
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.transparent,
@@ -342,7 +342,7 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
                       'Casa de Apoio atualizada com sucesso!',
                   contentType: ContentType.success,
                 ),
-                duration: const Duration(seconds: 10),
+                duration: Duration(seconds: 10),
               );
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()

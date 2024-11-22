@@ -130,7 +130,7 @@ class _VerificaEmailScreenState extends State<VerificaEmailScreen> {
                         LoginButton(
                           onPressed: reenviarEmail ? () async {
                             await context.read<UsuarioController>().enviarEmailVerificacao().then((value) {
-                              final snackBar = SnackBar(
+                              const snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
@@ -140,7 +140,7 @@ class _VerificaEmailScreenState extends State<VerificaEmailScreen> {
                                       'Outro e-mail de verificação foi enviado para o e-mail cadastrado.',
                                   contentType: ContentType.help,
                                 ),
-                                duration: const Duration(seconds: 10),
+                                duration: Duration(seconds: 10),
                               );
                               ScaffoldMessenger.of(context)
                                 ..hideCurrentSnackBar()

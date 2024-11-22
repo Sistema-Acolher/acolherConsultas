@@ -177,7 +177,7 @@ class UsuarioController extends ChangeNotifier {
               if(_auth.currentUser!.emailVerified){
                 showLoading(context);
                 _emailVerificado.value = _auth.currentUser!.emailVerified;
-                final snackBar = SnackBar(
+                const snackBar = SnackBar(
                   elevation: 0,
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.transparent,
@@ -187,7 +187,7 @@ class UsuarioController extends ChangeNotifier {
                         'Seu e-mail foi verificado com sucesso!',
                     contentType: ContentType.success,
                   ),
-                  duration: const Duration(seconds: 10),
+                  duration: Duration(seconds: 10),
                 );
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context)
@@ -210,7 +210,7 @@ class UsuarioController extends ChangeNotifier {
     await _auth.currentUser!.reload().then((value) => Navigator.pop(context));
     _emailVerificado.value = _auth.currentUser!.emailVerified;
     if(_auth.currentUser!.emailVerified){
-      final snackBar = SnackBar(
+      const snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.transparent,
@@ -220,13 +220,13 @@ class UsuarioController extends ChangeNotifier {
               'Seu e-mail foi verificado com sucesso!',
           contentType: ContentType.success,
         ),
-        duration: const Duration(seconds: 10),
+        duration: Duration(seconds: 10),
       );
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
     } else {
-      final snackBar = SnackBar(
+      const snackBar = SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.transparent,
@@ -236,7 +236,7 @@ class UsuarioController extends ChangeNotifier {
               'Seu e-mail ainda não foi verificado.',
           contentType: ContentType.failure,
         ),
-        duration: const Duration(seconds: 10),
+        duration: Duration(seconds: 10),
       );
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()

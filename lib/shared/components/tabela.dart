@@ -3,7 +3,6 @@ import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/shared/colors.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

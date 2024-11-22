@@ -28,6 +28,13 @@ class ConsultaRelatorioInstituicao extends StatelessWidget {
         child: PageAppBar(
           titulo: "Relatório",
           casaDeApoioSelecionada: Provider.of<CasaDeApoio>(context),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context)
+          ),
         ),
       ),
       body: SingleChildScrollView(

@@ -1,7 +1,6 @@
 import 'package:acolherconsultas/modules/consultas/controllers/consultaController.dart';
 import 'package:acolherconsultas/modules/consultas/models/consulta.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultaAgendar.dart';
-import 'package:acolherconsultas/modules/consultas/views/consultaRelatorioInstituicao.dart';
 import 'package:acolherconsultas/modules/consultas/views/consultarScreen.dart';
 import 'package:acolherconsultas/modules/pacientes/models/paciente.dart';
 import 'package:acolherconsultas/shared/components/buttons/circleButton.dart';
@@ -36,12 +35,7 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
     if (widget.listaConsulta != null) {
       return Column(
         children: [
-          for (int i = 0;
-              i <
-                  (widget.listaConsulta!.length >= 3
-                      ? 3
-                      : widget.listaConsulta!.length);
-              i++)
+          for (int i = 0; i < (widget.listaConsulta!.length >= 3 ? 3 : widget.listaConsulta!.length); i++)
             _buildListItem(widget.listaConsulta![i]),
           if (widget.listaConsulta!.length > 3)
             Padding(
@@ -130,9 +124,9 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
               if (item.estado == "concluida") {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ConsultaRelatorioInstituicao(
-                      consultaCadastro: item,
-                      eInstituicao: widget.eInstituicao ?? false,
+                    builder: (context) => ConsultarScreen(
+                      readOnly: true,
+                      dadosConsulta: item,
                     ),
                   ),
                 );
@@ -183,25 +177,6 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
                   },
                 ),
               ),
-              if (widget.eInstituicao == true)
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: CircleButton(
-                    title: "Relatório",
-                    icon: Icons.insert_drive_file_outlined,
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ConsultaRelatorioInstituicao(
-                            consultaCadastro: consulta,
-                            eInstituicao: widget.eInstituicao ?? false,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: CircleButton(
@@ -229,10 +204,8 @@ class _ListaComIconeConsultasState extends State<ListaComIconeConsultas> {
             widget.label,
             style: const TextStyle(decoration: TextDecoration.underline),
           ),
-          contentPadding:
-              const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+          contentPadding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
           scrollable: true,
           content: Column(
             children: [
