@@ -196,7 +196,7 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                       obscureText: true,
                       emptyMessage: "Informe a senha",
                     ) : const SizedBox(),
-                    if(mostrarErroFirebase && erroFirebase.contains("senha") && widget.usuario != null)
+                    if(mostrarErroFirebase && erroFirebase.contains("senha") && widget.usuario == null)
                       Text(
                         erroFirebase,
                         style: const TextStyle(
