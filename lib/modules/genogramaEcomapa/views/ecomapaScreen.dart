@@ -184,50 +184,91 @@ class EcomapaScreen extends HookWidget {
                     double largura = MediaQuery.of(context).size.width;
                     double distanciaRelativaAltura = altura * 0.2;
                     double distanciaRelativaLargura = largura * 0.2;
-                    // Mover para a direita
-                    if(largura - details.localFocalPoint.dx < distanciaRelativaLargura && lastFocalPoint.dx - details.localFocalPoint.dx <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
-                      changeTransformations(
-                        viewTransformationController, 
-                        viewTransformationController.value.value.getMaxScaleOnAxis(), 
-                        -viewTransformationController.value.value.getTranslation()[0] + (4), 
-                        -viewTransformationController.value.value.getTranslation()[1]
-                      );
-                    }
-                    // Mover para a baixo
-                    if(showAppBar.value){
+
+                    // Ajusta para a barra de aplicativo, se visível
+                    if (showAppBar.value) {
                       altura -= MediaQuery.of(context).padding.top;
                       altura -= kToolbarHeight;
                     }
-                    if(altura - details.localFocalPoint.dy < distanciaRelativaAltura && lastFocalPoint.dy - details.localFocalPoint.dy <= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
-                      changeTransformations(
-                        viewTransformationController,
-                        viewTransformationController.value.value.getMaxScaleOnAxis(), 
-                        -viewTransformationController.value.value.getTranslation()[0], 
-                        -viewTransformationController.value.value.getTranslation()[1] + (4)
-                      );
+
+                    // Obtém o escala e a translação atuais
+                    Matrix4 matrix = viewTransformationController.value.value;
+                    double scale = matrix.getMaxScaleOnAxis();
+
+                    // Acessa os componentes de translação diretamente da matriz
+                    double tx = matrix[12]; // Equivalente a matrix.m14
+                    double ty = matrix[13]; // Equivalente a matrix.m24
+
+                    double viewportWidth = largura;
+                    double viewportHeight = altura;
+
+                    double dx = 0;
+                    double dy = 0;
+
+                    // Determina os incrementos de movimento
+                    // Move para a direita
+                    if (largura - details.localFocalPoint.dx < distanciaRelativaLargura &&
+                        lastFocalPoint.dx - details.localFocalPoint.dx <= 0 &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaVertical) {
+                      dx = -4; // Negativo para mover para a direita
                     }
-                    // Mover para esquerda
-                    if(details.localFocalPoint.dx < distanciaRelativaLargura * 1.5 && lastFocalPoint.dx - details.localFocalPoint.dx >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaVertical){
-                      changeTransformations(
-                        viewTransformationController, 
-                        viewTransformationController.value.value.getMaxScaleOnAxis(), 
-                        -viewTransformationController.value.value.getTranslation()[0] - (4), 
-                        -viewTransformationController.value.value.getTranslation()[1]
-                      );
+
+                    // Move para a esquerda
+                    if (details.localFocalPoint.dx < distanciaRelativaLargura * 1.5 &&
+                        lastFocalPoint.dx - details.localFocalPoint.dx >= 0 &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaVertical) {
+                      dx = 4; // Positivo para mover para a esquerda
                     }
-                    // Mover para cima
-                    if(details.localFocalPoint.dy < distanciaRelativaAltura && lastFocalPoint.dy - details.localFocalPoint.dy >= 0 && desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal && desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao){
-                      changeTransformations(
-                        viewTransformationController, 
-                        viewTransformationController.value.value.getMaxScaleOnAxis(), 
-                        -viewTransformationController.value.value.getTranslation()[0], 
-                        -viewTransformationController.value.value.getTranslation()[1] - (4)
-                      );
+
+                    // Move para baixo
+                    if (altura - details.localFocalPoint.dy < distanciaRelativaAltura &&
+                        lastFocalPoint.dy - details.localFocalPoint.dy <= 0 &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao) {
+                      dy = -4; // Negativo para mover para baixo
                     }
+
+                    // Move para cima
+                    if (details.localFocalPoint.dy < distanciaRelativaAltura &&
+                        lastFocalPoint.dy - details.localFocalPoint.dy >= 0 &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaHorizontal &&
+                        desenhoAtual.value.tipo != TipoDesenho.linhaSeparacao) {
+                      dy = 4; // Positivo para mover para cima
+                    }
+
+                    // Atualiza os valores de translação
+                    tx += dx;
+                    ty += dy;
+
+                    // Calcula os valores mínimos e máximos de translação
+                    double minX = viewportWidth - (4000 * scale);
+                    double maxX = 0;
+                    double minY = viewportHeight - (2000 * scale);
+                    double maxY = 0;
+
+                    // Trata casos em que o conteúdo é menor que o viewport
+                    if (minX > maxX) {
+                      minX = maxX = (viewportWidth - (4000 * scale)) / 2;
+                    }
+                    if (minY > maxY) {
+                      minY = maxY = (viewportHeight - (2000 * scale)) / 2;
+                    }
+
+                    // Restringe os valores de translação para evitar excesso de rolagem
+                    tx = tx.clamp(minX, maxX);
+                    ty = ty.clamp(minY, maxY);
+
+                    // Atualiza a matriz de transformação
+                    Matrix4 newMatrix = Matrix4.identity()
+                      ..scale(scale)
+                      ..translate(tx / scale, ty / scale);
+
+                    viewTransformationController.value.value = newMatrix;
+
                     lastFocalPoint = details.localFocalPoint;
                   }
                 },
-                boundaryMargin: const EdgeInsets.all(100),
+                // boundaryMargin: const EdgeInsets.all(100),
                 panEnabled: !desenhoAtivo.value,
                 scaleEnabled: !desenhoAtivo.value,
                 transformationController: viewTransformationController.value,
