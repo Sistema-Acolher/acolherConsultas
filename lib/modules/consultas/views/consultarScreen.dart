@@ -1058,6 +1058,7 @@ class EstagioDeTurnerMeninos extends StatelessWidget {
             height: 500, // Ajuste o tamanho conforme necessário
           ),
           InputRadioButtonsConsulta(
+            readOnly: readOnly,
             options: const ["G1", "G2", "G3", "G4", "G5"],
             label: "ESTÁGIOS DE TURNER GENITALIA",
             controller: state.estagioTurnerMeninosGenitalia,
@@ -1065,6 +1066,7 @@ class EstagioDeTurnerMeninos extends StatelessWidget {
           ),
           const SizedBox(height: 10.0),
           InputCaixaDeTexto(
+            readOnly: readOnly,
             label: "ESTÁGIOS DE TURNER PELOS PUBIANOS",
             controller: state.estagioTurnerMeninosPelosPubianos,
             isCadastro: true,
