@@ -659,6 +659,7 @@ class ExameFisicoCrianca extends StatelessWidget {
                   flex: 1,
                   child: InputTextoAcolher(
                     readOnly: readOnly,
+                    keyboardType: TextInputType.number,
                     label: "Comprimento",
                     placeHolder: "cm",
                     controller: state.comprimento,
@@ -669,6 +670,7 @@ class ExameFisicoCrianca extends StatelessWidget {
                   flex: 1,
                   child: InputTextoAcolher(
                     readOnly: readOnly,
+                    keyboardType: TextInputType.number,
                     label: "Peso",
                     placeHolder: "kg",
                     controller: state.peso,
