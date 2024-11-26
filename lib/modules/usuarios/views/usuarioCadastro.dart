@@ -91,7 +91,6 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PacienteAppbar(admin: true),
-      resizeToAvoidBottomInset: false,
       floatingActionButton: Visibility(
         visible: infoAlterada(),
         child: StandartRoundButton(
