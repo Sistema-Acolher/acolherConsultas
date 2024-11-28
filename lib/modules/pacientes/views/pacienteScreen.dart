@@ -34,15 +34,17 @@ class PacienteScreen extends StatelessWidget {
                 text: "Observações",
                 icon: Icons.comment_outlined,
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        PacienteObservacoes(paciente: paciente, eInstituicao: true))),
+                    builder: (context) => PacienteObservacoes(
+                        paciente: paciente, eInstituicao: true))),
               ),
               BigRoundButton(
                 text: "Observações",
                 icon: Icons.comment_outlined,
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        PacienteObservacoes(paciente: paciente,  eInstituicao: true,))),
+                    builder: (context) => PacienteObservacoes(
+                          paciente: paciente,
+                          eInstituicao: true,
+                        ))),
               ),
             ]
           : null,

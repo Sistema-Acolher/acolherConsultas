@@ -25,7 +25,9 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
 
   void loadConsultas() {
     consultasPaciente = Provider.of<List<ConsultaCadastro>>(context)
-        .where((element) => element.pacienteId == widget.paciente.id && element.estado == "concluida")
+        .where((element) =>
+            element.pacienteId == widget.paciente.id &&
+            element.estado == "concluida")
         .sorted((a, b) => b.dataHorario.compareTo(a.dataHorario));
   }
 
@@ -64,9 +66,7 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
                 vertical: VisualDensity.minimumDensity),
             padding: EdgeInsets.zero,
             icon: Icon(
-              item.estado == "concluida"
-                  ? Icons.remove_red_eye
-                  : null,
+              item.estado == "concluida" ? Icons.remove_red_eye : null,
               size: 30,
             ),
             onPressed: () {
@@ -74,12 +74,12 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ConsultaRelatorioInstituicao(
-                      consultaCadastro: item, 
-                      eInstituicao: false,
+                      consultaCadastro: item,
+                      eInstituicao: widget.eInstituicao!,
                     ),
                   ),
                 );
-              } 
+              }
             },
           )
         ],
@@ -95,12 +95,12 @@ class _ConsultaListaState extends State<PacienteObservacoes> {
           paciente: widget.paciente,
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10, right: 10),
+          padding:
+              const EdgeInsets.only(top: 10, left: 10, bottom: 10, right: 10),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                for (var item in consultasPaciente)
-                  _buildListItem(item),
+                for (var item in consultasPaciente) _buildListItem(item),
               ],
             ),
           ),
