@@ -12,6 +12,7 @@ import 'package:acolherconsultas/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 //Generate appropriate comments for the code at the top of the class and its functions in portuguese
 
@@ -25,6 +26,11 @@ class MyApp extends StatelessWidget {
     // O MultiProvider é um widget que permite que vários provedores de estado sejam usados em um único widget.
     return MultiProvider(
       providers: [
+        // Provider de Internet, Para informar o usuario de caso o sistema estar offline.
+        StreamProvider<List<ConnectivityResult>>(
+          create: (context) => Connectivity().onConnectivityChanged,
+          initialData: const [ConnectivityResult.none],
+        ),
         // O ChangeNotifierProvider é um provedor de estado que notifica os 'ouvintes' quando o objeto fornecido muda.
         StreamProvider<List<CadastroPaciente>>(
           create: (context) => PacientesController().pacientesStream,

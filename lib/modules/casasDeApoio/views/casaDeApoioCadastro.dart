@@ -13,6 +13,7 @@ import 'package:mask/mask/mask.dart';
 import 'package:mask/models/hashtag_is.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; 
 
 class CadastroCasaDeApoioScreen extends StatefulWidget {
   const CadastroCasaDeApoioScreen({super.key, this.casaDeApoio});
@@ -292,61 +293,90 @@ class _CadastroCasaDeApoioScreenState extends State<CadastroCasaDeApoioScreen> {
     return false;
   }
 
-  cadastrar() async{
+  cadastrar() async {
     context.read<CasaDeApoioController>().showLoading(context);
     
+    var statusConexao = context.read<List<ConnectivityResult>>();
+    bool isOffline = statusConexao.contains(ConnectivityResult.none);
+    
     final cadastro = _casaDeApoioState.cadastroCasaDeApoio();
-    await context.read<CasaDeApoioController>().criarCasaDeApoio(cadastro).then(
-      (value) {
+
+    if (isOffline) {
+      context.read<CasaDeApoioController>().criarCasaDeApoio(cadastro);
+      
+      Navigator.of(context).pop(); // Fecha o loading
+      Navigator.of(context).pop(); // Fecha a tela
+      
+      final snackBar = SnackBar(
+        elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Salvo Localmente',
+          message: 'Sem internet. Os dados foram salvos no aparelho e serão sincronizados em breve.',
+          contentType: ContentType.warning,
+        ),
+        duration: const Duration(seconds: 6),
+      );
+      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+    } else {
+      await context.read<CasaDeApoioController>().criarCasaDeApoio(cadastro).then((value) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         
-        const snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Sucesso',
-                  message:
-                      'Casa de Apoio cadastrada com sucesso!',
-                  contentType: ContentType.success,
-                ),
-                duration: Duration(seconds: 10),
-              );
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      }
-      );
+        final snackBar = SnackBar(
+          elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Sucesso',
+            message: 'Casa de Apoio cadastrada com sucesso!',
+            contentType: ContentType.success,
+          ),
+          duration: const Duration(seconds: 6),
+        );
+        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+      });
+    }
   }
 
-  atualizar() async{
+  atualizar() async {
     context.read<CasaDeApoioController>().showLoading(context);
     
-    // Cria um objeto de usuário e tenta atualizar no firebase
+    var statusConexao = context.read<List<ConnectivityResult>>();
+    bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
     final cadastro = _casaDeApoioState.cadastroCasaDeApoio();
     cadastro.id = widget.casaDeApoio?.id;
-    await context.read<CasaDeApoioController>().atualizarCasaDeApoio(cadastro.toMap()).then(
-      (value) {
+
+    if (isOffline) {
+      context.read<CasaDeApoioController>().atualizarCasaDeApoio(cadastro.toMap());
+      
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+
+      final snackBar = SnackBar(
+        elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Salvo Localmente',
+          message: 'Sem internet. As alterações foram salvas e serão sincronizadas em breve.',
+          contentType: ContentType.warning,
+        ),
+        duration: const Duration(seconds: 6),
+      );
+      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+    } else {
+      await context.read<CasaDeApoioController>().atualizarCasaDeApoio(cadastro.toMap()).then((value) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
 
-        const snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Sucesso',
-                  message:
-                      'Casa de Apoio atualizada com sucesso!',
-                  contentType: ContentType.success,
-                ),
-                duration: Duration(seconds: 10),
-              );
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      }
-    );
+        final snackBar = SnackBar(
+          elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Sucesso',
+            message: 'Casa de Apoio atualizada com sucesso!',
+            contentType: ContentType.success,
+          ),
+          duration: const Duration(seconds: 6),
+        );
+        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+      });
+    }
   }
 }

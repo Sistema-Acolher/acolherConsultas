@@ -7,6 +7,8 @@ import 'package:acolherconsultas/modules/pacientes/models/historiaPregressa.dart
 // Gerada automaticamente pela extensão "Dart Data Class Generator".
 // Possui métodos para converter um objeto Paciente em um Map e vice-versa, além de converter um objeto Paciente em JSON e vice-versa.
 // Além disso, possui um método copyWith para copiar um objeto Paciente e alterar seus atributos, e o método toString, alteração da função == e definição do hashCode.
+
+//TODO Testar A conversão dos nulos em texto em branco!
 class Paciente {
   String? id;
   String casaDeApoioId;
@@ -32,6 +34,7 @@ class Paciente {
   String? vacinasFaltando;
   String? observacoes;
   HistoriaPregressa? historiaPregressa;
+
   Paciente({
     this.id,
     required this.casaDeApoioId,
@@ -149,36 +152,29 @@ class Paciente {
   factory Paciente.fromMap(Map<String, dynamic> map, {String? id}) {
     return Paciente(
       id: id ?? "",
-      casaDeApoioId: map['casaDeApoioId'] as String,
-      nome: map['nome'] as String,
-      cpf: map['cpf'] as String,
-      rg: map['rg'] as String,
-      ativo: map['ativo'] as bool,
-      numeroCartaoSus: map['numeroCartaoSus'] as String,
-      sexo: map['sexo'] as String,
-      dataNasc: (map['dataNasc'] as Timestamp).toDate(),
-      nomeMae: map['nomeMae'] as String,
-      cidadeOrigem: map['cidadeOrigem'] as String,
-      motivoAcolhimento: map['motivoAcolhimento'] as String,
-      acolhimentoAnterior: map['acolhimentoAnterior'] as bool,
-      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] != null
-          ? map['localAcolhimentoAnterior'] as String
-          : null,
-      dataAcolhimentoAnterior: map['dataAcolhimentoAnterior'] != null
-          ? map['dataAcolhimentoAnterior'] as String
-          : null,
-      nomeEscola: map['nomeEscola'] as String,
-      serieTurnoEscola: map['serieTurnoEscola'] != null ? map['serieTurnoEscola'] as String : null,
-      dificuldadesEscolares: map['dificuldadesEscolares'] != null ? map['dificuldadesEscolares'] as String : null,
-      aulasEspecializadas: map['aulasEspecializadas'] as String,
-      medicamentosUsados: map['medicamentosUsados'] as String,
-      acompanhamentoProfissionalDeSaude:
-          map['acompanhamentoProfissionalDeSaude'] != null
-              ? map['acompanhamentoProfissionalDeSaude'] as String
-              : null,
-      vacinasFaltando: map['vacinasFaltando'] as String,
-      observacoes:
-          map['observacoes'] != null ? map['observacoes'] as String : null,
+      // Correções aplicadas abaixo utilizando as String? ?? "" e bool? ?? false
+      casaDeApoioId: map['casaDeApoioId'] as String? ?? "",
+      nome: map['nome'] as String? ?? "",
+      cpf: map['cpf'] as String? ?? "",
+      rg: map['rg'] as String? ?? "",
+      ativo: map['ativo'] as bool? ?? true,
+      numeroCartaoSus: map['numeroCartaoSus'] as String? ?? "",
+      sexo: map['sexo'] as String? ?? "",
+      dataNasc: map['dataNasc'] != null ? (map['dataNasc'] as Timestamp).toDate() : DateTime.now(),
+      nomeMae: map['nomeMae'] as String? ?? "",
+      cidadeOrigem: map['cidadeOrigem'] as String? ?? "",
+      motivoAcolhimento: map['motivoAcolhimento'] as String? ?? "",
+      acolhimentoAnterior: map['acolhimentoAnterior'] as bool? ?? false,
+      localAcolhimentoAnterior: map['localAcolhimentoAnterior'] as String?,
+      dataAcolhimentoAnterior: map['dataAcolhimentoAnterior'] as String?,
+      nomeEscola: map['nomeEscola'] as String? ?? "",
+      serieTurnoEscola: map['serieTurnoEscola'] as String?,
+      dificuldadesEscolares: map['dificuldadesEscolares'] as String?,
+      aulasEspecializadas: map['aulasEspecializadas'] as String? ?? "",
+      medicamentosUsados: map['medicamentosUsados'] as String? ?? "",
+      acompanhamentoProfissionalDeSaude: map['acompanhamentoProfissionalDeSaude'] as String?,
+      vacinasFaltando: map['vacinasFaltando'] as String? ?? "",
+      observacoes: map['observacoes'] as String?,
       historiaPregressa: map['historiaPregressa'] != null
           ? HistoriaPregressa.fromMap(
               map['historiaPregressa'] as Map<String, dynamic>)
@@ -235,9 +231,9 @@ class AulasEspecializadas {
 
   factory AulasEspecializadas.fromMap(Map<String, dynamic> map) {
     return AulasEspecializadas(
-      nomeAula: map['nomeAula'] as String,
-      localAula: map['localAula'] as String,
-      horarioAula: map['horarioAula'] as String,
+      nomeAula: map['nomeAula'] as String? ?? "",
+      localAula: map['localAula'] as String? ?? "",
+      horarioAula: map['horarioAula'] as String? ?? "",
     );
   }
 
@@ -289,9 +285,9 @@ class CadastroPaciente {
   factory CadastroPaciente.fromMap(Map<String, dynamic> map) {
     return CadastroPaciente(
       paciente: Paciente.fromMap(map['paciente'] as Map<String, dynamic>,
-          id: map['id'] as String),
-      dataCadastro: (map['dataCadastro'] as Timestamp).toDate(),
-      dataAtualizacao: (map['dataAtualizacao'] as Timestamp).toDate(),
+          id: map['id'] as String?),
+      dataCadastro: map['dataCadastro'] != null ? (map['dataCadastro'] as Timestamp).toDate() : DateTime.now(),
+      dataAtualizacao: map['dataAtualizacao'] != null ? (map['dataAtualizacao'] as Timestamp).toDate() : DateTime.now(),
     );
   }
 

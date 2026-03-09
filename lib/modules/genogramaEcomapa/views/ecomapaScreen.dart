@@ -13,6 +13,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+// NOVOS IMPORTS
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:provider/provider.dart';
+
 class EcomapaScreen extends HookWidget {
   final Ecomapa? ecomapaVelho;
   final Paciente? paciente;
@@ -349,21 +354,53 @@ class EcomapaScreen extends HookWidget {
                                     if(ecomapaVelho != null)
                                       TextButton(
                                         onPressed: () {
+                                          var statusConexao = context.read<List<ConnectivityResult>>();
+                                          bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
                                           Navigator.of(context).pop();
                                           ecomapa.value.dataCriacao = DateTime.now();
                                           PacienteEcomapaController().saveEcomapa(ecomapa.value, paciente?.id ?? '');
                                           salvou.value = true;
                                           Navigator.of(context).pop();
+
+                                          final snackBar = SnackBar(
+                                            elevation: 0,
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: Colors.transparent,
+                                            content: AwesomeSnackbarContent(
+                                              title: isOffline ? 'Salvo Localmente' : 'Sucesso',
+                                              message: isOffline ? 'Sem internet. O diagrama foi salvo e será enviado em breve.' : 'Diagrama atualizado!',
+                                              contentType: isOffline ? ContentType.warning : ContentType.success,
+                                            ),
+                                            duration: const Duration(seconds: 6),
+                                          );
+                                          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                         }, 
                                         child: const Text("Salvar")
                                       ),
                                     TextButton(
                                       onPressed: () {
+                                        var statusConexao = context.read<List<ConnectivityResult>>();
+                                        bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
                                         Navigator.of(context).pop();
                                         ecomapa.value.dataCriacao = DateTime.now();
                                         PacienteEcomapaController().saveNewEcomapa(ecomapa.value, paciente?.id ?? '');
                                         salvou.value = true;
                                         Navigator.of(context).pop();
+
+                                        final snackBar = SnackBar(
+                                          elevation: 0,
+                                          behavior: SnackBarBehavior.floating,
+                                          backgroundColor: Colors.transparent,
+                                          content: AwesomeSnackbarContent(
+                                            title: isOffline ? 'Salvo Localmente' : 'Sucesso',
+                                            message: isOffline ? 'Sem internet. O novo diagrama foi salvo e será enviado em breve.' : 'Novo diagrama salvo!',
+                                            contentType: isOffline ? ContentType.warning : ContentType.success,
+                                          ),
+                                          duration: const Duration(seconds: 6),
+                                        );
+                                        ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                       }, 
                                       child: const Text("Salvar novo")
                                     ),
@@ -379,50 +416,6 @@ class EcomapaScreen extends HookWidget {
                         ),
                       ),
                     ),
-                    // ValueListenableBuilder<bool>(
-                    //   valueListenable: undoRedoPilha.value.canUndo,
-                    //   builder: (_, canUndo, __) {
-                    //     // print("Can Undo: $canUndo");
-                    //     return Visibility(
-                    //       visible: (canUndo),
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: FloatingActionButton(
-                    //           heroTag: null,
-                    //           backgroundColor: amarelo,
-                    //           onPressed: canUndo
-                    //             ? () => undoRedoPilha.value.undo()
-                    //             : null,
-                    //           child: const Icon(
-                    //             Icons.undo_outlined,
-                    //             color: branco
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     );
-                    //   }
-                    // ),
-                    // ValueListenableBuilder<bool>(
-                    //   valueListenable: undoRedoPilha.value.canRedo,
-                    //   builder: (_, canRedo, __) {
-                    //     // print("Can Redo: $canRedo");
-                    //     return Visibility(
-                    //       visible: canRedo,
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: FloatingActionButton(
-                    //           heroTag: null,
-                    //           backgroundColor: amarelo,
-                    //           onPressed: canRedo ? () => undoRedoPilha.value.redo() : null,
-                    //           child: const Icon(
-                    //             Icons.redo_outlined,
-                    //             color: branco
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     );
-                    //   }
-                    // ),
                   ],
                 ),
               ) : Container()

@@ -13,6 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/services.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:provider/provider.dart';
 
 class GenogramaScreen extends HookWidget {
   final Genograma? genogramaVelho;
@@ -563,21 +566,53 @@ class GenogramaScreen extends HookWidget {
                                         if(genogramaVelho != null)
                                           TextButton(
                                             onPressed: () {
+                                              var statusConexao = context.read<List<ConnectivityResult>>();
+                                              bool isOffline = statusConexao.contains(ConnectivityResult.none);
+                                              
                                               Navigator.of(context).pop();
                                               genograma.value.dataCriacao = DateTime.now();
                                               PacienteGenogramaController().saveGenograma(genograma.value, paciente?.id ?? '');
                                               salvou.value = true;
                                               Navigator.of(context).pop();
+
+                                              final snackBar = SnackBar(
+                                                elevation: 0,
+                                                behavior: SnackBarBehavior.floating,
+                                                backgroundColor: Colors.transparent,
+                                                content: AwesomeSnackbarContent(
+                                                  title: isOffline ? 'Salvo Localmente' : 'Sucesso',
+                                                  message: isOffline ? 'Sem internet. O diagrama foi salvo e será enviado em breve.' : 'Diagrama atualizado!',
+                                                  contentType: isOffline ? ContentType.warning : ContentType.success,
+                                                ),
+                                                duration: const Duration(seconds: 6),
+                                              );
+                                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                             }, 
                                             child: const Text("Salvar")
                                           ),
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop();
-                                            genograma.value.dataCriacao = DateTime.now();
-                                            PacienteGenogramaController().saveNewGenograma(genograma.value, paciente?.id ?? '');
-                                            salvou.value = true;
-                                            Navigator.of(context).pop();
+                                              var statusConexao = context.read<List<ConnectivityResult>>();
+                                              bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
+                                              Navigator.of(context).pop();
+                                              genograma.value.dataCriacao = DateTime.now();
+                                              PacienteGenogramaController().saveNewGenograma(genograma.value, paciente?.id ?? '');
+                                              salvou.value = true;
+                                              Navigator.of(context).pop();
+
+                                              final snackBar = SnackBar(
+                                                elevation: 0,
+                                                behavior: SnackBarBehavior.floating,
+                                                backgroundColor: Colors.transparent,
+                                                content: AwesomeSnackbarContent(
+                                                  title: isOffline ? 'Salvo Localmente' : 'Sucesso',
+                                                  message: isOffline ? 'Sem internet. O novo diagrama foi salvo e será enviado em breve.' : 'Novo diagrama salvo!',
+                                                  contentType: isOffline ? ContentType.warning : ContentType.success,
+                                                ),
+                                                duration: const Duration(seconds: 6),
+                                              );
+                                              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
                                           }, 
                                           child: const Text("Salvar novo")
                                         ),
@@ -596,7 +631,6 @@ class GenogramaScreen extends HookWidget {
                         ValueListenableBuilder<bool>(
                           valueListenable: undoRedoPilha.value.canUndo,
                           builder: (_, canUndo, __) {
-                            // print("Can Undo: $canUndo");
                             return Visibility(
                               visible: (canUndo),
                               child: Padding(
@@ -619,7 +653,6 @@ class GenogramaScreen extends HookWidget {
                         ValueListenableBuilder<bool>(
                           valueListenable: undoRedoPilha.value.canRedo,
                           builder: (_, canRedo, __) {
-                            // print("Can Redo: $canRedo");
                             return Visibility(
                               visible: canRedo,
                               child: Padding(
@@ -693,14 +726,6 @@ class GenogramaScreen extends HookWidget {
                   backgroundColor: verde,
                   foregroundColor: branco,
                   labelBackgroundColor: verde,
-                  // child: const Text(
-                  //   "//",
-                  //   style: TextStyle(
-                  //     color: branco,
-                  //     fontSize: 20,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
                   child: const Icon(LinhaSeparacao.linhaSeparacao),
                   onTap: () {
                     opcaoSelecionada(LinhaSeparacao.linhaSeparacao, TipoDesenho.linhaSeparacao, preto);
@@ -735,7 +760,6 @@ class GenogramaScreen extends HookWidget {
                           controller: textController,
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
-                          // textCapitalization: TextCapitalization.sentences,
                           style: const TextStyle(
                             fontSize: 13,
                             color: Colors.black,

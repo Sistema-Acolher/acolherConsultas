@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:acolherconsultas/modules/casasDeApoio/models/casaDeApoio.dart';
 import 'package:acolherconsultas/modules/usuarios/controllers/usuarioController.dart';
 import 'package:acolherconsultas/modules/usuarios/models/usuario.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; // NOVO IMPORT
 
 class CadastroUsuarioScreen extends StatefulWidget {
   const CadastroUsuarioScreen({super.key, this.usuario});
@@ -96,7 +96,26 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
         child: StandartRoundButton(
           text: widget.usuario != null ? "Salvar" : "Cadastrar",
           icon: Symbols.book,
-          onPressed: (){
+          onPressed: () async {
+            
+            // 🛑 NOVO: BLOQUEIO OFFLINE EXCLUSIVO PARA USUÁRIOS
+            var statusConexao = context.read<List<ConnectivityResult>>();
+            if (statusConexao.contains(ConnectivityResult.none)) {
+              final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Sem Conexão',
+                  message: 'Aviso de Segurança: Você precisa estar online para criar ou editar usuários no sistema.',
+                  contentType: ContentType.failure,
+                ),
+                duration: const Duration(seconds: 6),
+              );
+              ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+              return; // Aborta a ação imediatamente
+            }
+
             if (radiobuttonNotifier.value == false) {
                 setState(() {
                   radiobuttonNotifier.value = true;
@@ -251,6 +270,24 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                               text: "Enviar e-mail",
                               icon: Symbols.email,
                               onPressed: isButtonEnabled ? () async {
+                                // 🛑 BLOQUEIO OFFLINE NO BOTÃO DE EMAIL TAMBÉM
+                                var statusConexao = context.read<List<ConnectivityResult>>();
+                                if (statusConexao.contains(ConnectivityResult.none)) {
+                                  final snackBar = SnackBar(
+                                    elevation: 0,
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    content: AwesomeSnackbarContent(
+                                      title: 'Sem Conexão',
+                                      message: 'É necessário estar online para enviar o e-mail de recuperação.',
+                                      contentType: ContentType.failure,
+                                    ),
+                                    duration: const Duration(seconds: 6),
+                                  );
+                                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+                                  return;
+                                }
+
                                 setState(() {
                                   isButtonEnabled = false;
                                 });
@@ -364,13 +401,11 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   cadastrar() async{
     context.read<UsuarioController>().showLoading(context);
     try {
-      // Cria um objeto de usuário e tenta cadastrar no firebase
       final cadastro = _usuarioCadastroState.cadastroUsuario(casasDeApoioCadastradas.value);
       await context.read<UsuarioController>().cadastrar(cadastro, _usuarioCadastroState.senha.text).then(
         (value) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
-          // Snackbar informando que um email de verificação foi enviado
           const snackBar = SnackBar(
                   elevation: 0,
                   behavior: SnackBarBehavior.floating,
@@ -416,7 +451,6 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
   atualizar() async{
     context.read<UsuarioController>().showLoading(context);
     try {
-      // Cria um objeto de usuário e tenta atualizar no firebase
       final cadastro = _usuarioCadastroState.cadastroUsuario(casasDeApoioCadastradas.value);
       cadastro.id = widget.usuario?.id;
       await context.read<UsuarioController>().atualizarUsuario(cadastro.toMap()).then(
@@ -436,9 +470,9 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                 ),
                 duration: Duration(seconds: 10),
               );
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
         }
       );
     } on FirebaseAuthException catch (e) {

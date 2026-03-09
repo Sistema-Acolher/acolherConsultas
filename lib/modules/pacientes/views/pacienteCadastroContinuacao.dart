@@ -58,93 +58,71 @@ class PacienteCadastroContinuacaoState extends State<PacienteCadastroContinuacao
                         nome: "",
                         dataHorario: DateTime.now(),
                         confimacao: () async {
-                          bool erro = false;
-                          showLoading(context);  // Mostra o diálogo de carregamento
+                          showLoading(context);
                           var actualContext = context;
 
-                          // Verifica a conectividade antes de tentar o cadastro
-                          await Connectivity().checkConnectivity().then((value) {
-                            if (value[0] == ConnectivityResult.none) {
-                              Navigator.pop(actualContext);  // Fecha o diálogo de carregamento
-                              const snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
+                          var statusConexao = context.read<List<ConnectivityResult>>();
+                          bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
+                          // Salva o mensageiro ANTES de desempilhar as telas
+                          final messenger = ScaffoldMessenger.of(context);
+
+                          if (isOffline) {
+                            // 🛑 MODO OFFLINE
+                            PacientesController().cadastrarPaciente(
+                                widget.cadastroPacienteState.cadastro(),
+                                Provider.of<CasaDeApoio>(context, listen: false));
+                            
+                            // FECHANDO AS 4 CAMADAS PARA VOLTAR À LISTA
+                            Navigator.pop(actualContext); // 1. Fecha o Loading
+                            Navigator.pop(actualContext); // 2. Fecha o Alert de Confirmação
+                            Navigator.pop(actualContext); // 3. Fecha a Tela de Continuação
+                            Navigator.pop(actualContext); // 4. Fecha a Tela de Cadastro 1
+                            
+                            final snackBar = SnackBar(
+                              elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+                              content: AwesomeSnackbarContent(
+                                title: 'Salvo Localmente',
+                                message: 'Sem internet. O paciente foi salvo no aparelho e será enviado em breve.',
+                                contentType: ContentType.warning,
+                              ),
+                              duration: const Duration(seconds: 6),
+                            );
+                            messenger..hideCurrentSnackBar()..showSnackBar(snackBar);
+                            
+                          } else {
+                            // ✅ MODO ONLINE
+                            await PacientesController().cadastrarPaciente(
+                                widget.cadastroPacienteState.cadastro(),
+                                Provider.of<CasaDeApoio>(context, listen: false))
+                            .then((value) {
+                                
+                              Navigator.pop(actualContext); // 1. Fecha o Loading
+                              Navigator.pop(actualContext); // 2. Fecha o Alert de Confirmação
+                              Navigator.pop(actualContext); // 3. Fecha a Tela de Continuação
+                              Navigator.pop(actualContext); // 4. Fecha a Tela de Cadastro 1
+                              
+                              final snackBar = SnackBar(
+                                elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Erro',
-                                  message: 'Sem conexão com a internet',
-                                  contentType: ContentType.failure,
+                                  title: 'Sucesso', message: 'Paciente cadastrado com sucesso!', contentType: ContentType.success,
                                 ),
-                                duration: Duration(seconds: 10),
+                                duration: const Duration(seconds: 6),
                               );
-                              ScaffoldMessenger.of(actualContext)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-                              return;  // Encerra o processo para evitar pop adicionais
-                            }
-                          });
-
-                          // Tenta cadastrar o paciente
-                          await PacientesController()
-                              .cadastrarPaciente(
-                                  widget.cadastroPacienteState.cadastro(),
-                                  Provider.of<CasaDeApoio>(context, listen: false))
-                              .then((value) {
-                            Navigator.pop(actualContext); // Fecha o diálogo de carregamento
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Sucesso',
-                                message: value,
-                                contentType: ContentType.success,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(actualContext)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                          }).onError((error, stackTrace) {
-                            erro = true;
-                            Navigator.pop(actualContext);  // Fecha o diálogo de carregamento em caso de erro
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Erro',
-                                message: error.toString(),
-                                contentType: ContentType.failure,
-                              ),
-                              duration: const Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                          });
-
-                          // Confirma o sucesso da operação (sem erro e com conexão)
-                          if (!erro) {
-                            const snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: AwesomeSnackbarContent(
-                                title: 'Sucesso',
-                                message: 'Paciente Cadastrado',
-                                contentType: ContentType.success,
-                              ),
-                              duration: Duration(seconds: 10),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.pop(actualContext);  // Fecha a tela após sucesso
+                              messenger..hideCurrentSnackBar()..showSnackBar(snackBar);
+                              
+                            }).onError((error, stackTrace) {
+                              Navigator.pop(actualContext); // Fecha só o loading em caso de erro
+                              final snackBar = SnackBar(
+                                elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Erro', message: error.toString(), contentType: ContentType.failure,
+                                ),
+                                duration: const Duration(seconds: 6),
+                              );
+                              messenger..hideCurrentSnackBar()..showSnackBar(snackBar);
                             });
                           }
-
                         })),
               );
             }

@@ -15,6 +15,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:mask/mask/mask.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConsultarScreen extends StatefulWidget {
   const ConsultarScreen({super.key, this.dadosConsulta, this.readOnly=false});
@@ -96,7 +97,7 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                   .where((paciente) => paciente.paciente.id == consulta.pacienteId).firstOrNull?.paciente;
                 if (paciente != null) {
                   String? idadeS = PacientesController.calcularIdade(paciente.dataNasc);
-                  final match = RegExp(r'^(\d+)a').firstMatch(idadeS);
+                  final match = RegExp(r'^(\d+)a').firstMatch(idadeS ?? "");
                   int idade = match != null ? int.parse(match.group(1)!) : 0;
                   String? sexo = paciente.sexo;
             
@@ -173,22 +174,25 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
                     pageWidgets: pageWidgets,
                     readOnly: widget.readOnly,
                     onSuccess: () {
+                        var statusConexao = context.read<List<ConnectivityResult>>();
+                        bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
                         widget.dadosConsulta!=null
                         ? Navigator.pop(context)
                         : setState(() {
                           consultaSelecionado=null;
                           _consultaState = ConsultaState();
                         });
-                        const snackBar = SnackBar(
+                        final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: Colors.transparent,
                                 content: AwesomeSnackbarContent(
-                                  title: 'Sucesso',
-                                  message: 'Consulta enviada',
-                                  contentType: ContentType.success,
+                                  title: isOffline ? 'Salvo Localmente' : 'Sucesso',
+                                  message: isOffline ? 'Sem internet. O prontuário foi salvo no aparelho e será sincronizado quando houver conexão.' : 'Consulta enviada com sucesso!',
+                                  contentType: isOffline ? ContentType.warning : ContentType.success,
                                 ),
-                                duration: Duration(seconds: 10),
+                                duration: const Duration(seconds: 6),
                               );
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
@@ -204,28 +208,31 @@ class _ConsultarScreenState extends State<ConsultarScreen> {
         )
         : Padding(
           padding: const EdgeInsets.only(bottom: 60, left: 30, right: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Selecione uma consulta:",
-                style: TextStyle(fontSize: 20, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
-              ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(color: Colors.amber[100], borderRadius: BorderRadius.circular(15)),
-                  child: ListaHorario(
-                    consultasDoDia: consultasDia,
-                    onSelect: (p) => setState(() {
-                      if(p.estado!="concluida") {
-                        consultaSelecionado = p;
-                      }
-                    }),
+          // A ADIÇÃO DO SingleChildScrollView RESOLVE O OVERFLOW
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Selecione uma consulta:",
+                  style: TextStyle(fontSize: 20, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                ),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(color: Colors.amber[100], borderRadius: BorderRadius.circular(15)),
+                    child: ListaHorario(
+                      consultasDoDia: consultasDia,
+                      onSelect: (p) => setState(() {
+                        if(p.estado!="concluida") {
+                          consultaSelecionado = p;
+                        }
+                      }),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         )
     );
@@ -1508,39 +1515,39 @@ class _ExibirConsultaState extends State<ExibirConsulta> {
 
   Future<void> _enviarConsulta() async {
     if (_validateCurrentPage()) {
-      await ConsultaController().realizarConsulta(widget.consulta.id!, widget.consultaState.cadastro())
-      .then((v) => widget.onSuccess())
-      .onError((error, stackTrace) {
-        const snackBar = SnackBar(
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.transparent,
-                content: AwesomeSnackbarContent(
-                  title: 'Erro',
-                  message: 'Erro no envio da consulta',
-                  contentType: ContentType.failure,
-                ),
-                duration: Duration(seconds: 10),
-              );
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      });
+      
+      var statusConexao = context.read<List<ConnectivityResult>>();
+      bool isOffline = statusConexao.contains(ConnectivityResult.none);
+
+      if (isOffline) {
+        // 🛑 OFFLINE: Manda rodar sem esperar o Google e aciona o sucesso na tela
+        ConsultaController().realizarConsulta(widget.consulta.id!, widget.consultaState.cadastro());
+        widget.onSuccess();
+      } else {
+        // ✅ ONLINE: Espera o Google
+        await ConsultaController().realizarConsulta(widget.consulta.id!, widget.consultaState.cadastro())
+        .then((v) => widget.onSuccess())
+        .onError((error, stackTrace) {
+          final snackBar = SnackBar(
+            elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Erro', message: 'Erro no envio da consulta', contentType: ContentType.failure,
+            ),
+            duration: const Duration(seconds: 10),
+          );
+          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+        });
+      }
+
     } else {
-      const snackBar = SnackBar(
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              content: AwesomeSnackbarContent(
-                title: 'Incorreto',
-                message: 'Dados mal preenchidos',
-                contentType: ContentType.success,
-              ),
-              duration: Duration(seconds: 10),
-            );
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
+      final snackBar = SnackBar(
+        elevation: 0, behavior: SnackBarBehavior.floating, backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Incorreto', message: 'Dados mal preenchidos', contentType: ContentType.failure,
+        ),
+        duration: const Duration(seconds: 10),
+      );
+      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
     }
   }
 

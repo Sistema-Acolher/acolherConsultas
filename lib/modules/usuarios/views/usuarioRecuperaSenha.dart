@@ -219,27 +219,36 @@ class _UsuarioRecuperaSenhaScreenState
     );
   }
 
+  
   void recuperarSenha() async {
     try {
-      await context.read<UsuarioController>().auth.sendPasswordResetEmail(email: _usuarioLoginController.email.text).then(
-        (value) {
-          Navigator.pop(context, true);
-          const snackBar = SnackBar(
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: 'Informe',
-              message:
-                  'Um link de recuperação foi enviado para o e-mail indicado.',
-              contentType: ContentType.help,
-            ),
-            duration: Duration(seconds: 10),
-          );
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-        });
+      // 1. Espera o Firebase enviar o email
+      await context.read<UsuarioController>().auth.sendPasswordResetEmail(email: _usuarioLoginController.email.text);
+
+      // 2. Trava de segurança: verifica se a tela ainda existe antes de usar o context
+      if (!mounted) return;
+
+      // 3. Cria o SnackBar
+      const snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Informe',
+          message: 'Um link de recuperação foi enviado para o e-mail indicado.',
+          contentType: ContentType.help,
+        ),
+        duration: Duration(seconds: 10),
+      );
+
+      // 4. Mostra o SnackBar PRIMEIRO
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+
+      // 5. Fecha a tela DEPOIS
+      Navigator.pop(context, true);
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         setState(() {
